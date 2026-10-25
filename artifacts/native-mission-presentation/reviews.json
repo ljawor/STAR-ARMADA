@@ -1,0 +1,29 @@
+{
+  "full_review": {
+    "delegation_id": "deleg_24fd3910",
+    "scope": "Independent read-only review of the 10-file staged production, test, and capture-tool diff and adjacent native/input integration",
+    "passed": true,
+    "security_concerns": [],
+    "logic_errors": [],
+    "summary": "Requirements check out; no blockers found. Native briefing Capture ops, dimension validation, per-frame stale-model reset, unified mission collapse, duplicate hint suppression and compatibility fallback were reviewed.",
+    "nonblocking_suggestions_summary": [
+      "Suppress hint export under explicit help modal, although modal covers the mission panel already.",
+      "Use exact footer line-height bounds and remove redundant page-layout work.",
+      "Derive mission scroll increments from measured rows; consider resetting scroll/minimized state on mission changes.",
+      "Share the character-fallback wrapper; keep AST capture tool documented as non-shipping developer tooling."
+    ]
+  },
+  "capture_followup": {
+    "delegation_id": "deleg_f304615a",
+    "scope": "Nine-line evidence-only refinement: sandbox catalogue symlink, actual preview/all-packs activation assertions, catalogue and viewer-hash receipt fields",
+    "passed": true,
+    "security_concerns": [],
+    "logic_errors": [],
+    "summary": "New lines verified against asset_selection and asset_registry. The symlink preserves canonical containment and existing readers have no write path; catalogue activation assertions and evidence hashes are correct.",
+    "nonblocking_suggestions_summary": [
+      "Optionally hash visual-pack tree before/after capture to self-verify read-only use.",
+      "Pack count relies on the preceding all-accepted assertion; make field naming more explicit if that gate ever changes.",
+      "The absolute sandbox symlink is harmless but not relocatable; it is not copied into the published evidence."
+    ]
+  }
+}

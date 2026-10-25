@@ -1,0 +1,37 @@
+.....F...                                                             [100%]
+=================================== FAILURES ===================================
+_ PresentationMainTests.test_cinematic_final_frame_returns_to_menu_only_for_outro _
+
+self = <test_presentation_main.PresentationMainTests testMethod=test_cinematic_final_frame_returns_to_menu_only_for_outro>
+
+    def test_cinematic_final_frame_returns_to_menu_only_for_outro(self):
+        for outcome, left in ((None, False), ('MISSION COMPLETE', True), ('MISSION FAILED', True)):
+            movie = SimpleNamespace(outcome=outcome, finished=True, update=Mock(), draw_gl=Mock())
+            ns = main_functions(cinematic=movie, camera=SimpleNamespace(apply=Mock()),
+                renderer=SimpleNamespace(draw=Mock()), W=1024, H=768,
+                accumulator=3., pygame=SimpleNamespace(display=SimpleNamespace(flip=Mock())))
+            ns['leave_game'] = Mock()
+>           ns['draw_campaign_presentation'](.033)
+
+tests/test_presentation_main.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+main.py:816: in draw_campaign_presentation
+    cinematic.update(dt_frame)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+reason = 'native window is not drawing'
+
+    def cpp_fatal(reason: str) -> None:
+        """Report the fault that killed the window and leave the match; never draw a legacy frame.
+    
+        Called from both the producer and the frame loop, so the first fault wins and is said once.
+        """
+>       if CPP.get('failed'):
+           ^^^
+E       NameError: name 'CPP' is not defined
+
+main.py:424: NameError
+=========================== short test summary info ============================
+FAILED tests/test_presentation_main.py::PresentationMainTests::test_cinematic_final_frame_returns_to_menu_only_for_outro
+1 failed, 8 passed, 3 subtests passed in 0.33s

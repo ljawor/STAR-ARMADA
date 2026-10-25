@@ -1,0 +1,33 @@
+{
+  "code_sha": "37abea989bb077faad9375afe35dc9c2fa029f72",
+  "files": {
+    "README.md": "6dc725f8178388d76995a7f2ae35c5e299b199c7f0a9c13b2eed07086fca55cc",
+    "baseline-presentation-tests.txt": "0d47adf51d1afc1a77619a7bf987629e32a6305948788e9e9e3d7bae3a70b613",
+    "collapse-pixels.json": "5ee5f613a172c1d9379317e4f1404bdc40d696a6a07ee4ae32418c35bfba36e2",
+    "compatibility-tests.txt": "cee0f6e3f29328c03df0d91e3917a386369b7ebd13ec754d8be38d5971f8dffc",
+    "focused-tests.txt": "163dd4c28329739070116ee767845cb5c3066f7ed6d57d353a69906e87f88547",
+    "large/briefing-before-raster.png": "1112e25e42dc0e12025c0f62245c98288b005222be99436e7d24969bc299b6b0",
+    "large/briefing-native-restored.png": "7d69044d08880ccde9ac23b07e11bcfe869f953ad6858a7f0c7c2dcd1ee5f56c",
+    "large/briefing-native.png": "f28fc32996085287c140780ffcea1b07885b43e0d529853763a7485335b3f231",
+    "large/mission-collapsed.png": "c253bfa0219939cd645cf1c1c6d3371aa0518cd68a9e9f4b4bd786cabb04b925",
+    "large/mission-de.png": "9e5f5913d98a98e840c9a5e1c008f59994dd98f998c5c93a7db5206e61ad4721",
+    "large/mission-expanded.png": "c1ac45e63aa83201f1bb361abdff9406d86ece74270d3c9de2e21d701f30b9a7",
+    "large/mission-pl.png": "eefcd1ea30d77bef57f1896498d5c801de7f90b638890860f4f171e7418345b7",
+    "large/mission-restored.png": "17e13c2f0cfc2b05e97b4f476cfd7df1a8e688b9aebf809f31bd87ee7c278cbe",
+    "large/mission-ru.png": "2426b65ed16df7eaef76b072b588054a797d9548bc9036f2b0af09d9751170bb",
+    "large/verification.json": "af83ef8f28981b278ad63b979f67303908bb07f5cf43d639bee3c921a0cdd2c2",
+    "mission-states.png": "cb0ae902a6a45bd5a41bd21d2af660c4dcd6dd8414d63b4740dd9959bd8ac63f",
+    "native-tests.txt": "9561a8c308873459e50324c75e4ae830ff9e4d05e68a41d947d2faa6fbc06d87",
+    "reviews.json": "c2c294ae87cfce300ca261abcdb4184cf1921e2aa19598b09ff807c143662ab9",
+    "small/briefing-before-raster.png": "32f5c4e43fa2495ab664e9649f2977e78baef3a36c0f7bc48a929143fafba2e7",
+    "small/briefing-native-restored.png": "feae88b8fedc68a5578852084b965d3547c0e2e8138a9a3e21c335ce5c10490b",
+    "small/briefing-native.png": "67a8512c129a85f8de568e325ca46cf4dc20885c740b89fe7ed96a2e0a8f3aef",
+    "small/mission-collapsed.png": "5d435c32e74262b1210c4578683d736d4253234952ac14fab6a817b3a806f228",
+    "small/mission-de.png": "e70072e435d18a8c15b31fbdf6ae314b777d0b1274e17853ed2b82190c5c759d",
+    "small/mission-expanded.png": "ec9a424c75f955411c549c9ebfde10660c7977f9297526974e4bd9b6a6c30e53",
+    "small/mission-pl.png": "c7f893fb740ac043aff70c9b7580a3a718b4c7cee9c41735b78c76c19f701796",
+    "small/mission-restored.png": "1641839ce0e24e1efadc0600f6126353b38c23b282568ff544d42b618f0d72f2",
+    "small/mission-ru.png": "573e9d57b48d34a28372279c3ff81332afe57aa0804c755faa25ad22ee86755e",
+    "small/verification.json": "e6812f27c350e30829636e7f825216c8ec99362973a1dd2521ad7d20b732d9d5"
+  }
+}
