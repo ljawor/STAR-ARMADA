@@ -1,0 +1,127 @@
+{
+  "batch": "s06-b5-environment",
+  "asset": "core:environment/asteroid_field",
+  "binding": "environment:asteroid_field",
+  "decision_id": "s06-b5-environment-2026-10-25",
+  "owner_words_verbatim": "Asteroids look good",
+  "what_was_asked": "Every skirmish and multiplayer map must show a good-looking asteroid field made of many small rocks, so a mining station can be placed and built on it.",
+  "what_changed": {
+    "prop": "one irregular boulder (displaced icosphere, 320 triangles, stone roles base/dark/trim) replacing four overlapping bevelled boxes with faction hardware roles",
+    "draw": "64 small rocks per field, area-weighted scatter held inside the field radius, instead of one instance of the prop scaled up to the radius",
+    "envelope": "unchanged at +-0.58 X/Z and +-0.46 Y, so ASTEROID_EXTENT and every projected size hold"
+  },
+  "evidence": {
+    "asteroid-field-comparison.png": {
+      "shows": "2x2 sheet: the same field in the same native frame before and after, wide and close",
+      "sha256": "6e9e7930409b6e0e8fd3bf7aefda9533015eae6085038e44b6365c0c334e2950"
+    },
+    "asteroid-field-before-wide.png": {
+      "sha256": "be55b6815269ffc0277eea3d8326608db4fd9dbe0393a0e0e0bcc58905a47aad"
+    },
+    "asteroid-field-after-wide.png": {
+      "sha256": "78134189618d18c54fb0e02ced69d3bf7f1f000cc556f9ea24ea389be77c8ea9"
+    },
+    "asteroid-field-before-close.png": {
+      "sha256": "da9d5502ba66614d3a23fb8d1c1063565f1401a141176c03f432da4a14cfa204"
+    },
+    "asteroid-field-after-close.png": {
+      "sha256": "6bc778b7776a20ce55be445f258658c744b9d206ff2a9ac5da110907bf3ed742"
+    },
+    "native-field-verification.json": {
+      "shows": "a measurement of the same revision in the real skirmish frame (see limits below)",
+      "written_by": {
+        "path": "tools/render/verify_native_asteroid_fields.py",
+        "sha256": "e4df1d5e6acd5878fe9c0c43df2399c237476e744198683847edd7b9b1bc3523"
+      },
+      "sha256": "44f0808555e892ea54e42e6ee29484462538077e83e802aefe8ae8a8d9a47ec9"
+    }
+  },
+  "what_the_measurement_does": [
+    "renders the whole scene the production collector builds for skirmish01 (ships, planets, stations, 320 rocks) through the native viewer",
+    "renders the same frame again with only the aimed-at field removed, so occlusion by every other object cancels out",
+    "result on this revision: passed=True, centre_error=[0.014, 0.014], size_ratio=[0.86, 0.75], disc_fill=0.147, fields_drawn=5, rock_instances=320",
+    "drops the sparse silhouette/starfield flicker between the two renders (dense mask), then measures the footprint against the projection: centre error, span ratio, share of the disc that is rock, and whether the field reaches the frame edge",
+    "reproduces to the digit on every gated metric (centre_error, size_ratio, disc_fill, target_pixels, passed) when it is re-run; the frame-wide numbers it also records (changed_pixels, coverage, field_rgb) differ by a few pixels between runs - 30 of ~14,000 changed pixels across four runs of the real frame - which is the flicker the mask is there to remove"
+  ],
+  "controls": [
+    {
+      "control": "scale3",
+      "expected": "fail: is_a_scatter_not_a_boulder (disc_fill 0.676); the clipped bounding box still reads as correctly sized, which is why the disc fill and the frame-edge check exist",
+      "observed": {
+        "passed": false,
+        "centre_error": [
+          0.0140625,
+          0.005625
+        ],
+        "size_ratio": [
+          0.966302587586679,
+          0.925889630487919
+        ],
+        "disc_fill": 0.6757580553844432,
+        "touches_frame_edge": false
+      },
+      "failed_checks": [
+        "is_a_scatter_not_a_boulder"
+      ],
+      "run": "artifacts/s06_alliance_batch_review/b5-asteroid-v5/controls/scale3.json",
+      "sha256": "2b8b172fcbfd8703bf53858b5402e0db2caf30d9de57ae6d58c955e3bc03bf1f",
+      "note": "the clipped bounding box still reads as correctly sized, which is why the disc fill and the frame-edge check exist"
+    },
+    {
+      "control": "shift",
+      "expected": "fail: centred (0.125 / 0.083) and size_matches_projection (2.67 / 1.22)",
+      "observed": {
+        "passed": false,
+        "centre_error": [
+          0.125,
+          0.0825
+        ],
+        "size_ratio": [
+          2.664652590011751,
+          1.2189464401377648
+        ],
+        "disc_fill": 0.14856542958931054,
+        "touches_frame_edge": false
+      },
+      "failed_checks": [
+        "centred",
+        "size_matches_projection"
+      ],
+      "run": "artifacts/s06_alliance_batch_review/b5-asteroid-v5/controls/shift.json",
+      "sha256": "13ad93e6230a2055d0659bd03bbce9d997702ea3ab075d83f9121ae20926ad07",
+      "note": "a field of the right size in the wrong place is still wrong"
+    },
+    {
+      "control": "boulder",
+      "expected": "fail: is_a_scatter_not_a_boulder (disc_fill 1.176) - the picture the owner rejected",
+      "observed": {
+        "passed": false,
+        "centre_error": [
+          0.01015625,
+          0.00375
+        ],
+        "size_ratio": [
+          1.0183592926418537,
+          1.083036035662474
+        ],
+        "disc_fill": 1.17604914851235,
+        "touches_frame_edge": false
+      },
+      "failed_checks": [
+        "is_a_scatter_not_a_boulder"
+      ],
+      "run": "artifacts/s06_alliance_batch_review/b5-asteroid-v5/controls/boulder.json",
+      "sha256": "c6348e6277c7660d0d5fa0ddad59bc9dc9de256e62ea360be186e395c6896022",
+      "note": "the picture the owner rejected - the regression this work exists to prevent"
+    }
+  ],
+  "limits": [
+    "This measures a footprint, not beauty. The appearance was approved by the owner looking at the sheet and the two captures; the numbers here cannot approve a picture.",
+    "It proves one map (skirmish01), one field and one camera. The unit tests cover the other maps, the live emitter and the rock scatter; the pixel proof does not.",
+    "A field drawn in the right place at the right size with ugly rocks would pass, and so would a field in the wrong colour: field_rgb is recorded but never asserted, and lit_rock only asks that the field is brighter than the background. Both are what the sheet is for.",
+    "The rock count and the rock shapes are not measured individually, only as an aggregate span and a wide fill band (3-50 %)."
+  ],
+  "reproduce": "python tools/render/verify_native_asteroid_fields.py --out OUTDIR",
+  "tool_sha256": "e4df1d5e6acd5878fe9c0c43df2399c237476e744198683847edd7b9b1bc3523",
+  "controls_how": "python tools/render/verify_native_asteroid_fields.py --out OUT --control {scale3,shift,boulder} - the tool draws the field wrong on purpose and exits non-zero if a control slips through every check"
+}

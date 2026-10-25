@@ -23,6 +23,12 @@ import json
 import os
 import sys
 
+# A renderer worker must never initialize the game window, audio or user menus.
+# The same early entry is available inside the frozen executable on both platforms.
+if sys.argv[1:2] == ["--native-render-worker"]:
+    from render_bridge.native_worker import cli as native_worker_cli
+    raise SystemExit(native_worker_cli(sys.argv[2:]))
+
 # Dispatch before SDL/audio/menu initialization; frozen Windows GUI builds
 # return their report through --output rather than a missing console.
 if "--benchmark" in sys.argv:
@@ -389,7 +395,11 @@ def cpp_drawing() -> bool:
     reason to hand the frame to a second renderer.
     """
     window = CPP["window"]
-    return window is not None and window.poll() is None
+    try:
+        return window is not None and window.poll() is None
+    except Exception as exc:
+        cpp_fatal(str(exc))
+        return False
 
 
 def flash_print(message: str) -> None:

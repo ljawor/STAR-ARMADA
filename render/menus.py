@@ -462,9 +462,8 @@ class MenuStack:
         self.skirmish_notice = ""
         self.skirmish_text_bounds = []
         self.skirmish_preview_starts = []
-        from copy import deepcopy
-        self.lan_options = deepcopy(self.skirmish_options)
-        self.lan_options.update(human_count=2, ai_count=0, cooperative=False)
+        from game.net.lan import default_lan_options
+        self.lan_options = default_lan_options()
         self.lan_port = '7777'
         self.lan_address = '127.0.0.1'
         self.lan_name = 'Player'
@@ -701,11 +700,22 @@ class MenuStack:
             capacity = self.skirmish_capacity(value)
             o['human_count'] = min(capacity, o['human_count'])
             o['ai_count'] = min(o['ai_count'], capacity - o['human_count'])
+            o['spawn_slots'] = list(range(capacity))
+            # Retain choices from a pre-eight-slot lobby when editing its setup.
+            if len(o['colors']) < 8:
+                o['colors'].extend([key for key in PLAYER_COLORS if key not in o['colors']][:8 - len(o['colors'])])
+                o['factions'].extend(['imperial'] * (8 - len(o['factions'])))
         elif action == 'lan_humans':
             o['human_count'] = min(capacity, max(2, o['human_count'] + value))
             o['ai_count'] = min(o['ai_count'], capacity - o['human_count'])
         elif action == 'lan_ai':
-            o['ai_count'] = min(2, capacity - o['human_count'], max(0, o['ai_count'] + value))
+            o['ai_count'] = min(capacity - o['human_count'], max(0, o['ai_count'] + value))
+        elif action in ('lan_spawn', 'lan_spawn_point'):
+            starts = o.setdefault('spawn_slots', list(range(capacity)))
+            slot = value if action == 'lan_spawn' else 0
+            target = (starts[slot] + 1) % capacity if action == 'lan_spawn' else value
+            other = starts.index(target)
+            starts[slot], starts[other] = starts[other], starts[slot]
         elif action == 'lan_color':
             palette = list(PLAYER_COLORS)
             old = o['colors'][value]
@@ -1213,7 +1223,7 @@ class MenuStack:
                     host = self.lan_session.snapshot.get('is_host', False)
                     self.close_lan()
                     self.screen = 'lan_host' if host else 'lan_join'
-                elif act in ('lan_map', 'lan_humans', 'lan_ai', 'lan_color', 'lan_faction', 'lan_difficulty', 'lan_cooperative'):
+                elif act in ('lan_map', 'lan_humans', 'lan_ai', 'lan_color', 'lan_faction', 'lan_difficulty', 'lan_cooperative', 'lan_spawn', 'lan_spawn_point'):
                     self._lan_choice(act, b['payload'])
                     if act in ('lan_map', 'lan_humans', 'lan_ai'):
                         self.buttons = []

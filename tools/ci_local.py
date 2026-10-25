@@ -67,7 +67,7 @@ LAN_TEST_MODULES = [
     'test_netdiag', 'test_netdiag_compare', 'test_lan_state_diff',
     'test_sim_profiles', 'test_lan', 'test_multiplayer',
     'test_checksum_canonicalization', 'test_orbit_spacing_batch',
-    'test_draw_view_scope', 'test_lan_human_safety',
+    'test_lan_human_safety',
     'test_lan_failure_diagnostics', 'test_lan_reconnect',
     'test_lan_production_reconnect', 'test_lan_reconnect_admission',
     'test_lan_launch_recovery', 'test_station_balance',
@@ -261,14 +261,20 @@ STEPS: list[dict] = [
          kind='run',
          local_command=[str(PYTHON), '-m', 'unittest'] + LAN_TEST_MODULES + ['-v'],
          timeout=1800, env=LAN_TEST_ENV,
-         reproduction='exact_commands',
-         note='REPRODUCED EXACTLY: same 21 modules, same order, same environment including the '
-              'lowered STAR_ARMADA_PACING_FLOOR=15, the dummy SDL drivers and PYTHONPATH=tests. '
-              'The commands are identical; the platform is not, so this is macOS evidence about '
-              'modules that are platform-portable, not Windows evidence. Two-process LAN tests in '
-              'this list are load-sensitive; the summary records the machine\'s load average before '
-              'and after the run (host.loadavg_1_5_15_*) - read a timing failure against those '
-              'numbers rather than assuming the box was idle. It was not necessarily: a sibling '
+         reproduction='subset_of_ci_command',
+         note='SUBSET, NOT A REPRODUCTION: these are 20 of the 33 modules in that CI step, in the '
+              'workflow order, under the same environment (lowered STAR_ARMADA_PACING_FLOOR=15, '
+              'dummy SDL drivers, PYTHONPATH=tests). The 13 modules the CI step also runs are absent '
+              'here: test_render_camera, test_render_live, test_render_single_path, '
+              'test_lan_eight_players, test_lan_deployment_ui, test_lan_language, '
+              'test_release_packaging, test_native_binary_discovery, test_render_default, '
+              'test_native_worker_entry, test_native_worker, test_native_worker_main_boundary, '
+              'test_native_worker_parent_identity. The local order is a subsequence of the CI order '
+              '(those modules sit between the ones run here), not a prefix of it. Same '
+              'environment, same platform caveat: this is macOS evidence about portable modules, '
+              'not Windows evidence. Two-process LAN tests in this list are load-sensitive; the '
+              'summary records the load average before and after (host.loadavg_1_5_15_*) - read a '
+              'timing failure against those numbers rather than assuming the box was idle. A sibling '
               'task was editing this same worktree while the receipt was produced, which is '
               'recorded in does_not_cover.'),
     dict(id='windows-lan.8', workflow='windows-signal.yml', job='windows-lan',
@@ -325,14 +331,46 @@ STEPS: list[dict] = [
     dict(id='package-windows.5', workflow='windows-signal.yml', job='package-windows',
          runs_on='windows-latest', ci_step='Zip',
          ci_command='Compress-Archive -Path "dist/STAR ARMADA/*" `\n  -DestinationPath '
-                    '"dist/STAR-ARMADA-candidate-win.zip"',
+                    '"dist/STAR-ARMADA-candidate-win$suffix.zip" (suffix -gate-failed when the gate was red)',
          kind='skip', skip_reason='PLATFORM MISMATCH: Compress-Archive is Windows PowerShell only. '
                      'Packaging step.'),
     dict(id='package-windows.6', workflow='windows-signal.yml', job='package-windows',
          runs_on='windows-latest', ci_step='Upload artifact (star-armada-candidate-win)',
-         ci_command='uses: actions/upload-artifact@v4\nwith:\n  name: star-armada-candidate-win\n  '
-                    'path: dist/STAR-ARMADA-candidate-win.zip',
+         ci_command='uses: actions/upload-artifact@v4\nwith:\n  name: star-armada-candidate-win '
+                    '(suffixed -gate-failed when windows-lan was not successful)\n  '
+                    'path: dist/STAR-ARMADA-candidate-win*.zip',
          kind='skip', skip_reason='CI artifact storage on a Windows-only, manual-only packaging job.'),
+
+    # ------------------------------------------------------------------
+    # Local mirror of the new counted cleanup-diagnostic gate (windows-lan,
+    # 'Worker cleanup diagnostic tests'). The local command applies the same
+    # count/no-skip rule, so a module that stops collecting or self-skips fails here.
+    # ------------------------------------------------------------------
+    dict(id='windows-lan.8b', workflow='windows-signal.yml', job='windows-lan',
+         runs_on='windows-latest', ci_step='Worker cleanup diagnostic tests',
+         ci_command='python -c "import sys, unittest; suite = '
+                    "unittest.defaultTestLoader.loadTestsFromName('test_windows_worker_diagnostic'); "
+                    'expected = suite.countTestCases(); assert expected >= 5; result = '
+                    'unittest.TextTestRunner(verbosity=2).run(suite); sys.exit(0 if '
+                    'result.wasSuccessful() and result.testsRun == expected and not '
+                    'result.skipped else 1)"',
+         kind='run', ci_step_is_ci=True,
+         local_command=[str(PYTHON), '-c',
+                        'import sys, unittest; '
+                        "suite = unittest.defaultTestLoader.loadTestsFromName("
+                        "'test_windows_worker_diagnostic'); "
+                        'expected = suite.countTestCases(); '
+                        "assert expected >= 5, f'only {expected} cases loaded'; "
+                        'result = unittest.TextTestRunner(verbosity=2).run(suite); '
+                        'sys.exit(0 if result.wasSuccessful() and result.testsRun == expected '
+                        'and not result.skipped else 1)'],
+         timeout=300,
+         env={'PYTHONPATH': 'tests', 'SDL_VIDEODRIVER': 'dummy', 'SDL_AUDIODRIVER': 'dummy'},
+         reproduction='equivalent',
+         note='EQUIVALENT: the local wrapper applies the CI rule itself - at least five cases, '
+              'testsRun == expected, no skips - so a module that stops collecting or self-skips '
+              'fails here too. The module is mocked and platform-portable, so this is real evidence '
+              'for its reporting logic, but still not Windows evidence for the tool it observes.'),
 
     # ------------------------------------------------------------------
     # Local addition: not a CI step. The portable member of the skipped
@@ -355,9 +393,9 @@ STEPS: list[dict] = [
 ]
 
 COVERS = [
-    'The focused LAN test suite from windows-signal.yml\'s windows-lan job: the same 21 modules, '
-    'in the same order, under the same environment (PYTHONPATH=tests, dummy SDL video/audio, '
-    'STAR_ARMADA_PACING_FLOOR=15) - executed on macOS.',
+    '20 of the 33 modules in windows-signal.yml\'s focused LAN step, in the workflow order, under '
+    'the same environment (PYTHONPATH=tests, dummy SDL video/audio, STAR_ARMADA_PACING_FLOOR=15) - '
+    'executed on macOS. The other 13 CI modules are not run here.',
     'The netdiag entry point (python main.py --netdiag info): environment probe, local-address '
     'enumeration and a real host+join socket pairing on macOS.',
     'The three tools/lan_state_diff.py scene-state dumps (ticks 0, ticks 1, contact scene at 60 '

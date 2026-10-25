@@ -2270,16 +2270,15 @@
             "class": "environment_prop",
             "source_authority": "script-authoritative",
             "source": {
-              "art/blender/shared_asteroid_field.blend": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e"
+              "art/blender/shared_asteroid_field.blend": "aa3ded259475c79f091f8359a8b6c850e1eb92dfea0f65bc786746187b8829e1"
             },
             "exporter": {
-              "tools/art/build_b5_asteroid.py": "eb6935400489de58df08e22effea006c5126838e2e927ab75f10db7d88ee6563",
+              "tools/art/build_b5_asteroid.py": "724e68f0090466aa761466e930897aa818c780c99a9b5ab4b18e376eec706742",
               "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
-              "tools/art/export_shared_asteroid_field.py": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db"
+              "tools/art/export_shared_asteroid_field.py": "eef987ac539ea20448b4923dd1bf022e27beacda4da6802d0a3e22ecb25076e9"
             },
             "runtime": {
-              "assets/models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
-              "render/renderer.py": "fc7e3edcf67862c4b0f94bd942e738b62631c817e94690d700ad99c393e9ca2b"
+              "assets/models/shared_asteroid_field.mesh.json": "ebcfb21f78289ba6deda5165c965960f8b7c0d2fa4a50fdc7fa2c6b66f40a2ba"
             },
             "declared_floor_triangles": 120,
             "legacy_extent": [
@@ -2294,8 +2293,8 @@
                 0.9
               ]
             ],
-            "triangle_count": 216,
-            "vertex_count": 126
+            "triangle_count": 320,
+            "vertex_count": 162
           }
         ]
       },
@@ -9784,6 +9783,30 @@
           "s07_static_station_pin_correction": true
         },
         "new_renderer_sha256": "fc7e3edcf67862c4b0f94bd942e738b62631c817e94690d700ad99c393e9ca2b"
+      },
+      "b5_asteroid_reauthor_correction": {
+        "authority_decision_ids": [
+          "s06-b5-environment-2026-10-25"
+        ],
+        "authority_owner_words_verbatim": [
+          "Asteroids look good"
+        ],
+        "appearance_approval_changed": true,
+        "reason": "The B5 row was re-authored and re-approved on 2026-10-25, so this decision's live pins move to the approved bytes. Unlike the s07 pin corrections this IS a new appearance approval: geometry, roles and tri count all changed, and the decision that authorises it is s06-b5-environment-2026-10-25. The previous pins are kept here so the 2026-10-17 record still says what it approved. It also drops the live pin on render/renderer.py, a file that exists in no tree (git ls-tree -r HEAD has no render/renderer.py), so the assertion it carried could only ever fail; the hash is kept in previous_runtime rather than silently deleted. That removal is why this test fails 30 times here and 31 times at 771dc2f, the one difference being that pin.",
+        "previous_source": {
+          "art/blender/shared_asteroid_field.blend": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e"
+        },
+        "previous_exporter": {
+          "tools/art/build_b5_asteroid.py": "eb6935400489de58df08e22effea006c5126838e2e927ab75f10db7d88ee6563",
+          "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+          "tools/art/export_shared_asteroid_field.py": "f7bad0a2df2a47dbcab4ef547072a9c9f46e8da58b03db5d28cc88625616f9db"
+        },
+        "previous_runtime": {
+          "assets/models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7",
+          "render/renderer.py": "fc7e3edcf67862c4b0f94bd942e738b62631c817e94690d700ad99c393e9ca2b"
+        },
+        "previous_triangle_count": 216,
+        "previous_vertex_count": 126
       }
     },
     {
@@ -12273,6 +12296,90 @@
         "production-default activation",
         "merge, tag or release",
         "S08/S09 platform, performance or packaging acceptance"
+      ]
+    },
+    {
+      "id": "s06-b5-environment-2026-10-25",
+      "date": "2026-10-25",
+      "owner": "owner (Lukasz Jawor)",
+      "decision": "approved",
+      "approval_kind": "appearance-revision",
+      "scope_statement": "Approved the appearance of the re-authored shared asteroid field prop - the only asset this revision changes. The owner's words were \"Asteroids look good\", after a before/after sheet of the field inside a real skirmish frame and two native captures of that frame (wide and close) in artifacts/s06_alliance_batch_review/b5-asteroid-v5. The revision replaces four overlapping bevelled boxes carrying faction hardware roles with one irregular boulder on stone roles only. This approves appearance only: it is not a landing, activation, merge, tag or release authorisation.",
+      "owner_words_verbatim": "Asteroids look good",
+      "how_recorded": "Said after the comparison sheet and the two native captures of the same frame were shown in the session. The decision binds the revision those captures were rendered from; every hash below was re-derived from disk when this record was written. It is a judgement of the picture, not a technical sign-off: what the pixel measurement can and cannot see is written down in artifacts/s06_alliance_batch_review/b5-asteroid-v5/report.json (limits and controls), not in this entry.",
+      "revision": {
+        "asset_id": "core:environment/asteroid_field",
+        "gameplay_binding": "environment:asteroid_field",
+        "shape_key": "shared:asteroid_field",
+        "change": "geometry replaced: four overlapping bevelled boxes with base/dark/trim/accent/lit/cool role batches -> one irregular boulder (displaced icosphere with two impact dents, a flattened base and one sheared break face) on stone roles base/dark/trim only, no accent paint, no emissive patches",
+        "source_authority": "script-authoritative",
+        "triangles": {
+          "before": 216,
+          "after": 320
+        },
+        "vertices": {
+          "before": 126,
+          "after": 162
+        },
+        "draw_calls": {
+          "before": 6,
+          "after": 3
+        },
+        "silhouette_change": "same envelope: the mesh still spans +-0.58 X/Z and +-0.46 Y, so ASTEROID_EXTENT (0.58) and every projected size hold. What changes is the surface - a faceted irregular volume instead of boxes - which is the point of the revision.",
+        "supersedes": {
+          "assets/models/shared_asteroid_field.mesh.json": "ad2b65483c330fecad28059fce9c489bc0bce2c050ebe38aa526e21f25c88ae7"
+        },
+        "source": {
+          "art/blender/shared_asteroid_field.blend": "aa3ded259475c79f091f8359a8b6c850e1eb92dfea0f65bc786746187b8829e1"
+        },
+        "exporter": {
+          "tools/art/build_b5_asteroid.py": "724e68f0090466aa761466e930897aa818c780c99a9b5ab4b18e376eec706742",
+          "tools/art/alliance_common.py": "96dd7b0f038e659ebe1483db7c695a06cd2e724bdd5d00160d63c55b6852a753",
+          "tools/art/export_shared_asteroid_field.py": "eef987ac539ea20448b4923dd1bf022e27beacda4da6802d0a3e22ecb25076e9"
+        },
+        "runtime": {
+          "assets/models/shared_asteroid_field.mesh.json": "ebcfb21f78289ba6deda5165c965960f8b7c0d2fa4a50fdc7fa2c6b66f40a2ba"
+        },
+        "manifest": "assets/models/manifests/shared_asteroid_field.json",
+        "manifest_decision_id": "s06-b5-environment-2026-10-25",
+        "receipt": "assets/models/approval-receipts.json",
+        "evidence": {
+          "dir": "artifacts/s06_alliance_batch_review/b5-asteroid-v5",
+          "sheet": "asteroid-field-comparison.png",
+          "frames": [
+            "asteroid-field-after-wide.png",
+            "asteroid-field-after-close.png",
+            "asteroid-field-before-wide.png",
+            "asteroid-field-before-close.png"
+          ],
+          "report": "report.json",
+          "native_verification": "native-field-verification.json",
+          "controls": "artifacts/s06_alliance_batch_review/b5-asteroid-v5/controls/ (three sabotage runs of the same tool; engineering controls, not owner-review evidence)"
+        }
+      },
+      "drawing_change": {
+        "summary": "the field is drawn as 64 small rocks per field instead of one instance of the prop scaled up to the field radius",
+        "count_per_field": 64,
+        "heroes_per_field": 8,
+        "rock_radius_fraction_of_field": [
+          0.018,
+          0.046
+        ],
+        "hero_radius_fraction_of_field": [
+          0.06,
+          0.092
+        ],
+        "placement": "area-weighted scatter, unit_area ** 0.62, held inside the field radius",
+        "why": "one prop scaled to the radius read as one enormous boulder sitting over the mining sites the field exists to serve; the owner rejected that picture",
+        "not_a_change_to": "the field's gameplay values: radius, position, map placement, mining range and the 900 u window are untouched"
+      },
+      "not_approved_by_this_decision": [
+        "landing, registration, activation, merge, tag or release of this revision",
+        "the S11 catalogue switch and any production-default switch",
+        "packaging of any kind, including a package candidate",
+        "any change to the field's gameplay values or to the mining-station range rule",
+        "the mesh features block (field_instances 40, field_scale_range 12-46): it records the authoring intent from before the field was drawn this way and is not a claim about the draw - the renderer decides the count and the sizes",
+        "any other asset, station, ship or planet"
       ]
     }
   ],

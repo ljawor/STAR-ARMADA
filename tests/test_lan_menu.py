@@ -53,7 +53,7 @@ class LanMenuTests(unittest.TestCase):
         press(self.menu, 'lan_faction', 0)
         press(self.menu, 'lan_difficulty')
         press(self.menu, 'lan_cooperative')
-        self.assertEqual(len(set(self.menu.lan_options['colors'])), 4)
+        self.assertEqual(len(set(self.menu.lan_options['colors'])), 8)
         self.assertEqual(self.menu.lan_options['factions'][0], 'rebel')
         self.assertTrue(self.menu.lan_options['cooperative'])
         self.assertTrue(all(self.menu._surface.get_rect().contains(b['rect']) for b in self.menu.buttons))

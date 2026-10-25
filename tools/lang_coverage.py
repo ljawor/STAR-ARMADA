@@ -31,6 +31,7 @@ LANG_DIR = os.path.join(ROOT, 'assets', 'data', 'lang')
 UI_SURFACE = (
     'render/menus.py',
     'render/skirmish_screen.py',
+    'render/lan_screen.py',
     'render/clean_classic.py',
     'render/classic_screens.py',
     'render/classic_saves.py',
@@ -67,6 +68,11 @@ SKIP_EXACT = {
 #: lowercase. A key that is not in the catalogue can never be reported as untranslated.
 EXTRA_UI_KEYS = (
     'Start {n}',
+    # LAN Host roster/count templates end in a format field, so the conservative
+    # literal scanner treats them as fragments unless explicitly catalogued.
+    'Humans {count} / {capacity}',
+    'AI {count} / {capacity}',
+    'Human {n}', 'AI {n}', 'Unused {n}',
     'Current resolution: {width} × {height} · {mode}',
     '{outcome} — {name}',
     '{label} +{percent}%',
@@ -132,9 +138,32 @@ def literals_in(path: str) -> set[str]:
             if body and isinstance(body[0], ast.Expr) and isinstance(body[0].value, ast.Constant) \
                     and isinstance(body[0].value.value, str):
                 docstrings.add(id(body[0].value))
+    # A globals() lookup key names a Python binding, not a player-facing label.
+    # Exclude that argument/comparison node only: defaults and ordinary UI
+    # mappings can still contain real labels (even the same text as a binding).
+    namespace_keys = set()
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                and node.func.attr == 'get'
+                and isinstance(node.func.value, ast.Call)
+                and isinstance(node.func.value.func, ast.Name)
+                and node.func.value.func.id == 'globals'
+                and not node.func.value.args and not node.func.value.keywords):
+            if node.args:
+                namespace_keys.add(id(node.args[0]))
+            for keyword in node.keywords:
+                if keyword.arg == 'key':
+                    namespace_keys.add(id(keyword.value))
+        if isinstance(node, ast.Compare):
+            for left, op, right in zip([node.left, *node.comparators], node.ops, node.comparators):
+                if (isinstance(op, (ast.In, ast.NotIn)) and isinstance(right, ast.Call)
+                        and isinstance(right.func, ast.Name) and right.func.id == 'globals'
+                        and not right.args and not right.keywords):
+                    namespace_keys.add(id(left))
     found = set()
     for node in ast.walk(tree):
-        if isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in docstrings:
+        if (isinstance(node, ast.Constant) and isinstance(node.value, str)
+                and id(node) not in docstrings and id(node) not in namespace_keys):
             if _is_candidate(node.value):
                 found.add(node.value)
     return found

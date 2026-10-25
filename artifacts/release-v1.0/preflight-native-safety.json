@@ -1,0 +1,33 @@
+{
+  "delegation_id": "deleg_508cdb21",
+  "scope": "Current native renderer source/history/test inspection; no runtime execution",
+  "production_readiness": "blocked pending implementation and verification of owner-authorized containment fixes",
+  "owner_disposition": {
+    "question": "How should I handle these renderer risks before publishing?",
+    "answer_verbatim": "Fix and verify renderer failure handling before publishing 1.0",
+    "authorized_scope": "Isolate native rendering in a killable worker while preserving the original game window and rendered pixels; add bounded failure/cleanup and single-owner lifecycle verification."
+  },
+  "findings": [
+    {
+      "id": "native-timeout-unbounded-close",
+      "status": "confirmed ordinary-application fault path",
+      "evidence": ["render_cpp/src/viewer.cpp:3000-3013", "render_cpp/src/viewer.cpp:3027-3031", "render_bridge/embedded.py:131-144", "main.py:319-325"],
+      "detail": "armada_frame has a 15-second wait, but subsequent synchronous armada_close joins the renderer worker without a deadline. A stalled backend can therefore hang shutdown indefinitely. The source proves an unbounded failure path, not an observed driver stall."
+    },
+    {
+      "id": "process-fatal-backend-callback",
+      "status": "confirmed in-process failure-containment decision",
+      "evidence": ["render_cpp/src/viewer.cpp:126-131", "render_bridge/cpp_window.py:133-142"],
+      "detail": "The native bgfx fatal callback invokes std::_Exit(4) inside the application's process, bypassing Python cleanup. This does not establish that normal rendering crashes."
+    },
+    {
+      "id": "concurrent-c-api-lifetime-and-frame-contract",
+      "status": "exposed-library defect; ordinary application concurrent caller not found",
+      "evidence": ["render_cpp/include/embedded.hpp:10-27", "render_cpp/src/viewer.cpp:3003-3008", "render_cpp/src/viewer.cpp:3027-3031", "render_bridge/embedded.py:50,81-88,131-144"],
+      "detail": "The ABI does not guard handle lifetime across concurrent frame/close calls. The inspected application call graph is synchronous; single-owner use is not yet documented or enforced in the wrapper."
+    }
+  ],
+  "recommendation": "Do not equate packaging repairs or later HUD feature acceptance with production safety acceptance. Obtain explicit owner disposition: fix containment, accept and document selected failure policy and single-owner contract, or change release scope. Do not detach a stuck worker and free its state or throw from a backend callback across a driver thread.",
+  "separate_gates": ["Native packaging repair", "Full protected suite", "Native Windows CI", "Downloaded frozen artifact verification", "Physical mixed-platform gameplay"],
+  "historical_receipt_limitation": "The old review-rejected.json referenced by NATIVE_SAME_WINDOW_REPAIR.md is absent. Findings rely on current source, independently re-read by the parent."
+}

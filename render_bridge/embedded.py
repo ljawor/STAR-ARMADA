@@ -8,6 +8,33 @@ import ctypes
 import os
 from pathlib import Path
 import sys
+import json
+import mmap
+import secrets
+import socket
+import subprocess
+import tempfile
+import threading
+import time
+import hmac
+from .native_worker import find_library, receive, send
+
+STARTUP_TIMEOUT = 20.0
+FRAME_TIMEOUT = 15.0
+SHUTDOWN_GRACE = 2.0
+REAP_TIMEOUT = 2.0
+# Windows reports a file still held by a closing handle, or by a scanner, as
+# WinError 5 during cleanup. The child is already reaped and our mapping is
+# closed at that point, so a short bounded retry separates that race from a
+# genuine leak, which keeps raising.
+CLEANUP_ATTEMPTS = 5
+CLEANUP_RETRY_DELAY = 0.05
+
+
+def worker_command(config):
+    if getattr(sys, 'frozen', False):
+        return [sys.executable, '--native-render-worker', str(config)]
+    return [sys.executable, '-u', '-m', 'render_bridge.native_worker', str(config)]
 
 
 def map_pointer_event(event, source_size, target_size):
@@ -28,6 +55,55 @@ def map_pointer_event(event, source_size, target_size):
     return pygame.event.Event(event.type, attrs)
 
 
+def _cleanup_temporary(temporary, attempts=CLEANUP_ATTEMPTS, delay=CLEANUP_RETRY_DELAY):
+    """Delete the worker's shared storage, retrying only a transient sharing violation.
+
+    By the time this runs the writer has been reaped and every mapping of ours is
+    closed, so an OSError here is either a handle that has not finished closing or
+    a scanner reading the file. A genuine leak exhausts the budget and still raises,
+    which the fatal path turns into reported evidence rather than silence.
+    """
+    name = getattr(temporary, 'name', None)
+    if not isinstance(name, (str, bytes, os.PathLike)):
+        # Nothing to verify against: the caller supplies a TemporaryDirectory in
+        # production, so this is a test double and the return value is all we have.
+        name = None
+    for remaining in range(attempts, 0, -1):
+        try:
+            temporary.cleanup()
+        except OSError:
+            if remaining == 1:
+                raise
+            time.sleep(delay)
+            continue
+        # cleanup() is neither documented as re-entrant nor required to report that it
+        # removed anything, so a silent no-op must not read as success. lstat instead of
+        # exists(): that call answers False for a stat it could not take, which would
+        # turn an unreadable parent directory into a clean teardown.
+        try:
+            present = False if name is None else _storage_present(name)
+        except OSError:
+            # The check itself can hit the same transient lock the cleanup does; treat it
+            # like a failed attempt rather than aborting the budget on the first try.
+            if remaining == 1:
+                raise
+            time.sleep(delay)
+            continue
+        if not present:
+            return
+        if remaining == 1:
+            raise OSError(f'worker storage survived cleanup: {name}')
+        time.sleep(delay)
+
+
+def _storage_present(name):
+    try:
+        os.lstat(name)
+    except FileNotFoundError:
+        return False
+    return True        # other OSError propagates: unknown is not "removed"
+
+
 class EmbeddedWindow:
     embedded = True
 
@@ -38,54 +114,124 @@ class EmbeddedWindow:
         if not (320 <= width <= 7680 and 240 <= height <= 4320):
             raise ValueError('Invalid native drawable resolution')
         self.size = (width, height)
-        bundle = getattr(sys, '_MEIPASS', None)
-        name = 'armada_embedded.dll' if sys.platform == 'win32' else 'libarmada_embedded.dylib'
-        candidates = [os.environ.get('STAR_ARMADA_CPP_LIBRARY')]
-        if bundle:
-            candidates.append(str(Path(bundle) / 'cpp' / name))
-        candidates.append(str(Path(root) / 'render_cpp/build-w02' / name))
-        library = next((p for p in candidates if p and Path(p).is_file()), None)
-        if library is None:
-            raise RuntimeError('Build the armada_embedded shared-library target first')
-        self._lib = lib = ctypes.CDLL(library)
-        lib.armada_abi_version.restype = ctypes.c_uint
-        if lib.armada_abi_version() != 1:
-            raise RuntimeError('Unsupported native renderer ABI')
-        lib.armada_open.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_char_p)]
-        lib.armada_open.restype = ctypes.c_void_p
-        lib.armada_frame.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t]
-        lib.armada_frame.restype = ctypes.c_int
-        lib.armada_close.argtypes = [ctypes.c_void_p]
-        lib.armada_close.restype = None
-        lib.armada_poll.argtypes = [ctypes.c_void_p]
-        lib.armada_poll.restype = ctypes.c_int
-        lib.armada_error.argtypes = [ctypes.c_void_p]
-        lib.armada_error.restype = ctypes.c_char_p
-        self._pixels = (ctypes.c_ubyte * (self.size[0] * self.size[1] * 4))()
+        self._owner = threading.get_ident()
+        self._process = self._connection = self._listener = None
+        self._mapping = self._temporary = None
         self._texture = None
-        # Empty optional streams are valid; do not ask a decoder to open a missing file.
-        cleaned = [argv[0]]
-        index = 1
-        while index < len(argv):
-            flag, value = argv[index:index + 2]
-            if flag == '--input-ring' or (flag.endswith('-ring') and not Path(value).exists()):
-                index += 2
-                continue
-            cleaned += [flag, value]
-            index += 2
-        encoded = (ctypes.c_char_p * len(cleaned))(*(os.fsencode(p) for p in cleaned))
-        self._handle = lib.armada_open(len(cleaned), encoded)
-        if not self._handle:
-            raise RuntimeError('Could not initialize native renderer session')
+        self._terminal = False
+        self._tail = bytearray()
+        self._log_thread = None
+        try:
+            library = find_library(root)
+            directory = None
+            if '--ring' in argv:
+                directory = str(Path(argv[argv.index('--ring') + 1]).resolve().parent)
+            self._temporary = tempfile.TemporaryDirectory(prefix='armada-worker-',
+                dir=directory or os.environ.get('TMPDIR'))
+            base = Path(self._temporary.name)
+            frame = base / 'frame.bgra'
+            length = width * height * 4
+            with frame.open('w+b') as stream:
+                stream.truncate(length)
+                self._mapping = mmap.mmap(stream.fileno(), length)
+            self._pixels = (ctypes.c_ubyte * length).from_buffer(self._mapping)
+            self._listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self._listener.bind(('127.0.0.1', 0))
+            self._listener.listen(1)
+            nonce = secrets.token_hex(32)
+            config = base / 'config.json'
+            from .native_worker import process_creation_time
+            config.write_text(json.dumps(dict(port=self._listener.getsockname()[1], nonce=nonce,
+                library=library, argv=list(argv), frame=str(frame), width=width, height=height,
+                parent_pid=os.getpid(), parent_creation_time=process_creation_time())),
+                encoding='utf-8')
+            options = dict(cwd=str(Path(root).resolve()), stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT)
+            if os.name == 'nt':
+                options['creationflags'] = subprocess.CREATE_NO_WINDOW
+            else:
+                options['start_new_session'] = True
+            deadline = time.monotonic() + STARTUP_TIMEOUT
+            self._process = subprocess.Popen(worker_command(config), **options)
+            self._log_thread = threading.Thread(target=self._drain_log,
+                args=(base / 'diagnostic.log',), daemon=True)
+            self._log_thread.start()
+            self._listener.settimeout(max(0.001, deadline - time.monotonic()))
+            self._connection, _ = self._listener.accept()
+            hello = receive(self._connection, deadline)
+            if not isinstance(hello.get('nonce'), str) or not hmac.compare_digest(hello['nonce'], nonce):
+                raise RuntimeError('Native worker authentication failed')
+            send(self._connection, {'nonce': nonce}, deadline)
+            if receive(self._connection, deadline) != {'ready': True}:
+                raise RuntimeError('Native worker did not become ready')
+            self._listener.close()
+            self._listener = None
+        except Exception as exc:
+            self._abort(exc)
+
+    def _check_thread(self):
+        if threading.get_ident() != self._owner:
+            raise RuntimeError('Native renderer requires its creator thread')
+
+    def _drain_log(self, path):
+        # Always drain stdout/stderr; retain only the most recent 8 KiB on disk/in memory.
+        try:
+            while True:
+                data = os.read(self._process.stdout.fileno(), 4096)
+                if not data:
+                    break
+                self._tail.extend(data)
+                del self._tail[:-8192]
+                try:
+                    path.write_bytes(self._tail)
+                except OSError:
+                    pass  # optional disk diagnostics must never stop draining the pipe
+        except (OSError, ValueError):
+            pass
+
+    def _abort(self, reason):
+        self._terminal = True
+        cleanup_failure = ''
+        try:
+            self._stop(hard=True)
+        except Exception as exc:
+            # A cleanup failure is evidence, not a replacement for the native fault.
+            cleanup_failure = f'; cleanup failed: {type(exc).__name__}: {exc}'
+        code = self._process.returncode if self._process else None
+        tail = bytes(self._tail).decode('utf-8', errors='replace')
+        raise RuntimeError(f'Native renderer failed: {reason}; exitcode={code}'
+                           f'{cleanup_failure}\n{tail}') from reason
+
+    def _request(self, command):
+        self._check_thread()
+        if self._terminal:
+            raise RuntimeError('Native renderer session is terminal')
+        try:
+            deadline = time.monotonic() + FRAME_TIMEOUT
+            send(self._connection, {'command': command}, deadline)
+            result = receive(self._connection, deadline)
+            if 'error' in result:
+                raise RuntimeError(result['error'])
+            if command == 'frame' and result.get('count') != len(self._pixels):
+                raise RuntimeError('Invalid native frame byte count')
+            if command == 'poll' and type(result.get('status')) is not int:
+                raise RuntimeError('Invalid native poll status')
+            return result
+        except Exception as exc:
+            self._abort(exc)
 
     def poll(self):
-        return None if self._handle and self._lib.armada_poll(self._handle) == 0 else 0
+        self._check_thread()
+        if self._terminal:
+            return self._process.poll() if self._process else 0
+        if self._request('poll')['status'] == 0:
+            return None
+        self.terminate()
+        return self._process.returncode
 
     def present(self):
-        count = self._lib.armada_frame(self._handle, self._pixels, len(self._pixels))
-        if count != len(self._pixels):
-            reason = self._lib.armada_error(self._handle).decode('utf-8', errors='replace')
-            raise RuntimeError(f'Native frame failed ({count}): {reason}')
+        self._check_thread()
+        self._request('frame')
         import pygame
         from OpenGL.GL import (glGenTextures, glPushAttrib, glPopAttrib, glViewport,
             glMatrixMode, glPushMatrix, glPopMatrix, glLoadIdentity, glOrtho,
@@ -128,17 +274,65 @@ class EmbeddedWindow:
             glMatrixMode(GL_MODELVIEW); glPopAttrib()
         pygame.display.flip()
 
-    def terminate(self):
-        if self._handle:
-            self._lib.armada_close(self._handle)
-            self._handle = None
-        if self._texture is not None:
-            from OpenGL.GL import glDeleteTextures
-            glDeleteTextures([self._texture])
+    def _stop(self, *, hard=False):
+        self._terminal = True
+        process = self._process
+        if process is not None:
+            if process.poll() is None and not hard and self._connection is not None:
+                try:
+                    deadline = time.monotonic() + SHUTDOWN_GRACE
+                    send(self._connection, {'command': 'close'}, deadline)
+                    process.wait(timeout=max(0, deadline - time.monotonic()))
+                except (OSError, TimeoutError, subprocess.TimeoutExpired):
+                    pass
+            if process.poll() is None:
+                process.kill()
+            # Never release shared storage until the writer has actually been reaped.
+            process.wait(timeout=REAP_TIMEOUT)
+        for name in ('_connection', '_listener'):
+            connection = getattr(self, name)
+            if connection is not None:
+                connection.close()
+                setattr(self, name, None)
+        if self._log_thread is not None:
+            self._log_thread.join(timeout=REAP_TIMEOUT)
+        if process is not None and process.stdout is not None:
+            process.stdout.close()
+        if hasattr(self, '_pixels'):
+            del self._pixels
+        if self._mapping is not None:
+            self._mapping.close()
+            self._mapping = None
+        # Independent releases: neither the texture nor the storage may be skipped
+        # because the other one raised. A failed texture delete propagates after the
+        # storage has been dealt with, unless that cleanup fails too (its error wins,
+        # with the texture error kept as __context__).
+        texture = self._texture
+        try:
+            if texture is not None:
+                from OpenGL.GL import glDeleteTextures
+                glDeleteTextures([texture])
+        except BaseException:
+            # Keep the id so a later terminate()/kill() can retry it: a context that is
+            # gone now may be current again, and dropping the id leaks the texture.
+            self._texture = texture
+            raise
+        else:
             self._texture = None
+        finally:
+            if self._temporary is not None:
+                _cleanup_temporary(self._temporary)
+                self._temporary = None
+
+    def terminate(self):
+        self._check_thread()
+        self._stop()
 
     def wait(self, timeout=None):
-        self.terminate()
-        return 0
+        self._check_thread()
+        # Popen semantics: waiting is not a request to close the renderer.
+        return self._process.wait(timeout=timeout) if self._process else 0
 
-    kill = terminate
+    def kill(self):
+        self._check_thread()
+        self._stop(hard=True)

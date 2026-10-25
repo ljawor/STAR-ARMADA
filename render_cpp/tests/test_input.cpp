@@ -6,7 +6,11 @@
 // disagree on the wire; only a byte comparison catches that.
 #include "input_ring.hpp"
 
+#include <algorithm>
+#include <chrono>
 #include <cstdlib>
+#include <filesystem>
+#include <limits>
 #include <fstream>
 #include <iostream>
 #include <iterator>
@@ -16,7 +20,7 @@
 using namespace armada::input;
 
 static std::vector<uint8_t> slurp(const std::string& path) {
-  std::ifstream file(path, std::ios::binary);
+  std::ifstream file(std::filesystem::u8path(path), std::ios::binary);
   if (!file)
     throw std::runtime_error("cannot read fixture: " + path);
   return std::vector<uint8_t>(std::istreambuf_iterator<char>(file),
@@ -31,6 +35,151 @@ static void check(bool ok, const std::string& what) {
     ++failures;
   }
 }
+
+// Runs on both backends. A refused contender must never resize or reset a live ring.
+static void transport_contract(const std::string& path, const std::vector<uint8_t>& batch) {
+  const auto diskPath = std::filesystem::u8path(path);
+  const auto alias = std::filesystem::u8path(path + ".alias");
+  std::filesystem::remove(diskPath);
+  std::filesystem::remove(alias);
+  // Create the alias before opening the producer: Windows may require delete sharing
+  // when creating hard links, which is unrelated to the lock-identity contract.
+  { std::ofstream seed(diskPath, std::ios::binary); }
+  std::error_code aliasError;
+  std::filesystem::create_hard_link(diskPath, alias, aliasError);
+  check(!aliasError, "create hard-link alias for file-identity exclusion");
+  {
+    RingWriter writer(path, 4, kMinSlotBytes);
+    writer.publish(batch);
+    const auto before = slurp(path);
+    bool refused = false;
+    const auto start = std::chrono::steady_clock::now();
+    try { RingWriter contender(path, 2, 2 * kMinSlotBytes); }
+    catch (const InputError&) { refused = true; }
+    check(refused, "second producer refused");
+    check(std::chrono::steady_clock::now() - start < std::chrono::seconds(2),
+          "producer refusal is nonblocking");
+    check(slurp(path) == before, "refused producer leaves live bytes and file size untouched");
+
+    // Hard links test file identity rather than a mutex derived from a path spelling.
+    if (!aliasError) {
+      refused = false;
+      try { RingWriter contender(path + ".alias", 1, kMinSlotBytes); }
+      catch (const InputError&) { refused = true; }
+      check(refused, "producer through hard-link alias refused");
+      check(slurp(path) == before, "alias contender leaves live ring untouched");
+    }
+
+    bool oversized = false;
+    try { writer.publish(std::vector<uint8_t>(writer.payloadBytes() + 1)); }
+    catch (const InputError&) { oversized = true; }
+    check(oversized && writer.published() == 1, "oversize publish leaves head unchanged");
+    check(writer.publish(batch) == 1, "failed contender does not disturb original writer");
+    check(get64(slurp(path).data() + 16) == 2, "reader sees live mapped writes under producer lock");
+    writer.close();
+    writer.close();
+    bool closed = false;
+    try { writer.publish(batch); }
+    catch (const InputError&) { closed = true; }
+    check(closed, "publish after idempotent close refused");
+    RingWriter replacement(path, 2, kMinSlotBytes);
+    check(replacement.publish(batch) == 0, "close releases producer ownership before destructor");
+  }
+  {
+    RingWriter replacement(path, 1, kMinSlotBytes);
+    check(replacement.publish(batch) == 0, "destructor releases mapping and producer ownership");
+  }
+  // Reject unrepresentable dimensions before touching even an existing ring.
+  const auto before = slurp(path);
+  bool refused = false;
+  try { RingWriter invalid(path, 4096, (std::numeric_limits<size_t>::max)()); }
+  catch (const InputError&) { refused = true; }
+  check(refused && slurp(path) == before, "invalid wire/mapping size rejected before file mutation");
+  std::filesystem::remove(alias);
+  std::filesystem::remove(diskPath);
+}
+
+#ifdef _WIN32
+// Independent byte-range lock is the contract Python's msvcrt.locking must share.
+// Keep the fixed offset here rather than borrowing the implementation's constant.
+static OVERLAPPED producer_lock_position() {
+  OVERLAPPED position{};
+  position.OffsetHigh = 0x40000000u; // 1 << 62, one byte beyond every valid ring payload
+  return position;
+}
+
+static void windows_lock_contract(const std::string& path) {
+  const auto nativePath = std::filesystem::u8path(path);
+  { std::ofstream seed(nativePath, std::ios::binary); seed << "do not truncate"; }
+  HANDLE owner = ::CreateFileW(nativePath.c_str(), GENERIC_READ | GENERIC_WRITE,
+                             FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
+                             FILE_ATTRIBUTE_NORMAL, nullptr);
+  check(owner != INVALID_HANDLE_VALUE, "open independent producer-lock handle");
+  if (owner == INVALID_HANDLE_VALUE) return;
+  auto position = producer_lock_position();
+  const bool locked = ::LockFileEx(owner, LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY,
+                                   0, 1, 0, &position) != 0;
+  check(locked, "acquire independent beyond-EOF producer lock");
+  const auto before = slurp(path);
+  bool refused = false;
+  try { RingWriter contender(path, 1, kMinSlotBytes); }
+  catch (const InputError&) { refused = true; }
+  check(locked && refused, "native writer respects independently held Python-compatible lock");
+  check(slurp(path) == before, "lock refusal occurs before sizing/header initialization");
+  ::CloseHandle(owner);
+
+  // Force failure AFTER lock acquisition: an existing mapped view prevents resize.
+  // The throwing constructor must release its producer lock, not leak ownership.
+  owner = ::CreateFileW(nativePath.c_str(), GENERIC_READ | GENERIC_WRITE,
+                        FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
+                        FILE_ATTRIBUTE_NORMAL, nullptr);
+  HANDLE mapping = owner == INVALID_HANDLE_VALUE ? nullptr
+      : ::CreateFileMappingW(owner, nullptr, PAGE_READONLY, 0, 0, nullptr);
+  void* view = mapping ? ::MapViewOfFile(mapping, FILE_MAP_READ, 0, 0, 0) : nullptr;
+  check(view != nullptr, "create mapped-view resize-failure precondition");
+  if (view) {
+    refused = false;
+    try { RingWriter contender(path, 1, kMinSlotBytes); }
+    catch (const InputError&) { refused = true; }
+    check(refused, "mapped backing refuses resize after producer lock acquired");
+    check(slurp(path) == before, "failed resize preserves existing backing bytes");
+    position = producer_lock_position();
+    check(::LockFileEx(owner, LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY,
+                       0, 1, 0, &position) != 0,
+          "throwing constructor releases producer lock on sizing failure");
+    ::UnmapViewOfFile(view);
+  }
+  if (mapping) ::CloseHandle(mapping);
+  if (owner != INVALID_HANDLE_VALUE) ::CloseHandle(owner);
+  {
+    RingWriter writer(path, 2, kMinSlotBytes);
+    HANDLE contender = ::CreateFileW(nativePath.c_str(), GENERIC_READ | GENERIC_WRITE,
+                                    FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
+                                    FILE_ATTRIBUTE_NORMAL, nullptr);
+    check(contender != INVALID_HANDLE_VALUE, "producer permits concurrent reader/writer handle open");
+    if (contender != INVALID_HANDLE_VALUE) {
+      position = producer_lock_position();
+      const bool gotLock = ::LockFileEx(contender,
+          LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY, 0, 1, 0, &position) != 0;
+      const DWORD lockError = ::GetLastError();
+      check(!gotLock && lockError == ERROR_LOCK_VIOLATION,
+            "native producer holds exact fixed beyond-EOF byte until close");
+      // Ordinary ReadFile must remain usable: locking payload byte zero would break it.
+      uint8_t magic[8]{};
+      DWORD read = 0;
+      check(::ReadFile(contender, magic, sizeof(magic), &read, nullptr) && read == sizeof(magic)
+                && std::memcmp(magic, kRingMagic, sizeof(magic)) == 0,
+            "producer byte lock does not block regular file readers");
+      writer.close();
+      position = producer_lock_position();
+      check(::LockFileEx(contender, LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY,
+                         0, 1, 0, &position) != 0, "close releases exact producer byte");
+      ::CloseHandle(contender);
+    }
+  }
+  std::filesystem::remove(nativePath);
+}
+#endif
 
 int main() {
   const char* dir = std::getenv("ARMADA_INPUT_FIXTURE_DIR");
@@ -96,7 +245,10 @@ int main() {
   ::remove(ringPath.c_str());
   {
     RingWriter writer(ringPath, 4, kMinSlotBytes);
-    check(writer.payloadBytes() == kMinSlotBytes - kSlotOverhead, "slot payload capacity");
+    // The closing tag lives in the slot's last eight bytes, so capacity is slot - overhead
+    // - trailer (the same boundary ring.py and frame_v2.hpp use).
+    check(writer.payloadBytes() == kMinSlotBytes - kSlotOverhead - kSlotTrailer,
+          "slot payload capacity leaves room for the closing tag");
     const auto first = writer.publish(bytes);
     const auto second = writer.publish(encodeBatch({{kQuit, 0, 0, 0, 0, 0}}));
     check(first == 0 && second == 1, "sequence numbering");
@@ -105,6 +257,59 @@ int main() {
       std::cerr << "FAIL fixture does not fit a slot\n";
       return 1;
     }
+  }
+  {
+    // Exercise the boundary itself: a batch that exactly fills the capacity must leave
+    // the closing tag intact and must not write past the mapping, and one byte more
+    // must be refused rather than silently truncated.
+    const std::string path = root + "/input-capacity.bin";
+    ::remove(path.c_str());
+    const size_t slots = 4;
+    size_t capacity = 0;
+    {
+      RingWriter writer(path, slots, kMinSlotBytes);
+      capacity = writer.payloadBytes();
+      check(capacity + kSlotOverhead + kSlotTrailer == kMinSlotBytes,
+            "capacity plus its framing is exactly one slot");
+      // Pin the framing sizes themselves: the identity above holds for any pair of
+      // constants, while these two numbers are what ring.py and frame_v2.hpp expect.
+      check(kSlotOverhead == 20 && kSlotTrailer == 8,
+            "slot framing is 20 bytes of header plus an 8-byte closing tag");
+      std::vector<uint8_t> full(capacity);
+      for (size_t i = 0; i < capacity; ++i)
+        full[i] = uint8_t(i * 7 + 13);
+      check(writer.publish(full) == 0, "full-capacity publish");
+      bool overRefused = false;
+      try {
+        writer.publish(std::vector<uint8_t>(capacity + 1, 0x5a));
+      } catch (const InputError&) {
+        overRefused = true;
+      }
+      check(overRefused, "one byte over capacity is refused");
+    }
+    const auto file = slurp(path);
+    check(file.size() == kRingHeaderBytes + slots * kMinSlotBytes,
+          "full-capacity publish did not grow the mapping");
+    uint64_t closing = 0;
+    std::memcpy(&closing, file.data() + kRingHeaderBytes + kMinSlotBytes - kSlotTrailer,
+                sizeof(closing));
+    check(closing == 2, "closing tag survived a full-capacity payload");
+    uint32_t length = 0;
+    std::memcpy(&length, file.data() + kRingHeaderBytes + 8, sizeof(length));
+    check(length == capacity, "full-capacity length field");
+    // The tail of a full-capacity payload must survive: with the capacity eight bytes too
+    // large, the closing tag overwrites the payload's last eight bytes.
+    bool payloadIntact = true;
+    for (size_t i = 0; i < capacity; ++i) {
+      const uint8_t* stored = file.data() + kRingHeaderBytes + kSlotOverhead + i;
+      if (*stored != uint8_t(i * 7 + 13)) {
+        payloadIntact = false;
+        std::cerr << "payload byte " << i << " was overwritten\n";
+        break;
+      }
+    }
+    check(payloadIntact, "full-capacity payload survives next to the closing tag");
+    std::filesystem::remove(path);
   }
   {
     // The header the Python reader validates: magic, version, slots, slot bytes, published count.
@@ -123,6 +328,11 @@ int main() {
               0,
           "slot payload");
   }
+
+  transport_contract(root + "/transport-\xC5\xBB\xC3\xB3\xC5\x82\xC4\x87.ring", bytes);
+#ifdef _WIN32
+  windows_lock_contract(root + "/windows-lock-contract.ring");
+#endif
 
   if (failures) {
     std::cerr << failures << " input codec checks failed\n";

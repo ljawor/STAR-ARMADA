@@ -29,7 +29,7 @@ def main():
             glViewport(0, 0, w, h)
             pygame.event.pump()
             for screen in ('main', 'lan_host'):
-                for mid in (SKIRMISH_MAP_IDS[:4] if screen == 'lan_host' else (None,)):
+                for mid in (SKIRMISH_MAP_IDS if screen == 'lan_host' else (None,)):
                     menu = MenuStack(w, h)
                     menu.screen = screen
                     if mid:
@@ -46,7 +46,7 @@ def main():
                         assert all(window.contains(r) for r in bounds)
                         for i, r in enumerate(bounds):
                             assert not any(r.colliderect(x) for x in bounds[i + 1:]), r
-                        assert menu.skirmish_store.maps[mid]['description'] in ' '.join(menu.lan_rendered_text)
+                        assert menu.skirmish_store.maps[mid]['name'] in ' '.join(menu.lan_rendered_text)
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
                     menu.draw_gl()
                     pixels = glReadPixels(0, 0, w, h, GL_RGB, GL_UNSIGNED_BYTE)
@@ -59,8 +59,8 @@ def main():
                         for b in (b for b in menu.buttons if b['action'] == 'lan_color'):
                             r = b['rect']
                             color = np.array([round(v * 255) for v in PLAYER_COLORS[menu.lan_options['colors'][b['payload']]]])
-                            x = r.x + round(15 * min(w / 1120, h / 700))
-                            y = r.y + round(16 * min(w / 1120, h / 700))
+                            x = r.x + round(3 * min(w / 1120, h / 700))
+                            y = r.y + round(5 * min(w / 1120, h / 700))
                             assert np.max(np.abs(frame[y, x].astype(int) - color)) <= 8
                     name = f'{w}x{h}_{screen}' + (f'_{mid}' if mid else '') + '.png'
                     pygame.image.save(pygame.image.frombuffer(frame.tobytes(), (w, h), 'RGB'), out / name)

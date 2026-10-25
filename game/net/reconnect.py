@@ -317,8 +317,8 @@ class RecoveryBarrier:
     """
     def __init__(self, humans, content):
         import secrets
-        if type(humans) is not int or not 2 <= humans <= 4:
-            raise ValueError('Human count must be 2..4')
+        if type(humans) is not int or not 2 <= humans <= 8:
+            raise ValueError('Human count must be 2..8')
         self.humans = humans
         self.content = content
         self.session = secrets.token_hex(32)
@@ -409,7 +409,7 @@ class PendingInputs:
     The existing LanSession protocol does not supply these IDs yet.
     """
     def __init__(self, humans, *, barrier_tick):
-        if type(humans) is not int or not 2 <= humans <= 4 or type(barrier_tick) is not int or barrier_tick < 0:
+        if type(humans) is not int or not 2 <= humans <= 8 or type(barrier_tick) is not int or barrier_tick < 0:
             raise ValueError('Invalid input ledger')
         self.humans = humans
         self.barrier_tick = barrier_tick

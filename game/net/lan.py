@@ -20,7 +20,7 @@ DEFAULT_PORT = 7777
 
 def default_lan_options():
     return dict(map_id='skirmish01', human_count=2, ai_count=0,
-                colors=list(PLAYER_COLORS)[:4], factions=['imperial'] * 4,
+                colors=list(PLAYER_COLORS), factions=['imperial'] * 8,
                 ai_difficulty='normal', cooperative=False)
 
 
@@ -28,13 +28,17 @@ def build_lan_map(ds, options):
     if not isinstance(options, dict):
         raise ValueError('LAN options must be a dict')
     h, a = options.get('human_count'), options.get('ai_count')
-    if type(h) is not int or not 2 <= h <= 4:
-        raise ValueError('Human count must be 2..4')
-    if type(a) is not int or not 0 <= a <= 2 or h + a > 4:
-        raise ValueError('AI count must be 0..2; total slots <=4')
+    if type(h) is not int or not 2 <= h <= 8:
+        raise ValueError('Human count must be 2..8')
+    if type(a) is not int or not 0 <= a <= 6 or h + a > 8:
+        raise ValueError('AI count must be 0..6; total slots <=8')
     if type(options.get('cooperative')) is not bool:
         raise ValueError('cooperative must be boolean')
     temporary = deepcopy(options)
+    # Delegate capacity/spawn validation to the shared builder, but keep LAN's
+    # human/AI and team policy here (including all-human cooperative matches).
+    temporary.pop('human_count')
+    temporary['teams'] = list(range(8))
     temporary['ai_count'] = h + a - 1
     result = build_skirmish_map(ds, temporary)
     for slot, p in enumerate(result['players']):
@@ -711,7 +715,7 @@ class LanSession:
                                         ('content', self._content)):
                     if m.get(field) != expected:
                         raise ValueError(f'{field} mismatch')
-                if type(m.get('slot')) is not int or not 1 <= m['slot'] <= 3:
+                if type(m.get('slot')) is not int or not 1 <= m['slot'] <= 7:
                     raise ValueError('Invalid slot')
                 # The host's numbers become this peer's numbers before the lobby reports
                 # the match as configured: the launch map, the simulation and every
@@ -902,7 +906,7 @@ class LanSession:
                     # Rotate the bounded unauthenticated pool so incomplete
                     # outsiders cannot exclude an original credential holder.
                     pending = [p for p in self._peers if p.slot is None]
-                    if len(pending) >= 4:
+                    if len(pending) >= max(4, self._options['human_count']):
                         oldest = min(pending, key=lambda p: p.accepted_at)
                         oldest.close()
                         self._peers.remove(oldest)

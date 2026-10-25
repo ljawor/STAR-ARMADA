@@ -125,7 +125,10 @@ inline Mesh load_mesh(const std::filesystem::path &asset_root,
     detail::require(r == root.end() && p != path.end(),
                     "mesh outside asset root");
     auto source = detail::read_file(path, 2 * 1024 * 1024);
-    detail::require(picosha2::hash256_hex_string(source) == record.at("sha256"),
+    // `std::string == json` picks json's rewritten operator== through an implicit conversion,
+    // and MSVC (C++20) rejects the rewritten candidate with C7692 - an error, not a warning.
+    // Compare the digest as a string, the way the contract check below already does.
+    detail::require(picosha2::hash256_hex_string(source) == detail::text(record.at("sha256")),
                     "mesh SHA256 mismatch");
     auto j = Json::parse(source);
     detail::require(j.is_object(), "mesh must be object");

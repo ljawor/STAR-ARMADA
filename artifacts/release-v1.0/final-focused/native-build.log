@@ -1,0 +1,79 @@
++ cmake -S /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp -B /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02 -DCMAKE_BUILD_TYPE=Release
+-- Using the multi-header code from /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02/_deps/json-src/include/
+CMake Warning (dev) at /Users/lukaszjawor/.hermes/cache/scratch/sa-native-release-j3si4se3/venv/lib/python3.11/site-packages/cmake/data/share/cmake-3.31/Modules/FetchContent.cmake:1953 (message):
+  Calling FetchContent_Populate(picosha2) is deprecated, call
+  FetchContent_MakeAvailable(picosha2) instead.  Policy CMP0169 can be set to
+  OLD to allow FetchContent_Populate(picosha2) to be called directly for now,
+  but the ability to call it with declared details will be removed completely
+  in a future version.
+Call Stack (most recent call first):
+  CMakeLists.txt:51 (FetchContent_Populate)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Configuring done (0.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02
++ cmake --build /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02 --config Release --parallel 2
+[ 31%] Built target armada_shaders
+[ 37%] Built target armada_top_hud
+[ 37%] Built target test_scene
+[ 44%] Built target test_camera
+[ 44%] Built target test_overlay
+[ 51%] Built target test_planets
+[ 51%] Built target test_input
+[ 58%] Built target test_explosion
+[ 58%] Built target test_markers
+[ 65%] Built target test_hit
+[ 65%] Built target test_shield
+[ 72%] Built target dump_hit_geometry
+[ 72%] Built target test_fogmap
+[ 79%] Built target test_frame_v2
+[ 79%] Built target test_hardware
+[ 82%] Built target test_starfield
+[ 89%] Built target armada_vector_hud
+[ 89%] Built target test_top_hud
+[ 93%] Building CXX object CMakeFiles/armada_embedded.dir/src/viewer.cpp.o
+[ 93%] Building CXX object CMakeFiles/armada_viewer.dir/src/viewer.cpp.o
+[ 94%] Linking CXX executable armada_viewer
+[ 96%] Linking CXX shared library libarmada_embedded.dylib
+[ 96%] Built target armada_viewer
+[100%] Built target test_vector_hud
+[100%] Built target armada_embedded
++ ctest --test-dir /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02 -C Release --output-on-failure --no-tests=error --timeout 60
+Internal ctest changing into directory: /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02
+Test project /Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02
+      Start  1: vector_hud
+ 1/15 Test  #1: vector_hud .......................   Passed    0.26 sec
+      Start  2: top_hud
+ 2/15 Test  #2: top_hud ..........................   Passed    0.06 sec
+      Start  3: scene
+ 3/15 Test  #3: scene ............................   Passed    0.05 sec
+      Start  4: camera
+ 4/15 Test  #4: camera ...........................   Passed    0.00 sec
+      Start  5: overlay
+ 5/15 Test  #5: overlay ..........................   Passed    0.00 sec
+      Start  6: input
+ 6/15 Test  #6: input ............................   Passed    0.00 sec
+      Start  7: markers
+ 7/15 Test  #7: markers ..........................   Passed    0.00 sec
+      Start  8: explosions
+ 8/15 Test  #8: explosions .......................   Passed    0.00 sec
+      Start  9: planets
+ 9/15 Test  #9: planets ..........................   Passed    0.00 sec
+      Start 10: shields
+10/15 Test #10: shields ..........................   Passed    0.00 sec
+      Start 11: hits
+11/15 Test #11: hits .............................   Passed    0.00 sec
+      Start 12: fog
+12/15 Test #12: fog ..............................   Passed    0.00 sec
+      Start 13: hardware
+13/15 Test #13: hardware .........................   Passed    0.00 sec
+      Start 14: frame_v2
+14/15 Test #14: frame_v2 .........................   Passed    0.28 sec
+      Start 15: starfield
+15/15 Test #15: starfield ........................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 15
+
+Total Test time (real) =   0.69 sec
+NATIVE_BUILD_OK binaries=3 shaders=18 manifest=/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render_cpp/build-w02/native-release.json

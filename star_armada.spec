@@ -10,6 +10,9 @@ sys._MEIPASS/assets.
 """
 import os
 import re
+import runpy
+import sys
+from pathlib import Path
 
 block_cipher = None
 ROOT = os.path.abspath(SPECPATH)
@@ -27,28 +30,39 @@ def _version() -> str:
 
 
 VERSION = _version()
+# The native renderer is mandatory. Fail before Analysis if either product,
+# any compiled shader, or any non-system runtime dependency is absent.
+native = runpy.run_path(os.path.join(ROOT, "tools", "build_native_release.py"))
+build_dir = os.path.join(ROOT, "render_cpp", "build-w02")
+native_binaries, native_shaders = native["native_payload"](build_dir)
+native_manifest = native["write_manifest"](
+    build_dir, native_binaries, native_shaders, sys.platform)
+# Bridge/controller dispatch imports are dynamic. Enumerate source modules
+# without importing packages: collect_submodules('game') itself trips the
+# game.systems cold-import cycle and otherwise silently omits that subtree.
+runtime_imports = set()
+for package in ('game', 'render', 'render_bridge'):
+    for path in (Path(ROOT) / package).rglob('*.py'):
+        parts = path.relative_to(ROOT).with_suffix('').parts
+        if parts[-1] == '__init__':
+            parts = parts[:-1]
+        if all(part.isidentifier() for part in parts):
+            runtime_imports.add('.'.join(parts))
+runtime_imports = sorted(runtime_imports)
 
 a = Analysis(
     ["main.py"],
     pathex=[ROOT],
-    binaries=[
-        # The native window (W11). A frozen build that ships the rings but not the viewer would
-        # fall back to legacy on every launch and the migration would exist only in a checkout.
-        ("render_cpp/build-w02/armada_viewer", "cpp"),
-    ],
+    binaries=native_binaries,
     datas=[
         ("assets", "assets"),          # game data + fonts
-        # The compiled bgfx shaders. The viewer defaults to the directory baked in at build time
-        # (the build tree), which does not exist inside a bundle, so `cpp_window.spawn` passes
-        # `--shaders cpp/shaders` when the binary it found sits in a bundle.
-        ("render_cpp/build-w02/shaders", "cpp/shaders"),
+        (str(native_manifest), "cpp"),
         # The approved Blender prototypes are the shipped default model selection, and the mesh
         # catalogue the window loads names their files. A bundle without them cannot build its
         # catalogue at all, which is what the first frozen attempt reported.
         ("visual_packs", "visual_packs"),
-    ],
-    hiddenimports=[
-        "pygame.pkg_properties",
+    ] + native_shaders,
+    hiddenimports=runtime_imports + [
         "OpenGL",
         "OpenGL.GL",
         "OpenGL.GLU",
@@ -104,6 +118,7 @@ app = BUNDLE(
         "CFBundleShortVersionString": VERSION,
         "CFBundleVersion": VERSION,
         "NSHighResolutionCapable": True,
-        "LSMinimumSystemVersion": "11.0",
+        # CMake does not set a deployment floor; do not advertise macOS 11
+        # compatibility from this plist. Native runner/OS acceptance is separate.
     },
 )

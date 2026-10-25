@@ -1,0 +1,24 @@
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)
+cpp renderer: isolated bgfx worker, original pygame window retained
+Replay saved: match-4a4824fc1e9343b3bcdbe05285d366e5.json
+cpp renderer: isolated bgfx worker, original pygame window retained
+Replay saved: match-6d51d481f9aa4ecc8f06d8bae9198c97.json
+{
+  "window": {
+    "window": 47408612608
+  },
+  "yaw": 45.0,
+  "pitch": 55.0,
+  "after_yaw": 9.5,
+  "after_pitch": 38.980000000000004,
+  "quicksave": true,
+  "phase": {
+    "cycle": 2,
+    "frame": 10,
+    "menu_frames": 3,
+    "finished": true
+  },
+  "embedded_sessions": 2,
+  "external_viewer_processes": 0,
+  "presentation": "C++ Metal/D3D scene \u2192 CPU readback \u2192 existing GL window"
+}

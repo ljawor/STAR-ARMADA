@@ -148,6 +148,37 @@ Open on this contract, in the order they bite:
   production-default switch, or authorize merge/tag/release.
 - Status: owner-adopted policy, implemented and exercised by S04 transactional rejection tests; published for owner review in draft PR #124.
 
+## S06 B5 appearance revision — `s06-b5-environment-2026-10-25`
+
+- Decision id: `s06-b5-environment-2026-10-25`, kind `appearance-revision` (the batch record of
+  2026-10-17 keeps its own entry and history; its pins move here, with the previous values kept in
+  `b5_asteroid_reauthor_correction`).
+- Owner: Lukasz Jawor.
+- Approved asset: `core:environment/asteroid_field` (`environment:asteroid_field`), the only asset
+  this revision changes.
+- Owner's words, verbatim: **"Asteroids look good"** — said after a before/after sheet of the field
+  in a real skirmish frame and two native captures of that frame, all in
+  `artifacts/s06_alliance_batch_review/b5-asteroid-v5/`.
+- What changed: four overlapping bevelled boxes carrying faction hardware roles became one
+  irregular boulder — a displaced icosphere with two impact dents, a flattened base and one sheared
+  break face — on stone roles `base`/`dark`/`trim` only. 216 → 320 triangles, 126 → 162 vertices,
+  6 → 3 draw calls. The envelope is unchanged (±0.58 X/Z, ±0.46 Y), so `ASTEROID_EXTENT` and every
+  projected size hold.
+- Why: the field's geometry has no visible tint control (instance tint moves 0 white, 0 dark and 25
+  changed pixels on a rendered frame), so a field could only stop looking like one slab if the mesh
+  itself changed.
+- Revision hashes, re-derived from disk when the record was written: blend `aa3ded259475c79f091f8359a8b6c850e1eb92dfea0f65bc786746187b8829e1`,
+  mesh `ebcfb21f78289ba6deda5165c965960f8b7c0d2fa4a50fdc7fa2c6b66f40a2ba`.
+- What it does not authorise: landing, registration, activation, merge, tag or release; the S11
+  catalogue switch; packaging; any gameplay value or the mining-station range rule; any other
+  asset. The mesh's `features` block (`field_instances: 40`, `field_scale_range 12-46`) records the
+  authoring intent from before the field was drawn this way and is explicitly not a claim about the
+  draw — the renderer decides the count (64 per field) and the sizes.
+- Evidence limits: the owner approved the picture. `native-field-verification.json` is an
+  engineering measurement of the same revision, and it says what it cannot see: a field larger than
+  the frame has a clipped bounding box, which is why the tool also refuses a field that touches the
+  frame edge and checks the disc's fill.
+
 ## Not decided here
 
 - Live in-battle pack switching, workshop distribution and executable mod scripting stay out of

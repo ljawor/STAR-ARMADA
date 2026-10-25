@@ -6,6 +6,11 @@ fall back to English here.
 """
 
 DE: dict[str, str] = {
+    "Humans {count} / {capacity}": "Menschen {count} / {capacity}",
+    "AI {count} / {capacity}": "KI {count} / {capacity}",
+    "Human {n}": "Mensch {n}",
+    "AI {n}": "KI {n}",
+    "Unused {n}": "Ungenutzt {n}",
     "Click a start to deploy here.": "Klicke auf einen Startpunkt, um hier zu starten.",
     "Gold: resources · Teal: worlds · Rings: starts": "Gold: Ressourcen · Türkis: Welten · Ringe: Startpunkte",
     "Same team = allies. AI allies share vision, not control.": "Gleiches Team = Verbündete. KI-Verbündete teilen Sicht, nicht Kontrolle.",
@@ -16,12 +21,10 @@ DE: dict[str, str] = {
     "Windowed": "Fenstermodus",
     "Current resolution: {width} × {height} · {mode}": "Aktuelle Auflösung: {width} × {height} · {mode}",
     "Resolution changes take effect after restarting the game.": "Auflösungsänderungen gelten nach einem Neustart des Spiels.",
-    "CPP": "CPP",
-    "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Änderungen gelten ab der nächsten Sitzung, niemals während einer Schlacht.",
     "1-9 control groups · F fleet menu": "1-9 Kontrollgruppen · F Flottenmenü",
     "ACTIONS / BUILD": "AKTIONEN / BAU",
-    "AI": "KI",
+
     "AI DIFFICULTY": "KI-SCHWIERIGKEIT",
     "ALL": "ALLE",
     "ALL replay JSON files, including files beyond the browser limit.":
@@ -122,8 +125,7 @@ DE: dict[str, str] = {
         "Passagiere abliefern: mit geladener Fracht R drücken und einen eigenen Rumpf ohne volle Besatzung anklicken.",
     "Deploy your fleet": "Flotte einsetzen",
     "Destroy ALL defending satellites first.": "Zerstöre ZUERST alle verteidigenden Satelliten.",
-    "Distinct colors. Unused slot choices are retained. Click to cycle.":
-        "Unterschiedliche Farben. Ungenutzte Platzwahl bleibt erhalten. Klicken zum Durchschalten.",
+
     "Dynamic range": "Dynamikumfang",
     "EN": "EN",
     "ENDED": "BEENDET",
@@ -153,7 +155,7 @@ DE: dict[str, str] = {
     "Gas and terrain cannot be colonized.": "Gas und Gelände können nicht kolonisiert werden.",
     "Goal: board and capture the hull.": "Ziel: den Rumpf entern und übernehmen.",
     "HULL": "RUMPF",
-    "HUMAN": "MENSCH",
+
     "High contrast panels": "Tafeln mit hohem Kontrast",
     "Host IPv4 address": "Host-IPv4-Adresse",
     "Host a game": "Spiel hosten",
@@ -342,7 +344,7 @@ DE: dict[str, str] = {
         "Die Übung beginnt mit intakter Lebenserhaltung auf beiden aufgegebenen Zielen; baue kein Bauschiff, solange keine Reparaturen nötig werden.",
     "The operation has ended. Regroup and try again.": "Die Operation ist beendet. Sammeln und erneut versuchen.",
     "Tutorial hints": "Tutorial-Hinweise",
-    "UNUSED": "UNGENUTZT",
+
     "UP - lower all shields": "HOCH - alle Schilde senken",
     "Unavailable": "Nicht verfügbar",
     "Uncolonized": "Unkolonisiert",

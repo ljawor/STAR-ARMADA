@@ -1885,11 +1885,12 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
               const uint32_t side = uint32_t(mask.cells);
               const bgfx::Memory *pixels =
                   bgfx::copy(mask.rgba.data(), uint32_t(mask.rgba.size()));
-              if (bgfx::isValid(fogTexture) && mask.cells == fogTextureCells) {
-                bgfx::updateTexture2D(fogTexture, 0, 0, 0, 0, side, side, pixels);
-              } else {
-                if (bgfx::isValid(fogTexture))
-                  bgfx::destroy(fogTexture);
+              // Replace, never update: bgfx does not apply updateTexture2D to a texture
+              // created with its pixels, so an in-place update left the first mask on screen
+              // for the whole match (ships and new sensor stations never revealed anything).
+              if (bgfx::isValid(fogTexture))
+                bgfx::destroy(fogTexture);
+              {
                 fogTexture = bgfx::createTexture2D(
                     uint16_t(side), uint16_t(side), false, 1,
                     bgfx::TextureFormat::RGBA8,

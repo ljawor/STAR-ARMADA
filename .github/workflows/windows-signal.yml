@@ -16,7 +16,11 @@ permissions:
 jobs:
   windows-lan:
     name: LAN surface on real Windows
-    runs-on: windows-latest
+    # Keep the compiler image compatible with the pinned CMake 3.31 toolchain.
+    runs-on: windows-2022
+    env:
+      CMAKE_GENERATOR: Visual Studio 17 2022
+      CMAKE_GENERATOR_PLATFORM: x64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,7 +30,7 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt cmake==3.31.6
       - name: netdiag on real Windows
         # Exercises the real entry point: environment, local addresses, the
         # observe-this-platform socket probes and a real host+join pairing.
@@ -43,11 +47,21 @@ jobs:
           python tools/lan_state_diff.py dump --out state-win-ticks0.json
           python tools/lan_state_diff.py dump --out state-win-ticks1.json --ticks 1
           python tools/lan_state_diff.py dump --out state-win-contact-ticks60.json --scene contact --ticks 60
+      - name: Portable renderer transport on real Windows
+        env:
+          PYTHONPATH: tests
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+          TMPDIR: ${{ runner.temp }}
+        # All portable renderer/ownership cases execute; a skipped import is not acceptance.
+        run: >-
+          python -c "import unittest; names = ['test_render_camera', 'test_render_live', 'test_render_single_path', 'test_render_ring']; suite = unittest.defaultTestLoader.loadTestsFromNames(names); expected = suite.countTestCases(); assert expected >= 39, expected; result = unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and not result.skipped else 1)"
       - name: Focused LAN tests on Windows
         env:
           PYTHONPATH: tests
           SDL_VIDEODRIVER: dummy
           SDL_AUDIODRIVER: dummy
+          TMPDIR: ${{ runner.temp }}
           # Pacing is hardware acceptance, not correctness: this shared 2-vCPU
           # runner paced 20.9 ticks/s against the 27 ticks/s LAN floor. The floor
           # is lowered here and the correctness clauses (identical checksums every
@@ -68,7 +82,16 @@ jobs:
         # Collection-point commands and recovery admission/launch regressions are
         # portable real-TCP gates. Localization tests also exercise native Cyrillic
         # font rendering and settings persistence without requiring an OpenGL context.
-        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_draw_view_scope test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools -v
+        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_render_camera test_render_live test_render_single_path test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools test_lan_eight_players test_lan_deployment_ui test_lan_language test_release_packaging test_native_binary_discovery test_render_default test_native_worker_entry test_native_worker test_native_worker_main_boundary test_native_worker_parent_identity -v
+      - name: Worker cleanup diagnostic tests
+        env:
+          PYTHONPATH: tests
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+        # Mocks only, but they are the only pins for the diagnostic's reporting; a
+        # module that loads zero cases or skips must not read as acceptance.
+        run: |
+          python -c "import unittest; suite = unittest.defaultTestLoader.loadTestsFromName('test_windows_worker_diagnostic'); expected = suite.countTestCases(); assert expected >= 5, f'only {expected} diagnostic cases loaded'; result = unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and not result.skipped else 1)"
       - name: Replay deletion on real Windows
         env:
           PYTHONPATH: tests
@@ -80,6 +103,51 @@ jobs:
           python -c "import os, unittest; assert os.name == 'nt', 'Native Windows deletion gate requires Windows'; suite = unittest.defaultTestLoader.loadTestsFromName('test_replay_deletion_windows.NativeWindowsDeletionTests'); expected = suite.countTestCases(); result = unittest.TextTestRunner(verbosity=2).run(suite); optional = 'test_file_symlink_is_never_deleted_or_followed'; raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and all(test._testMethodName == optional for test, reason in result.skipped) else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest test_replay_deletion_windows test_replay_library -v
+      - name: Native input-ring source contract
+        # Cheap tripwire for the Win32 branch and the shared producer-lock byte; a
+        # source assertion is not a compile, so the native build below stays the proof.
+        run: python render_cpp/tests/test_native_transport_platform_contract.py
+      - name: Observe native Windows worker cleanup
+        if: always()
+        timeout-minutes: 3
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+          TMPDIR: ${{ runner.temp }}
+        # Its findings are not the verdict: the frame-file handle retention it reports
+        # is a separate open defect, so a red baseline stays non-fatal and the log is
+        # uploaded either way. What it cannot do is fail to run and look the same: a
+        # diagnostic that never launched exits 1, because then there is no evidence.
+        run: |
+          python tools/diag_windows_worker_cleanup.py --run --close-process-handle-hypothesis 2>&1 | Tee-Object -FilePath native-worker-cleanup-windows.log
+          $code = $LASTEXITCODE
+          if ($null -eq $code) { $code = 127 }
+          "native worker cleanup observation exited $code (findings non-blocking)" | Tee-Object -FilePath native-worker-cleanup-windows.log -Append
+          # Exit codes cannot separate a red baseline from a tool that died on startup,
+          # so demand the verdict frame the tool always emits (baseline_verdict, or
+          # diagnostic_error when it failed outside its own reporting).
+          # Parse the frames rather than matching serialization spacing, and require the
+          # baseline verdict itself: a bare diagnostic_error means the tool crashed, which
+          # is a broken observation, not a red baseline.
+          $frames = Get-Content native-worker-cleanup-windows.log |
+            Where-Object { $_ -match '^\{"stage":' } |
+            ForEach-Object { try { $_ | ConvertFrom-Json } catch { $null } }
+          $verdict = $frames | Where-Object { $_.stage -eq 'baseline_verdict' } | Select-Object -Last 1
+          $crashed = $frames | Where-Object { $_.stage -eq 'diagnostic_error' } | Select-Object -First 1
+          if ($verdict) { $observed = "passed=$($verdict.passed)" } else { $observed = 'no baseline verdict' }
+          "Native worker cleanup observation: exited $code, $observed (findings non-blocking, see artifact)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          if (-not $verdict) {
+            if ($crashed) { Write-Error "cleanup diagnostic crashed: $($crashed.exception) (exit $code)" }
+            else { Write-Error "cleanup diagnostic produced no baseline verdict (exit $code)" }
+            exit 1
+          }
+          # A crash after the verdict is still a broken observation, and the log is the
+          # only place it shows up.
+          if ($crashed) { Write-Error "cleanup diagnostic crashed after its verdict: $($crashed.exception)"; exit 1 }
+          # 124/125 (watchdog) and 2 (internal error) never produce a diagnostic_error
+          # frame when the crash happens below Python.
+          if ($code -notin 0, 1) { Write-Error "cleanup diagnostic ended with exit $code after reporting a verdict"; exit 1 }
+          exit 0
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -89,13 +157,30 @@ jobs:
             state-win-ticks0.json
             state-win-ticks1.json
             state-win-contact-ticks60.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-worker-cleanup-windows
+          path: native-worker-cleanup-windows.log
+          # The log is the only record of this observation: a missing file is an error.
+          if-no-files-found: error
 
   package-windows:
+    needs: windows-lan
     # Manual runs only: hands the reporter a candidate build (an artifact, never
     # a published release) to re-test the pairing on the real PC.
     name: Candidate Windows package (manual)
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: windows-latest
+    # Runs even when windows-lan is red: the package job reports buildability of the
+    # exact candidate, and the release verdict is taken outside CI. The upstream
+    # verdict is recorded in the artifact and re-raised at the end of the job, so an
+    # unverified candidate cannot be mistaken for a validated one.
+    if: always() && github.event_name == 'workflow_dispatch'
+    runs-on: windows-2022
+    env:
+      # build_native_release.py preserves caches and delegates generator choice
+      # to CMake; fresh CI must not default to NMake without a developer shell.
+      CMAKE_GENERATOR: Visual Studio 17 2022
+      CMAKE_GENERATOR_PLATFORM: x64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -105,14 +190,70 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt pyinstaller
+          pip install -r requirements.txt pyinstaller==6.20.0 cmake==3.31.6
+      - name: Build and test mandatory native renderer (Release)
+        # A cold runner compiles pinned SDL3, bgfx, bx and bimg from source before it reaches
+        # this repository (~9 min at two jobs), so the budget is for third-party compilation,
+        # not for a slow test: ctest keeps its own 60 s per-test timeout. Four jobs is the
+        # windows-2022 core count; two was leaving three of them idle for 25 minutes.
+        timeout-minutes: 45
+        run: python tools/build_native_release.py --build-dir render_cpp/build-w02 --jobs 4
+      - name: Packaging contract tests
+        run: python -m unittest discover -s tests -p test_release_packaging.py -v
       - name: Build exe
         run: pyinstaller star_armada.spec --noconfirm
-      - name: Zip
+      - name: Validate frozen native payload
+        run: python tools/build_native_release.py --validate-frozen "dist/STAR ARMADA/_internal"
+      - name: Exercise frozen renderer worker and native ABI (no GPU)
+        shell: python
         run: |
+          import json, os, pathlib, subprocess, sys
+          sys.path.insert(0, str(pathlib.Path(os.environ['GITHUB_WORKSPACE']).resolve()))
+          from game import __version__
+          exe = pathlib.Path('dist/STAR ARMADA/STAR ARMADA.exe').resolve()
+          output = pathlib.Path(os.environ['RUNNER_TEMP']) / 'native-worker-probe.json'
+          assert not output.exists(), 'Refusing stale probe output'
+          env = dict(os.environ)
+          env.pop('STAR_ARMADA_CPP_LIBRARY', None)
+          subprocess.run([str(exe), '--native-render-worker', '--probe', '--output', str(output)],
+                         env=env, check=True, timeout=60)
+          report = json.loads(output.read_text(encoding='utf-8'))
+          assert report['status'] == 'ok' and report['abi'] == 1
+          assert report['frozen'] is True and report['version'] == __version__
+          expected = exe.parent / '_internal/cpp/armada_embedded.dll'
+          assert pathlib.Path(report['native_library']).resolve() == expected.resolve()
+          print(json.dumps(report, indent=2))
+      - name: Mark the candidate with its gate verdict
+        env:
+          GATE_VERDICT: ${{ needs.windows-lan.result }}
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          JOB_NAME: ${{ github.job }}
+        run: |
+          @(
+            "windows-lan: $env:GATE_VERDICT",
+            "commit: $env:COMMIT_SHA",
+            "run: $env:RUN_URL",
+            "job: $env:JOB_NAME"
+          ) | Tee-Object -FilePath "dist/STAR ARMADA/GATE-STATUS.txt"
+          "**Windows LAN gate for this candidate:** $env:GATE_VERDICT (commit $env:COMMIT_SHA) run $env:RUN_URL" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+      - name: Zip
+        env:
+          GATE_VERDICT: ${{ needs.windows-lan.result }}
+        run: |
+          $suffix = if ($env:GATE_VERDICT -eq 'success') { '' } else { '-gate-failed' }
           Compress-Archive -Path "dist/STAR ARMADA/*" `
-            -DestinationPath "dist/STAR-ARMADA-candidate-win.zip"
+            -DestinationPath "dist/STAR-ARMADA-candidate-win$suffix.zip"
       - uses: actions/upload-artifact@v4
         with:
-          name: star-armada-candidate-win
-          path: dist/STAR-ARMADA-candidate-win.zip
+          # An unverified candidate is still uploaded, under a name that says so.
+          name: star-armada-candidate-win${{ needs.windows-lan.result != 'success' && '-gate-failed' || '' }}
+          path: dist/STAR-ARMADA-candidate-win*.zip
+          if-no-files-found: error
+      - name: Require a green LAN gate for a verified candidate
+        if: needs.windows-lan.result != 'success'
+        env:
+          GATE_VERDICT: ${{ needs.windows-lan.result }}
+        run: |
+          Write-Error "windows-lan was $env:GATE_VERDICT: this candidate is built but unverified"
+          exit 1

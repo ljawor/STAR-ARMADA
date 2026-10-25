@@ -196,37 +196,5 @@ def skirmish_setup(menu):
 
 
 def host_setup(menu):
-    from game.core.skirmish import COLOR_NAMES
-    c = SetupCanvas(menu, 'lan')
-    o = menu.lan_options
-    c.text('STAR ARMADA', (32, 20, 300, 30), 24)
-    c.text('Host a multiplayer game', (32, 65, 780, 36), 28)
-    c.text('Hosting opens a lobby. It does not launch the match.', (280, 107, 548, 24), 14, MUTED)
-    data, preview = battlefield(c, o, o['human_count'] + o['ai_count'], 'lan_map')
-    c.text('FLEET ROSTER', (280, 330, 548, 24), 16, MUTED)
-    for slot in range(4):
-        y = 364 + slot * 42
-        role = 'HUMAN' if slot < o['human_count'] else 'AI' if slot < o['human_count'] + o['ai_count'] else 'UNUSED'
-        c.text(f'{slot + 1} {role}', (280, y + 8, 92, 24), 14, MUTED if role == 'UNUSED' else INK)
-        color = o['colors'][slot]
-        c.button((376, y, 114, 34), COLOR_NAMES[color] + ' ›', 'lan_color', slot, swatch=color)
-        c.button((498, y, 330, 34), menu.skirmish_store.factions[o['factions'][slot]].display_name + ' ›', 'lan_faction', slot)
-    c.panel((852, 107, 236, 423))
-    c.text('Session settings', (866, 122, 208, 30), 24)
-    c.text(f"Humans {o['human_count']} / capacity {menu.skirmish_capacity(o['map_id'])}", (866, 165, 208, 24), 14)
-    c.button((866, 188, 48, 34), '−', 'lan_humans', -1)
-    c.button((922, 188, 48, 34), '+', 'lan_humans', 1)
-    c.text(f"AI {o['ai_count']} (0–2)", (866, 233, 208, 24), 14)
-    c.button((866, 256, 48, 34), '−', 'lan_ai', -1)
-    c.button((922, 256, 48, 34), '+', 'lan_ai', 1)
-    c.button((866, 300, 208, 34), 'Difficulty: ' + o['ai_difficulty'], 'lan_difficulty')
-    c.button((866, 344, 208, 34), 'Humans vs AI' if o['cooperative'] else 'Free for all', 'lan_cooperative')
-    for field, label, y in (('lan_name', 'Nickname', 390), ('lan_port', 'TCP port', 456)):
-        c.text(label, (866, y, 208, 24), 14, MUTED)
-        c.button((866, y + 23, 208, 34), getattr(menu, field) + (' |' if menu.lan_focus == field else ''), 'lan_field', field)
-    c.text(data['description'], (32, 544, 1056, 60), 14, MUTED, wrap=True)
-    c.text(menu.lan_notice or 'Distinct colors. Unused slot choices are retained. Click to cycle.', (32, 608, 1056, 22), 14, MUTED)
-    pygame.draw.line(c.surface, BORDER, (32, 637), (1088, 637))
-    c.button((32, 650, 180, 36), 'Back', 'lan_back')
-    c.button((852, 650, 236, 36), 'Apply setup' if menu.lan_session is not None else 'Create lobby', 'lan_connect', primary=True)
-    c.finish(preview)
+    from render.lan_screen import host_setup as setup
+    setup(menu)

@@ -47,8 +47,9 @@ RADIUS = 45          # the row's catalogue radius, read from assets/data/station
 # ceiling is the worst case, asserted rather than reached.
 LIMITS = [[-0.58, 0.58], [-0.46, 0.46], [-0.58, 0.58]]
 CEILING = [[-0.90, 0.90], [-0.70, 0.70], [-0.90, 0.90]]
-DESIGN = ('four overlapping jittered lumps with a rugged silhouette, a lit upper crust, a dark '
-          'underside, a few mineral veins, glinting facets and two icy patches')
+DESIGN = ('one irregular boulder: a displaced icosphere with a rugged silhouette, two impact '
+          'dents, a flattened base and one sheared break face; a sunlit upper crust, a shadowed '
+          'underside and dark dent floors in stone tones only - no paint, no emissive patches')
 # Deterministic, so the recipe reproduces the same rock: the legacy look rhymes with it, and a
 # per-instance variant is what the field's own rotation, scale and tumble already provide.
 JITTER = (0.37, 0.61, 0.83, 1.19, 1.31, 1.57, 1.73, 1.91)
@@ -101,6 +102,105 @@ def _hash(*parts):
     return (value % 100000) / 100000.
 
 
+def _unit(vector):
+    length = math.sqrt(sum(c * c for c in vector)) or 1.0
+    return tuple(c / length for c in vector)
+
+
+def icosphere(levels):
+    """A subdivided icosahedron: the even, three-sided facet base a rock wants.
+
+    Four overlapping bevelled boxes gave a silhouette made of corners and flat plates, which at
+    eight pixels reads as a crate. An icosphere's facets are all triangles of the same size, so a
+    lumpy displacement keeps a rounded boulder outline instead of a box outline.
+    """
+    t = (1.0 + 5.0 ** 0.5) / 2.0
+    verts = [_unit(v) for v in ((-1, t, 0), (1, t, 0), (-1, -t, 0), (1, -t, 0),
+                                (0, -1, t), (0, 1, t), (0, -1, -t), (0, 1, -t),
+                                (t, 0, -1), (t, 0, 1), (-t, 0, -1), (-t, 0, 1))]
+    faces = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11),
+             (1, 5, 9), (5, 11, 4), (11, 10, 2), (10, 7, 6), (7, 1, 8),
+             (3, 9, 4), (3, 4, 2), (3, 2, 6), (3, 6, 8), (3, 8, 9),
+             (4, 9, 5), (2, 4, 11), (6, 2, 10), (8, 6, 7), (9, 8, 1)]
+    for _ in range(levels):
+        midpoints, out = {}, []
+
+        def middle(a, b):
+            key = (a, b) if a < b else (b, a)
+            if key not in midpoints:
+                va, vb = verts[a], verts[b]
+                midpoints[key] = len(verts)
+                verts.append(_unit([va[i] + vb[i] for i in range(3)]))
+            return midpoints[key]
+
+        for a, b, c in faces:
+            ab, bc, ca = middle(a, b), middle(b, c), middle(c, a)
+            out.extend(((a, ab, ca), (b, bc, ab), (c, ca, bc), (ab, bc, ca)))
+        faces = out
+    return verts, faces
+
+
+def _relief(direction):
+    """Deterministic radial noise: two big lumps, one medium ridge, one fine grain."""
+    x, y, z = direction
+    coarse = math.sin(x * 3.1 + 0.7) * math.cos(z * 2.7 - 1.1) * math.sin(y * 2.3 + 0.4)
+    ridge = math.sin(x * 5.3 - 1.2) * math.sin(z * 4.7 + 0.9)
+    grain = math.cos(y * 6.1 + 2.0) * math.cos(x * 3.9 + z * 2.1)
+    return 0.25 * coarse + 0.095 * ridge + 0.035 * grain
+
+
+def rock():
+    """One irregular boulder: displaced icosphere, two dents, flattened base, sheared side."""
+    verts, faces = icosphere(2)
+    dents = (_unit((0.72, 0.42, 0.55)), _unit((-0.55, 0.35, -0.72)), _unit((0.05, -0.25, 0.95)))
+    points = []
+    for direction in verts:
+        radius = 1.0 + _relief(direction)
+        # Two bites out of the crust and one shallow crater: a boulder that has been hit.
+        for dent in dents:
+            if sum(direction[i] * dent[i] for i in range(3)) > 0.90:
+                radius *= 0.86
+        # Squashed: rocks settle, and a field of spheres reads as bubbles.
+        x, y, z = (direction[i] * radius for i in range(3))
+        points.append((x, y * 0.74, z))
+    # A sheared face on one side: a flat break, so the silhouette is not rotationally uniform.
+    points = [(min(p[0], 0.42), p[1], p[2]) for p in points]
+    return points, faces
+
+
+def role_of(verts, tri, centre):
+    """Which stone role a triangle carries, from its own facing and height.
+
+    Only the loader's stone roles are used. `accent` is paint and `lit`/`cool` are emissive - the
+    faction hardware palette - so a rock wearing them reads as a painted crate with a glowing
+    ice patch, which is exactly how the first field looked.
+    """
+    a, b, c = (verts[i] for i in tri)
+    u = [b[i] - a[i] for i in range(3)]
+    v = [c[i] - a[i] for i in range(3)]
+    n = (u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0])
+    length = math.sqrt(sum(t * t for t in n)) or 1.0
+    ny = n[1] / length
+    height = sum(p[1] for p in (a, b, c)) / 3 - centre[1]
+    cx_, cz_ = sum(p[0] for p in (a, b, c)) / 3, sum(p[2] for p in (a, b, c)) / 3
+    radial = math.sqrt((cx_ - centre[0]) ** 2 + (cz_ - centre[2]) ** 2)
+    if ny < -0.05:
+        return 'dark'                       # underside and the shadowed flanks
+    if height > 0.10 and ny > 0.55:
+        return 'trim'                       # only the facets that really face the light
+    if radial < 0.42 and ny < 0.45:
+        return 'dark'                       # the floors and walls of the dents
+    return 'base'
+
+
+def build():
+    """One rock, then the role pass: no painted veins, no emissive patches, stone only."""
+    verts, faces = rock()
+    verts = fit(verts)
+    role_of_face = [role_of(verts, face, (0.0, 0.0, 0.0)) for face in faces]
+    return verts, faces, role_of_face
+
+
 def lump(name, centre, radii, grid=None, phase=0):
     """One lump, built the way the renderer's own rock is built: eight jittered corners and six face
     bulges, each face fanned through its bulge into four triangles with a flat normal.
@@ -141,70 +241,6 @@ def lump(name, centre, radii, grid=None, phase=0):
         for tri in ((0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)):
             faces_out.append((base + tri[0], base + tri[1], base + tri[2]))
     return verts, faces_out
-
-
-def role_of(verts, tri, centre):
-    """Which material role a triangle carries, from its own facing and height.
-
-    The loader's six roles have to be filled by real geometry, not by a painted band: the upper crust
-    is `trim`, the underside `dark`, the body `base`, and the accents are placed deliberately below.
-    """
-    a, b, c = (verts[i] for i in tri)
-    u = [b[i] - a[i] for i in range(3)]
-    v = [c[i] - a[i] for i in range(3)]
-    n = (u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0])
-    length = math.sqrt(sum(t * t for t in n)) or 1.0
-    ny = n[1] / length
-    height = sum(p[1] for p in (a, b, c)) / 3 - centre[1]
-    cx_, cz_ = sum(p[0] for p in (a, b, c)) / 3, sum(p[2] for p in (a, b, c)) / 3
-    radial = math.sqrt((cx_ - centre[0]) ** 2 + (cz_ - centre[2]) ** 2)
-    if height > 0.24 and ny > 0.15:
-        return 'trim'
-    if height < -0.20 or ny < -0.30:
-        return 'dark'
-    if height > 0.10 and radial > 0.52:
-        return 'lit'
-    return 'base'
-
-
-def build():
-    """Four overlapping lumps, the reach vertices, then the accent, glint and ice patches."""
-    centre = (0.0, 0.0, 0.0)
-    # Seven overlapping lumps, each carrying flat plates: the vocabulary the legacy rock uses (a lump
-    # is eight jittered corners and six bulges) at the size the field's own scale reads as the rock it
-    # replaces, and enough of them to clear the exporter's floor without a finer surface.
-    # Four overlapping lumps the size of the legacy rock's own, plus three raised patches. An authored
-    # instance has to read as *one* rock, so the lumps are few and the facets on them are large.
-    lumps = (((-.10, .02, .08), (.58, .42, .54), 5, 3),
-             ((.17, -.04, -.12), (.50, .37, .46), 5, 11),
-             ((.02, .10, .18), (.40, .29, .36), 4, 19),
-             ((-.24, -.05, -.20), (.30, .22, .28), 4, 29))
-    verts, faces, role_of_face = [], [], []
-    for k, (c, r, grid, phase) in enumerate(lumps):
-        lv, lf = lump(f'10 Lump {k}', c, r, grid=grid, phase=phase)
-        base = len(verts)
-        verts.extend(lv)
-        for a, b, c_ in lf:
-            faces.append((a + base, b + base, c_ + base))
-            role_of_face.append(None)      # classified below, from the face's own facing
-    # Accent veins, glint facets and two icy patches: raised slabs on the crust, still inside the box.
-    patches = (('20 Vein', 'accent', (0.30, 0.30, 0.26), 0.34, 6),
-               ('21 Vein', 'accent', (-0.30, 0.22, -0.24), 0.30, 10),
-               ('30 Glint', 'lit', (0.16, 0.40, -0.30), 0.26, 14),
-               ('40 Ice patch', 'cool', (-0.34, 0.26, 0.22), 0.28, 18),
-               ('41 Ice patch', 'cool', (0.34, 0.24, 0.30), 0.24, 22))
-    for name, role, c, grid_step, phase in patches:
-        lv, lf = lump(name, c, (grid_step, grid_step * 0.7, grid_step), grid=4, phase=phase)
-        base = len(verts)
-        verts.extend(lv)
-        for a, b, c_ in lf:
-            faces.append((a + base, b + base, c_ + base))
-            role_of_face.append(role)      # the vein, glint and ice patches carry their own role
-    verts = fit(verts)
-    for index, role in enumerate(role_of_face):
-        if role is None:
-            role_of_face[index] = role_of(verts, faces[index], (0.0, 0.0, 0.0))
-    return verts, faces, role_of_face
 
 
 def fit(verts):

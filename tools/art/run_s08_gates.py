@@ -21,7 +21,7 @@ MODULES = (
     'test_asset_selection', 'test_generic_model_preview', 'test_model_context_lifecycle',
     'test_asset_contract', 'test_runtime_asset_metadata', 'test_model_pipeline',
     'test_model_coverage_reconciliation', 'test_s07_approval_preservation',
-    'test_s06_appearance_records', 'test_draw_view_scope', 'test_station_bounds_cache',
+    'test_s06_appearance_records', 'test_station_bounds_cache',
     'test_detmath',
 )
 

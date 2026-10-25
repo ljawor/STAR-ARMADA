@@ -107,7 +107,7 @@ class LiveSession:
         self._hardware = self._create_ring(self.paths['hardware'], slots=8,
             slot_bytes=hardware.HEADER.size + hardware.MAX_NAME
             + len(hardware.ROLES) * hardware.BLOCK.size
-            + hardware.MAX_TRIANGLES * hardware.ROW.size + ring.SLOT_OVERHEAD + 8)
+            + hardware.MAX_TRIANGLES * hardware.ROW.size + ring.SLOT_OVERHEAD + ring.SLOT_TRAILER)
         self._mesh_publisher = hardware.MeshPublisher()
         self._emit = self._create_ring(
             self.paths['emit'], slots=8,
@@ -136,10 +136,10 @@ class LiveSession:
                         + self.size[0] * self.size[1] * 4))
         self._overlay_published = 0
         self._top_hud = self._create_ring(self.paths['top_hud'], slots=4,
-                                       slot_bytes=top_hud_codec.MAX_PAYLOAD + ring.SLOT_OVERHEAD + 8)
+                                       slot_bytes=top_hud_codec.MAX_PAYLOAD + ring.SLOT_OVERHEAD + ring.SLOT_TRAILER)
         from . import vector_hud as vector_hud_codec
         self._vector_hud = self._create_ring(self.paths['vector_hud'], slots=4,
-            slot_bytes=vector_hud_codec.MAX_PAYLOAD + ring.SLOT_OVERHEAD + 8)
+            slot_bytes=vector_hud_codec.MAX_PAYLOAD + ring.SLOT_OVERHEAD + ring.SLOT_TRAILER)
         self._overlay_last_full = float('-inf')
         self._overlay_keyframes = 0
         self._overlay_had_layers = False
@@ -153,7 +153,8 @@ class LiveSession:
         self._fog_last = None
         self._fog = self._create_ring(
             self.paths['fog'], slots=4,
-            slot_bytes=fog_codec.HEADER_BYTES + cells * cells * 4 + 28)   # 20 begin + 8 trailer
+            slot_bytes=(fog_codec.HEADER_BYTES + cells * cells * 4
+                                     + ring.SLOT_OVERHEAD + ring.SLOT_TRAILER))
 
         from render.planet_blobs import PlanetTextures
         self._planet_textures = PlanetTextures(size=int(planet_texture))

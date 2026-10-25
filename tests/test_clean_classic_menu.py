@@ -46,10 +46,10 @@ class CleanClassicTests(unittest.TestCase):
             self.assertEqual(len(set(r.x for r in maps)), 1)
             self.assertTrue(hasattr(menu, 'lan_preview_rect'))
             colors = [b for b in menu.buttons if b['action'] == 'lan_color']
-            self.assertEqual([b['payload'] for b in colors], [0, 1, 2, 3])
+            self.assertEqual([b['payload'] for b in colors], [0, 1])
             for b in colors:
                 rgb = tuple(round(c * 255) for c in PLAYER_COLORS[menu.lan_options['colors'][b['payload']]])
-                self.assertEqual(tuple(menu._surface.get_at((b['rect'].x + 15, b['rect'].y + 16)))[:3], rgb)
+                self.assertEqual(tuple(menu._surface.get_at((b['rect'].x + 3, b['rect'].y + 5)))[:3], rgb)
             connect = next(b['rect'] for b in menu.buttons if b['action'] == 'lan_connect')
             self.assertGreater(connect.top, max(b['rect'].bottom for b in colors))
             self.assertIn('lan_field', [b['action'] for b in menu.buttons])
