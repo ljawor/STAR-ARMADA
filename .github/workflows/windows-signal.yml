@@ -144,6 +144,9 @@ jobs:
           # A crash after the verdict is still a broken observation, and the log is the
           # only place it shows up.
           if ($crashed) { Write-Error "cleanup diagnostic crashed after its verdict: $($crashed.exception)"; exit 1 }
+          # 124/125 (watchdog) and 2 (internal error) never produce a diagnostic_error
+          # frame when the crash happens below Python.
+          if ($code -notin 0, 1) { Write-Error "cleanup diagnostic ended with exit $code after reporting a verdict"; exit 1 }
           exit 0
       - uses: actions/upload-artifact@v4
         if: always()
@@ -242,6 +245,8 @@ jobs:
           if-no-files-found: error
       - name: Require a green LAN gate for a verified candidate
         if: needs.windows-lan.result != 'success'
+        env:
+          GATE_VERDICT: ${{ needs.windows-lan.result }}
         run: |
-          Write-Error "windows-lan was ${{ needs.windows-lan.result }}: this candidate is built but unverified"
+          Write-Error "windows-lan was $env:GATE_VERDICT: this candidate is built but unverified"
           exit 1

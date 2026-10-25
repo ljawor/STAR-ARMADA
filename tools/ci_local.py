@@ -262,21 +262,21 @@ STEPS: list[dict] = [
          local_command=[str(PYTHON), '-m', 'unittest'] + LAN_TEST_MODULES + ['-v'],
          timeout=1800, env=LAN_TEST_ENV,
          reproduction='subset_of_ci_command',
-         note='SUBSET, NOT A REPRODUCTION: this is the 21-module portable part of a 33-module CI '
-              'step, in the workflow order, under the same environment (lowered '
-              'STAR_ARMADA_PACING_FLOOR=15, dummy SDL drivers, PYTHONPATH=tests). The 13 modules '
-              'the CI step also runs are absent here: test_render_camera, test_render_live, '
-              'test_render_single_path, test_lan_eight_players, test_lan_deployment_ui, '
-              'test_lan_language, test_release_packaging, test_native_binary_discovery, '
-              'test_render_default, test_native_worker_entry, test_native_worker, '
-              'test_native_worker_main_boundary, test_native_worker_parent_identity. '
-              'test_draw_view_scope is run here but is not in that CI step at all, so the local '
-              'order is not a prefix of the CI order. Same environment, same platform caveat: '
-              'macOS evidence about portable modules, not Windows evidence. Two-process LAN tests '
-              'in this list are load-sensitive; the summary records the load average before and '
-              'after (host.loadavg_1_5_15_*) - read a timing failure against those numbers rather '
-              'than assuming the box was idle. A sibling task was editing this same worktree while '
-              'the receipt was produced, which is recorded in does_not_cover.'),
+         note='SUBSET, NOT A REPRODUCTION: these are 20 of the 33 modules in that CI step, in the '
+              'workflow order, under the same environment (lowered STAR_ARMADA_PACING_FLOOR=15, '
+              'dummy SDL drivers, PYTHONPATH=tests). The 13 modules the CI step also runs are absent '
+              'here: test_render_camera, test_render_live, test_render_single_path, '
+              'test_lan_eight_players, test_lan_deployment_ui, test_lan_language, '
+              'test_release_packaging, test_native_binary_discovery, test_render_default, '
+              'test_native_worker_entry, test_native_worker, test_native_worker_main_boundary, '
+              'test_native_worker_parent_identity. The 21st local module, test_draw_view_scope, is '
+              'not in that CI step at all, so the local order is not a prefix of the CI order. Same '
+              'environment, same platform caveat: this is macOS evidence about portable modules, '
+              'not Windows evidence. Two-process LAN tests in this list are load-sensitive; the '
+              'summary records the load average before and after (host.loadavg_1_5_15_*) - read a '
+              'timing failure against those numbers rather than assuming the box was idle. A sibling '
+              'task was editing this same worktree while the receipt was produced, which is '
+              'recorded in does_not_cover.'),
     dict(id='windows-lan.8', workflow='windows-signal.yml', job='windows-lan',
          runs_on='windows-latest', ci_step='Replay deletion on real Windows',
          ci_command='python -c "import os, unittest; assert os.name == \'nt\', \'Native Windows '
@@ -348,11 +348,12 @@ STEPS: list[dict] = [
     # ------------------------------------------------------------------
     dict(id='windows-lan.8b', workflow='windows-signal.yml', job='windows-lan',
          runs_on='windows-latest', ci_step='Worker cleanup diagnostic tests',
-         ci_command='python -c "import unittest; suite = '
+         ci_command='python -c "import sys, unittest; suite = '
                     "unittest.defaultTestLoader.loadTestsFromName('test_windows_worker_diagnostic'); "
-                    'expected = suite.countTestCases(); assert expected >= 5; result = ...; '
-                    'raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected '
-                    'and not result.skipped else 1)"',
+                    'expected = suite.countTestCases(); assert expected >= 5; result = '
+                    'unittest.TextTestRunner(verbosity=2).run(suite); sys.exit(0 if '
+                    'result.wasSuccessful() and result.testsRun == expected and not '
+                    'result.skipped else 1)"',
          kind='run', ci_step_is_ci=True,
          local_command=[str(PYTHON), '-c',
                         'import sys, unittest; '
@@ -392,10 +393,10 @@ STEPS: list[dict] = [
 ]
 
 COVERS = [
-    'The portable 21 modules of windows-signal.yml\'s 33-module focused LAN step, in the workflow '
-    'order, under the same environment (PYTHONPATH=tests, dummy SDL video/audio, '
-    'STAR_ARMADA_PACING_FLOOR=15) - executed on macOS. The 13 CI modules that need Windows-only '
-    'imports, GL or native workers are not run, and test_draw_view_scope is local-only.',
+    '20 of the 33 modules in windows-signal.yml\'s focused LAN step, in the workflow order, under '
+    'the same environment (PYTHONPATH=tests, dummy SDL video/audio, STAR_ARMADA_PACING_FLOOR=15) - '
+    'executed on macOS, plus test_draw_view_scope, which that step does not run. The other 13 CI '
+    'modules are not run here.',
     'The netdiag entry point (python main.py --netdiag info): environment probe, local-address '
     'enumeration and a real host+join socket pairing on macOS.',
     'The three tools/lan_state_diff.py scene-state dumps (ticks 0, ticks 1, contact scene at 60 '

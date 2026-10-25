@@ -304,14 +304,21 @@ class EmbeddedWindow:
             self._mapping.close()
             self._mapping = None
         # Independent releases: neither the texture nor the storage may be skipped
-        # because the other one raised. A failed texture delete still propagates, after
-        # the storage has been dealt with.
+        # because the other one raised. A failed texture delete propagates after the
+        # storage has been dealt with, unless that cleanup fails too (its error wins,
+        # with the texture error kept as __context__).
         texture = self._texture
-        self._texture = None
         try:
             if texture is not None:
                 from OpenGL.GL import glDeleteTextures
                 glDeleteTextures([texture])
+        except BaseException:
+            # Keep the id so a later terminate()/kill() can retry it: a context that is
+            # gone now may be current again, and dropping the id leaks the texture.
+            self._texture = texture
+            raise
+        else:
+            self._texture = None
         finally:
             if self._temporary is not None:
                 _cleanup_temporary(self._temporary)

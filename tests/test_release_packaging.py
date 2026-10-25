@@ -250,6 +250,8 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertNotIn('-eq 9009', body)
         # A crash after the verdict is still a broken observation; take the last verdict.
         self.assertIn('Select-Object -Last 1', body)
+        # A watchdog exit or a sub-Python crash leaves a verdict but no error frame.
+        self.assertIn('if ($code -notin 0, 1)', body)
         self.assertRegex(body, r"if \(\$crashed\) \{ Write-Error '?\"?cleanup diagnostic crashed after")
         self.assertRegex(body, r'(?m)^\s+exit 0$')
         self.assertIn('GITHUB_STEP_SUMMARY', body)
@@ -287,7 +289,7 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         # Expressions reach the shell through env, never interpolated into script source.
         zip_step = self._step(source, 'Zip')
         self.assertIn('$env:GATE_VERDICT', zip_step)
-        self.assertNotIn('${{', zip_step.replace('${{ needs.windows-lan.result }}', '', 1) if False else zip_step.split('run: |', 1)[1])
+        self.assertNotIn('${{', zip_step.split('run: |', 1)[1])
         self.assertRegex(job.group(1),
                          r"(?m)^      - name: Require a green LAN gate for a verified candidate\n"
                          r"        if: needs.windows-lan.result != 'success'")

@@ -244,6 +244,13 @@ class CleanupRetryTests(unittest.TestCase):
                 window._stop(hard=True)
         self.assertIsNone(window._temporary, 'storage cleanup was skipped by the texture error')
         self.assertFalse(Path(self.directory.name).exists())
+        # The id must survive the failure, and a retry must actually attempt the release.
+        self.assertEqual(window._texture, 11, 'a failed texture release must stay retryable')
+        deletions = []
+        with mock.patch('OpenGL.GL.glDeleteTextures', side_effect=lambda ids: deletions.append(ids)):
+            window._stop(hard=True)
+        self.assertEqual(deletions, [[11]], 'the retry did not re-issue the texture delete')
+        self.assertIsNone(window._texture)
 
     def test_successful_cleanup_clears_the_temporary_handle(self):
         import shutil
