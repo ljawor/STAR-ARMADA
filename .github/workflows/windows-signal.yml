@@ -222,14 +222,17 @@ jobs:
       - name: Mark the candidate with its gate verdict
         env:
           GATE_VERDICT: ${{ needs.windows-lan.result }}
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          JOB_NAME: ${{ github.job }}
         run: |
           @(
             "windows-lan: $env:GATE_VERDICT",
-            "commit: ${{ github.sha }}",
-            "run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "job: ${{ github.job }}"
+            "commit: $env:COMMIT_SHA",
+            "run: $env:RUN_URL",
+            "job: $env:JOB_NAME"
           ) | Tee-Object -FilePath "dist/STAR ARMADA/GATE-STATUS.txt"
-          "**Windows LAN gate for this candidate:** $env:GATE_VERDICT (commit ${{ github.sha }})" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "**Windows LAN gate for this candidate:** $env:GATE_VERDICT (commit $env:COMMIT_SHA) run $env:RUN_URL" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
       - name: Zip
         env:
           GATE_VERDICT: ${{ needs.windows-lan.result }}

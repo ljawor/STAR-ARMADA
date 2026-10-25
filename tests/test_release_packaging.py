@@ -250,8 +250,12 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertNotIn('-eq 9009', body)
         # A crash after the verdict is still a broken observation; take the last verdict.
         self.assertIn('Select-Object -Last 1', body)
-        # A watchdog exit or a sub-Python crash leaves a verdict but no error frame.
-        self.assertIn('if ($code -notin 0, 1)', body)
+        # A watchdog exit or a sub-Python crash leaves a verdict but no error frame. The set is
+        # asserted whole: `if ($code -notin 0, 1)` as a substring would also accept a widened
+        # `0, 1, 2` or `0, 1, 124`, which is exactly the hole this gate exists to close.
+        self.assertIn('if ($code -notin 0, 1) {', body)
+        self.assertNotIn('0, 1, 2', body)
+        self.assertNotRegex(body, r'-notin 0, 1,')
         self.assertRegex(body, r"if \(\$crashed\) \{ Write-Error '?\"?cleanup diagnostic crashed after")
         self.assertRegex(body, r'(?m)^\s+exit 0$')
         self.assertIn('GITHUB_STEP_SUMMARY', body)
@@ -275,9 +279,11 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertIn('GATE-STATUS.txt', job.group(1))
         self.assertIn('needs.windows-lan.result', job.group(1))
         self.assertIn("star-armada-candidate-win${{ needs.windows-lan.result != 'success'", job.group(1))
-        # Provenance: a verdict without a run is not attributable evidence.
-        for field in ('commit: ${{ github.sha }}', 'actions/runs/${{ github.run_id }}'):
+        # Provenance: a verdict without a run is not attributable evidence. The values reach
+        # the script through env (see test_no_step_interpolates_expressions_into_script_source).
+        for field in ('COMMIT_SHA: ${{ github.sha }}', 'RUN_URL: ${{ github.server_url }}'):
             self.assertIn(field, job.group(1))
+        self.assertIn('commit: $env:COMMIT_SHA', job.group(1))
         # The mark step must write where the zip reads, and before it compresses.
         self.assertLess(job.group(1).index('Mark the candidate with its gate verdict'),
                         job.group(1).index('Zip\n'), 'the verdict must be written before zipping')
@@ -293,6 +299,43 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertRegex(job.group(1),
                          r"(?m)^      - name: Require a green LAN gate for a verified candidate\n"
                          r"        if: needs.windows-lan.result != 'success'")
+
+
+    def test_no_step_interpolates_expressions_into_script_source(self):
+        """Workflow-wide: `${{ }}` is expanded before the shell sees the script.
+
+        A commit value interpolated into a PowerShell string is a command-injection surface and an
+        untestable one (the value is whatever the ref contains). One step was fixed at a time until
+        this test existed; five instances survived in the same job and the receipt said "the last".
+        """
+        source = self._workflow()
+        offenders = []
+        step = None
+        inside_run = False
+        indent = None
+        for number, line in enumerate(source.splitlines(), 1):
+            stripped = line.strip()
+            if re.match(r'^ {4,8}- (name|uses):', line):
+                step, inside_run, indent = stripped, False, None
+                continue
+            if re.match(r'^ {0,6}(jobs|[a-z-]+):$', line):
+                step = None
+            match = re.match(r'^(\s*)run: \|?', line)
+            if match:
+                inside_run, indent = True, len(match.group(1))
+                rest = line.split('run:', 1)[1].strip()
+                if rest and rest != '|' and '${{' in rest:
+                    offenders.append((number, step, rest[:80]))
+                continue
+            if inside_run:
+                if stripped.startswith('- ') or re.match(r'^\s*[a-z-]+:', line) and len(line) - len(line.lstrip()) <= indent:
+                    inside_run = False
+                    continue
+                if '${{' in line:
+                    offenders.append((number, step, stripped[:80]))
+        self.assertEqual(offenders, [],
+                         'expressions interpolated into script source: '
+                         + '; '.join(f'line {n} in {s_}: {text}' for n, s_, text in offenders))
 
 
 class WindowsMathConstantContractTests(unittest.TestCase):
