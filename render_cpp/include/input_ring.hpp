@@ -25,10 +25,24 @@
 #include <string>
 #include <vector>
 
+#include <limits>
+
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#include <filesystem>
+#else
 #include <fcntl.h>
+#include <sys/file.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#endif
 
 namespace armada {
 namespace input {
@@ -43,6 +57,7 @@ constexpr char kRingMagic[8] = {'A', 'R', 'M', 'A', 'D', 'A', 'R', '1'};
 constexpr uint16_t kRingVersion = 1;
 constexpr size_t kRingHeaderBytes = 64;
 constexpr size_t kSlotOverhead = 8 + 4 + 8;   // begin tag, length, closing tag
+constexpr size_t kSlotTrailer = 8;            // the closing tag at the end of the slot
 constexpr size_t kMinSlotBytes = 1024;
 
 enum Kind : uint8_t {
@@ -229,8 +244,41 @@ public:
       throw InputError("slot count must be 1..4096");
     if (slotBytes < kMinSlotBytes)
       throw InputError("slot bytes below the minimum");
+    if (slotBytes > (std::numeric_limits<uint32_t>::max)() ||
+        slotBytes > ((std::numeric_limits<size_t>::max)() - kRingHeaderBytes) / slots)
+      throw InputError("slot bytes exceed the wire or mapping size limit");
     slots_ = slots;
     slotBytes_ = slotBytes;
+    const size_t total = kRingHeaderBytes + size_t(slots_) * slotBytes_;
+#ifdef _WIN32
+    // The public narrow path is UTF-8, not the machine's active ANSI code page.
+    const auto nativePath = std::filesystem::u8path(path);
+    file_ = ::CreateFileW(nativePath.c_str(), GENERIC_READ | GENERIC_WRITE,
+                          FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_ALWAYS,
+                          FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (file_ == INVALID_HANDLE_VALUE)
+      windowsFailure("cannot open the input ring");
+    // Match Python's msvcrt.locking offset exactly. Locking payload byte zero would
+    // deny ordinary file readers; a pathname mutex would miss hard-link aliases.
+    OVERLAPPED producerLock{};
+    producerLock.Offset = DWORD(kProducerLockOffset & 0xffffffffu);
+    producerLock.OffsetHigh = DWORD(kProducerLockOffset >> 32);
+    if (!::LockFileEx(file_, LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY,
+                      0, 1, 0, &producerLock))
+      windowsFailure("cannot acquire input ring producer lock");
+    // Never truncate in CreateFileW: producer ownership must precede file mutation.
+    LARGE_INTEGER length{};
+    length.QuadPart = static_cast<LONGLONG>(total);
+    if (!::SetFilePointerEx(file_, length, nullptr, FILE_BEGIN) || !::SetEndOfFile(file_))
+      windowsFailure("cannot size the input ring");
+    mapping_ = ::CreateFileMappingW(file_, nullptr, PAGE_READWRITE, 0, 0, nullptr);
+    if (!mapping_)
+      windowsFailure("cannot create the input ring mapping");
+    map_ = static_cast<uint8_t*>(::MapViewOfFile(mapping_, FILE_MAP_READ | FILE_MAP_WRITE,
+                                               0, 0, total));
+    if (!map_)
+      windowsFailure("cannot map the input ring");
+#else
     fd_ = ::open(path.c_str(), O_RDWR | O_CREAT, 0600);
     if (fd_ < 0)
       throw InputError("cannot open the input ring: " + path);
@@ -241,7 +289,6 @@ public:
       fd_ = -1;
       throw InputError("input ring already has a producer: " + path);
     }
-    const size_t total = kRingHeaderBytes + size_t(slots_) * slotBytes_;
     if (::ftruncate(fd_, off_t(total)) != 0) {
       ::close(fd_);
       fd_ = -1;
@@ -254,6 +301,7 @@ public:
       throw InputError("cannot map the input ring");
     }
     map_ = static_cast<uint8_t*>(mapped);
+#endif
     bytes_ = total;
     std::memset(map_, 0, total);
     std::memcpy(map_, kRingMagic, 8);
@@ -269,6 +317,21 @@ public:
   ~RingWriter() { close(); }
 
   void close() {
+#ifdef _WIN32
+    if (map_) {
+      ::UnmapViewOfFile(map_);
+      map_ = nullptr;
+    }
+    if (mapping_) {
+      ::CloseHandle(mapping_);
+      mapping_ = nullptr;
+    }
+    // The file handle owns the byte lock. Release it LAST, after all writable views.
+    if (file_ != INVALID_HANDLE_VALUE) {
+      ::CloseHandle(file_);
+      file_ = INVALID_HANDLE_VALUE;
+    }
+#else
     if (map_) {
       ::munmap(map_, bytes_);
       map_ = nullptr;
@@ -277,9 +340,13 @@ public:
       ::close(fd_);
       fd_ = -1;
     }
+#endif
   }
 
-  size_t payloadBytes() const { return slotBytes_ - kSlotOverhead; }
+  // The closing tag owns the slot's last bytes, so a batch that filled slotBytes_ -
+  // kSlotOverhead would have its tail overwritten by that tag (and, in the last slot,
+  // written past the mapping). ring.py and frame_v2.hpp subtract the same trailer.
+  size_t payloadBytes() const { return slotBytes_ - kSlotOverhead - kSlotTrailer; }
 
   uint64_t published() const { return published_; }
 
@@ -308,7 +375,21 @@ private:
   size_t slotBytes_ = 0;
   uint16_t slots_ = 0;
   uint64_t published_ = 0;
+#ifdef _WIN32
+  static constexpr uint64_t kProducerLockOffset = uint64_t{1} << 62;
+  HANDLE file_ = INVALID_HANDLE_VALUE;
+  HANDLE mapping_ = nullptr;
+
+  [[noreturn]] void windowsFailure(const char* operation) {
+    const DWORD error = ::GetLastError();
+    // A throwing constructor has no destructor: explicitly release partially acquired
+    // mappings/handles and the producer lock on every failed acquisition.
+    close();
+    throw InputError(std::string(operation) + " (Windows error " + std::to_string(error) + ")");
+  }
+#else
   int fd_ = -1;
+#endif
 };
 
 }  // namespace input

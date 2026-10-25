@@ -3,6 +3,9 @@ project(armada_offline_viewer LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# MSVC hides the classic math constants (M_PI) behind _USE_MATH_DEFINES; viewer.cpp,
+# frame_v2.hpp and their tests use them. Harmless on the POSIX toolchains.
+add_compile_definitions(_USE_MATH_DEFINES)
 include(FetchContent)
 
 # Source pins are deliberate: bgfx's initialization API changes across revisions.

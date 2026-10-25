@@ -47,6 +47,15 @@ jobs:
           python tools/lan_state_diff.py dump --out state-win-ticks0.json
           python tools/lan_state_diff.py dump --out state-win-ticks1.json --ticks 1
           python tools/lan_state_diff.py dump --out state-win-contact-ticks60.json --scene contact --ticks 60
+      - name: Portable renderer transport on real Windows
+        env:
+          PYTHONPATH: tests
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+          TMPDIR: ${{ runner.temp }}
+        # All portable renderer/ownership cases execute; a skipped import is not acceptance.
+        run: >-
+          python -c "import unittest; names = ['test_render_camera', 'test_render_live', 'test_render_single_path', 'test_render_ring']; suite = unittest.defaultTestLoader.loadTestsFromNames(names); expected = suite.countTestCases(); assert expected >= 39, expected; result = unittest.TextTestRunner(verbosity=2).run(suite); raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and not result.skipped else 1)"
       - name: Focused LAN tests on Windows
         env:
           PYTHONPATH: tests
@@ -85,6 +94,27 @@ jobs:
           python -c "import os, unittest; assert os.name == 'nt', 'Native Windows deletion gate requires Windows'; suite = unittest.defaultTestLoader.loadTestsFromName('test_replay_deletion_windows.NativeWindowsDeletionTests'); expected = suite.countTestCases(); result = unittest.TextTestRunner(verbosity=2).run(suite); optional = 'test_file_symlink_is_never_deleted_or_followed'; raise SystemExit(0 if result.wasSuccessful() and result.testsRun == expected and all(test._testMethodName == optional for test, reason in result.skipped) else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest test_replay_deletion_windows test_replay_library -v
+      - name: Native input-ring source contract
+        # Cheap tripwire for the Win32 branch and the shared producer-lock byte; a
+        # source assertion is not a compile, so the native build below stays the proof.
+        run: python render_cpp/tests/test_native_transport_platform_contract.py
+      - name: Observe native Windows worker cleanup
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 3
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+          TMPDIR: ${{ runner.temp }}
+        # Observation, not a gate: the frame-file handle retention it reports is a
+        # separate open defect, so a red baseline must not turn this job red (that
+        # would also skip the packaging job behind it). The log is uploaded either way.
+        run: |
+          python tools/diag_windows_worker_cleanup.py --run --close-process-handle-hypothesis 2>&1 | Tee-Object -FilePath native-worker-cleanup-windows.log
+          $code = $LASTEXITCODE
+          if ($null -eq $code) { $code = 1 }
+          Write-Output "native worker cleanup observation exited $code (non-blocking)"
+          exit 0
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -94,6 +124,7 @@ jobs:
             state-win-ticks0.json
             state-win-ticks1.json
             state-win-contact-ticks60.json
+            native-worker-cleanup-windows.log
 
   package-windows:
     needs: windows-lan

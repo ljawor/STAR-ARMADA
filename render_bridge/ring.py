@@ -28,11 +28,11 @@ that sees published == n can trust slot n once both tags agree.
 """
 from __future__ import annotations
 
-import fcntl
 import mmap
 import os
 from pathlib import Path
 import struct
+import weakref
 
 RING = struct.Struct('<8sHHIQ')
 MAGIC = b'ARMADAR1'
@@ -47,6 +47,20 @@ SLOT_OVERHEAD = 2 * TAG.size + LENGTH.size   # offset of the frame bytes inside 
 # failed its own crc.
 SLOT_TRAILER = TAG.size
 MIN_SLOT_BYTES = 1024
+# Shared with native producers: one byte outside every supported ring extent.
+# Windows byte-range locks must never cover the header/payload read by native I/O.
+PRODUCER_LOCK_OFFSET = 1 << 62
+
+
+def _lock_producer(fd):
+    if os.name == 'nt':
+        import msvcrt
+        os.lseek(fd, PRODUCER_LOCK_OFFSET, os.SEEK_SET)
+        msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+        os.lseek(fd, 0, os.SEEK_SET)
+    else:
+        import fcntl
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 
 class RingError(ValueError):
@@ -64,6 +78,8 @@ class Ring:
         self._writable = writable
         self._published = 0
         self._closed = False
+        self._lock_fd = None
+        self._release_lock = None
 
     def _buffer(self) -> mmap.mmap:
         if self._closed:
@@ -77,51 +93,73 @@ class Ring:
         slot_bytes = int(slot_bytes)
         if not 1 <= slots <= 4096:
             raise RingError('slot count must be 1..4096')
-        if slot_bytes < MIN_SLOT_BYTES:
-            raise RingError(f'slot bytes must be at least {MIN_SLOT_BYTES}')
+        if not MIN_SLOT_BYTES <= slot_bytes <= 0xffffffff:
+            raise RingError(f'slot bytes must be {MIN_SLOT_BYTES}..4294967295')
+        extent = HEADER_BYTES + slots * slot_bytes
+        if extent >= PRODUCER_LOCK_OFFSET:
+            raise RingError('ring extent overlaps producer lock byte')
         path = Path(path)
         if path.parent and not path.parent.exists():
             path.parent.mkdir(parents=True, exist_ok=True)
         # No O_TRUNC here: the file must survive a refused second producer intact, so it
         # is emptied only after the lock is held.
-        fd = os.open(path, os.O_RDWR | os.O_CREAT, 0o600)
+        fd = os.open(path, os.O_RDWR | os.O_CREAT | getattr(os, 'O_BINARY', 0), 0o600)
+        mapping = None
         try:
-            # The ring is single-producer: `create` truncates the header, so a second
-            # producer on the same path would restart the counter under the first one and
-            # a consumer would report nonsense drops. An advisory lock makes that an
-            # error instead of a silent corruption. Readers never take the lock.
+            # Readers never take this lock; contention must fail before truncation.
             try:
-                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                _lock_producer(fd)
             except OSError as error:
                 raise RingError(f'ring already has a producer: {path}') from error
             os.ftruncate(fd, 0)                      # a new session starts from zeroed slots
-            os.ftruncate(fd, HEADER_BYTES + slots * slot_bytes)
+            os.ftruncate(fd, extent)
             mapping = mmap.mmap(fd, 0, access=mmap.ACCESS_WRITE)
-        finally:
-            os.close(fd)
-        RING.pack_into(mapping, 0, MAGIC, VERSION, slots, slot_bytes, 0)
-        return cls(path, slots=slots, slot_bytes=slot_bytes, mapping=mapping, writable=True)
+            RING.pack_into(mapping, 0, MAGIC, VERSION, slots, slot_bytes, 0)
+            ring = cls(path, slots=slots, slot_bytes=slot_bytes, mapping=mapping, writable=True)
+            # mmap does not retain the original descriptor on every platform.
+            ring._lock_fd = fd
+            # Exports retain the mmap, not the Ring. Keep ownership for that entire
+            # lifetime; the callback must not retain the mapping itself.
+            ring._release_lock = weakref.finalize(mapping, os.close, fd)
+            return ring
+        except BaseException:
+            try:
+                if mapping is not None:
+                    mapping.close()
+            finally:
+                os.close(fd)
+            raise
 
     @classmethod
     def open(cls, path, *, writable=False):
         path = Path(path)
         if not path.exists():
             raise RingError(f'ring file does not exist: {path}')
-        fd = os.open(path, os.O_RDWR if writable else os.O_RDONLY)
+        flags = (os.O_RDWR if writable else os.O_RDONLY) | getattr(os, 'O_BINARY', 0)
+        fd = os.open(path, flags)
+        mapping = None
         try:
-            mapping = mmap.mmap(fd, 0, access=mmap.ACCESS_WRITE if writable else mmap.ACCESS_READ)
-        finally:
-            os.close(fd)
-        magic, version, slots, slot_bytes, published = RING.unpack_from(mapping, 0)
-        if magic != MAGIC or version != VERSION:
-            raise RingError('unknown ring magic or version')
-        if not 1 <= slots <= 4096 or slot_bytes < MIN_SLOT_BYTES:
-            raise RingError('ring header declares an invalid layout')
-        if len(mapping) != HEADER_BYTES + slots * slot_bytes:
-            raise RingError('ring file size does not match its header')
-        ring = cls(path, slots=slots, slot_bytes=slot_bytes, mapping=mapping, writable=writable)
-        ring._published = published
-        return ring
+            try:
+                if os.fstat(fd).st_size < HEADER_BYTES:
+                    raise RingError('ring file is shorter than its header')
+                mapping = mmap.mmap(fd, 0, access=mmap.ACCESS_WRITE if writable else mmap.ACCESS_READ)
+            finally:
+                os.close(fd)
+            magic, version, slots, slot_bytes, published = RING.unpack_from(mapping, 0)
+            if magic != MAGIC or version != VERSION:
+                raise RingError('unknown ring magic or version')
+            if not 1 <= slots <= 4096 or slot_bytes < MIN_SLOT_BYTES:
+                raise RingError('ring header declares an invalid layout')
+            extent = HEADER_BYTES + slots * slot_bytes
+            if extent >= PRODUCER_LOCK_OFFSET or len(mapping) != extent:
+                raise RingError('ring file size does not match its header')
+            ring = cls(path, slots=slots, slot_bytes=slot_bytes, mapping=mapping, writable=writable)
+            ring._published = published
+            return ring
+        except BaseException:
+            if mapping is not None:
+                mapping.close()
+            raise
 
     # -- accessors ------------------------------------------------------------
     @property
@@ -206,11 +244,30 @@ class Ring:
         return sequence, frame
 
     def close(self):
-        if not self._closed:
-            self._closed = True
-            # Closing the mapping drops the mapping's reference to the descriptor, which
-            # is what releases the producer lock.
-            self._mapping.close()
+        if self._closed:
+            return
+        mapping = self._mapping
+        if not mapping.closed:
+            # Close the mapping first: it can refuse while an exported buffer is live,
+            # and releasing producer ownership then would let a second writer truncate
+            # a file that is still mapped writable. A refusal leaves the ring owned and
+            # retryable instead of permanently half-closed.
+            mapping.close()
+        self._closed = True
+        self._release_ownership()
+
+    def _release_ownership(self):
+        release, self._release_lock = self._release_lock, None
+        fd, self._lock_fd = self._lock_fd, None
+        if release is None:
+            # Readers retain no descriptor; a producer always owns exactly one finalizer.
+            assert fd is None, 'producer descriptor without an owner'
+            return
+        if release.alive:
+            release()        # closes the original descriptor, releasing the producer lock
+            return
+        # Already closed by the finalizer; a second os.close() could hit a reused number.
+        assert fd is None or not _descriptor_open(fd), 'producer descriptor already released'
 
     def __enter__(self):
         return self
@@ -218,3 +275,11 @@ class Ring:
     def __exit__(self, *exc):
         self.close()
         return False
+
+
+def _descriptor_open(fd):
+    try:
+        os.fstat(fd)
+    except OSError:
+        return False
+    return True

@@ -1,5 +1,6 @@
 """Execute the real main boundary without bootstrapping SDL or a GPU."""
 import ast
+from pathlib import Path
 from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
@@ -24,6 +25,11 @@ class NativeMainBoundaryTests(unittest.TestCase):
     def exercise_poll_failure(self, mode):
         window = self.window(mode)
         process = window._process
+        mapping = window._mapping
+        assert process is not None and mapping is not None and window._temporary is not None
+        worker_directory = Path(window._temporary.name)
+        self.assertFalse(mapping.closed)
+        self.assertTrue((worker_directory / 'frame.bgra').is_file())
         # A completed native frame precedes the failed next loop poll.
         self.assertEqual(window._request('frame')['count'], 320 * 240 * 4)
         resources = [Mock(), Mock()]
@@ -74,7 +80,18 @@ class NativeMainBoundaryTests(unittest.TestCase):
         self.assertNotIn('camera', state)
         self.assertNotIn('directory', state)
         self.assertIsNotNone(process.poll())
+        if mode == 9:
+            self.assertEqual(process.returncode, 9)
+            self.assertIn('exitcode=9', reason)
+        else:
+            self.assertNotEqual(process.returncode, 0)
+        self.assertTrue(window._terminal)
+        self.assertTrue(mapping.closed)
         self.assertIsNone(window._mapping)
+        self.assertFalse(worker_directory.exists())
+        window.kill()
+        window.terminate()
+        self.assertFalse(worker_directory.exists())
 
 
     def test_child_exit_after_frame_returns_to_menu_once(self):

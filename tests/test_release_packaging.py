@@ -195,6 +195,53 @@ class WindowsCompilerImageTests(unittest.TestCase):
                 self.assertIn('      CMAKE_GENERATOR_PLATFORM: x64\n', body)
 
 
+class WindowsRuntimeGateTests(unittest.TestCase):
+    def _step(self, source, name):
+        import re
+        block = re.search(r'      - name: ' + re.escape(name) + r'\n(.*?)(?=      - |\Z)',
+                          source, re.DOTALL)
+        self.assertIsNotNone(block, f'workflow step is missing: {name}')
+        return block.group(1)
+
+    def test_windows_runs_every_portable_renderer_case_without_skips(self):
+        source = (ROOT / '.github/workflows/windows-signal.yml').read_text(encoding='utf-8')
+        body = self._step(source, 'Portable renderer transport on real Windows')
+        for module in ('test_render_camera', 'test_render_live', 'test_render_single_path',
+                       'test_render_ring'):
+            self.assertIn(f"'{module}'", body)
+        # A skipped import or a partially loaded suite must not read as acceptance.
+        self.assertIn('assert expected >= 39', body)
+        self.assertIn('result.testsRun == expected', body)
+        self.assertIn('not result.skipped', body)
+
+    def test_windows_steps_the_native_source_contract(self):
+        source = (ROOT / '.github/workflows/windows-signal.yml').read_text(encoding='utf-8')
+        step = self._step(source, 'Native input-ring source contract')
+        self.assertIn('render_cpp/tests/test_native_transport_platform_contract.py', step)
+
+    def test_cleanup_diagnostic_is_observation_and_keeps_its_artifact(self):
+        source = (ROOT / '.github/workflows/windows-signal.yml').read_text(encoding='utf-8')
+        body = self._step(source, 'Observe native Windows worker cleanup')
+        self.assertIn('if: always()', body)
+        self.assertIn('tools/diag_windows_worker_cleanup.py --run --close-process-handle-hypothesis',
+                      body)
+        # The handle retention it observes is still an open defect: a red baseline
+        # must stay out of the job verdict and must not starve the packaging job.
+        self.assertIn('continue-on-error: true', body)
+        self.assertIn('$null -eq $code', body)
+        self.assertIn('exit 0', body)
+        self.assertIn('native-worker-cleanup-windows.log', body)
+        self.assertIn('            native-worker-cleanup-windows.log\n', source)
+
+
+class WindowsMathConstantContractTests(unittest.TestCase):
+    def test_native_build_defines_msvc_math_constants(self):
+        # Static contract only: MSVC hides M_PI behind _USE_MATH_DEFINES, and the POSIX
+        # build cannot observe that. Actual proof is the Windows package job compiling it.
+        source = (ROOT / 'render_cpp' / 'CMakeLists.txt').read_text(encoding='utf-8')
+        self.assertIn('add_compile_definitions(_USE_MATH_DEFINES)', source)
+
+
 class FrozenProbeShellImportTests(unittest.TestCase):
     def test_actual_python_shell_preludes_import_checkout_from_temp_script(self):
         import os

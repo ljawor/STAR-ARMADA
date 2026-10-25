@@ -7,7 +7,7 @@ import sys
 import tempfile
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from render_bridge import embedded
 from render_bridge.native_worker import process_creation_time
@@ -79,6 +79,37 @@ const char *armada_error(void *h) { return "injected terminal error"; }
 void armada_close(void *h) { mark("close"); if(mode==3 || mode==4) for(;;) sleep(1); }
 '''
 
+class AbortDiagnosticTests(unittest.TestCase):
+    """No native fixture: inject only the already-confirmed cleanup failure seam."""
+
+    def test_abort_preserves_original_diagnostic_when_cleanup_fails(self):
+        import threading
+        window = object.__new__(embedded.EmbeddedWindow)
+        window._owner = threading.get_ident()
+        window._terminal = False
+        window._process = Mock(returncode=4)
+        window._tail = bytearray(b'last native diagnostic')
+        reason = EOFError('original worker EOF')
+        cleanup = PermissionError('frame.bgra is locked')
+        with patch.object(window, '_stop', side_effect=cleanup) as stop:
+            with self.assertRaises(Exception) as caught:
+                window._abort(reason)
+        stop.assert_called_once_with(hard=True)
+        error = caught.exception
+        self.assertIsInstance(error, RuntimeError, 'cleanup replaced the native failure')
+        self.assertIs(error.__cause__, reason)
+        self.assertIn('original worker EOF', str(error))
+        self.assertIn('exitcode=4', str(error))
+        self.assertIn('last native diagnostic', str(error))
+        self.assertIn('cleanup failed', str(error))
+        self.assertIn('PermissionError', str(error))
+        self.assertIn('frame.bgra is locked', str(error))
+        self.assertTrue(window._terminal)
+        with patch.object(embedded, 'send', side_effect=AssertionError('terminal IO')):
+            with self.assertRaisesRegex(RuntimeError, 'terminal'):
+                window._request('frame')
+
+
 class NativeWorkerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -144,11 +175,25 @@ target_compile_definitions(bad PRIVATE ABI=99)
 
     def test_native_stdout_is_drained_and_diagnostics_are_bounded(self):
         window = self.window(6)
+        mapping = window._mapping
+        assert mapping is not None and window._temporary is not None
+        assert window._process is not None
+        directory = Path(window._temporary.name)
+        self.assertFalse(mapping.closed)
+        self.assertTrue((directory / 'frame.bgra').is_file())
         with self.assertRaisesRegex(RuntimeError, 'exitcode=6') as error:
             window._request('frame')
+        self.assertEqual(window._process.poll(), 6)
+        self.assertTrue(mapping.closed)
+        self.assertIsNone(window._mapping)
+        self.assertFalse(directory.exists())
+        self.assertTrue(window._terminal)
         self.assertLessEqual(len(window._tail), 8192)
         self.assertIn('DIAGNOSTIC-END', str(error.exception))
         self.assertLess(len(str(error.exception)), 8500)
+        window.kill()
+        window.terminate()
+        self.assertFalse(directory.exists())
 
     def test_log_disk_failure_still_drains_a_healthy_frame(self):
         window = self.window(10)
@@ -192,12 +237,25 @@ time.sleep(30)
 
     def test_fatal_exit_is_contained_and_terminal(self):
         window = self.window(1)
+        mapping = window._mapping
+        assert mapping is not None and window._temporary is not None
+        assert window._process is not None
+        directory = Path(window._temporary.name)
+        self.assertFalse(mapping.closed)
+        self.assertTrue((directory / 'frame.bgra').is_file())
         with self.assertRaisesRegex(RuntimeError, 'exitcode=4'):
             window._request('frame')
-        self.assertEqual(window._process.returncode, 4)
+        self.assertEqual(window._process.poll(), 4)
+        self.assertTrue(window._terminal)
         with self.assertRaisesRegex(RuntimeError, 'terminal'):
             window.present()
+        self.assertTrue(mapping.closed)
         self.assertIsNone(window._mapping)
+        self.assertFalse(directory.exists())
+        window.kill()
+        window.terminate()
+        self.assertEqual(window._process.poll(), 4)
+        self.assertFalse(directory.exists())
 
     def test_blocked_frame_is_killed_and_reaped(self):
         window = self.window(2)
@@ -312,14 +370,24 @@ time.sleep(30)
             version=__version__, frozen=False, native_library=str(self.library)))
 
     def test_probe_reads_the_single_game_version_authority(self):
-        import game
         import json
-        from render_bridge.native_worker import cli
         output = self.base / 'patched-version-probe.json'
-        with patch.object(game, '__version__', '9.8.7-test'), \
-                patch.dict(os.environ, STAR_ARMADA_CPP_LIBRARY=str(self.library)):
-            self.assertEqual(cli(['--probe', '--output', str(output)]), 0)
-        self.assertEqual(json.loads(output.read_text())['version'], '9.8.7-test')
+        # The real CLI loads a DLL. Keep that lifetime inside a fresh process so
+        # Windows can remove the compiled fixture after the child has exited.
+        command = '''import sys
+from unittest.mock import patch
+import game
+from render_bridge.native_worker import cli
+with patch.object(game, '__version__', '9.8.7-test'):
+    raise SystemExit(cli(sys.argv[1:]))
+'''
+        env = dict(os.environ, STAR_ARMADA_CPP_LIBRARY=str(self.library))
+        result = subprocess.run([sys.executable, '-c', command, '--probe',
+                                 '--output', str(output)], cwd=ROOT, env=env,
+                                capture_output=True, timeout=5)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(output.read_text()), dict(status='ok', abi=1,
+            version='9.8.7-test', frozen=False, native_library=str(self.library)))
 
     def test_configuration_rejects_inconsistent_argv_dimensions_before_load(self):
         import json

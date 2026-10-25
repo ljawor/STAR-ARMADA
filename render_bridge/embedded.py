@@ -136,10 +136,16 @@ class EmbeddedWindow:
 
     def _abort(self, reason):
         self._terminal = True
-        self._stop(hard=True)
+        cleanup_failure = ''
+        try:
+            self._stop(hard=True)
+        except Exception as exc:
+            # A cleanup failure is evidence, not a replacement for the native fault.
+            cleanup_failure = f'; cleanup failed: {type(exc).__name__}: {exc}'
         code = self._process.returncode if self._process else None
         tail = bytes(self._tail).decode('utf-8', errors='replace')
-        raise RuntimeError(f'Native renderer failed: {reason}; exitcode={code}\n{tail}') from reason
+        raise RuntimeError(f'Native renderer failed: {reason}; exitcode={code}'
+                           f'{cleanup_failure}\n{tail}') from reason
 
     def _request(self, command):
         self._check_thread()
