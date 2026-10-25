@@ -1,0 +1,96 @@
+{
+  "passed": true,
+  "zoom_ratios": {
+    "laser": 4.70002953055752,
+    "missile": 5.176303960924519,
+    "torpedo": 4.87174510701236
+  },
+  "results": {
+    "laser-near": {
+      "changed_pixels": 169,
+      "axis_extent_px": 47.00029530557521,
+      "bbox": [
+        432,
+        298,
+        479,
+        301
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "laser-far": {
+      "changed_pixels": 24,
+      "axis_extent_px": 10.0,
+      "bbox": [
+        469,
+        298,
+        479,
+        301
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "missile-near": {
+      "changed_pixels": 350,
+      "axis_extent_px": 88.00001403652817,
+      "bbox": [
+        388,
+        297,
+        476,
+        302
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "missile-far": {
+      "changed_pixels": 32,
+      "axis_extent_px": 17.00054994854105,
+      "bbox": [
+        460,
+        299,
+        477,
+        300
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "torpedo-near": {
+      "changed_pixels": 1296,
+      "axis_extent_px": 190.00000146610603,
+      "bbox": [
+        286,
+        295,
+        476,
+        304
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "torpedo-far": {
+      "changed_pixels": 74,
+      "axis_extent_px": 39.00039868519008,
+      "bbox": [
+        437,
+        299,
+        476,
+        300
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "perspective": {
+      "changed_pixels": 46,
+      "axis_extent_px": 19.233905703533907,
+      "bbox": [
+        615,
+        213,
+        624,
+        230
+      ],
+      "perspective_axis_error_degrees": 0.16296689234708506
+    }
+  },
+  "head": "8b6aa096c15ba1d620a8df056296dad61b781067",
+  "source_hashes": {
+    "render/emissive_batch.py": "64b92f5656df5cf0839562e94899f889d2d942a6b6fdf14ea448a231c8a6c960",
+    "render_bridge/emissive.py": "dd23a7e5921cd34ffbc9d6a65d082dba56fa058fbe65601ca614229c3addb8dc",
+    "render_cpp/src/viewer.cpp": "ac752ece6ebaebde9dc77137939ebe51275ddb2ad49e474109000ea53ace4e52",
+    "render_cpp/include/projectile_effects.hpp": "8982beab4b08263cad739294400f190a2ff7251f5497f395f0acfb84ffba0313",
+    "render_cpp/include/emissive.hpp": "ffb59a01851cfdf6076a72ca8270e85c14d212a80cacdd4e3b0b58e657fe9195"
+  },
+  "native_sha256": "e91328e5f58bc089961a07c23131ba1db9a5c7f77b46df08d9a7202c388b4066"
+}

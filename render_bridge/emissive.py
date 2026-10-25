@@ -7,13 +7,14 @@ window cannot infer any of them, so the *decisions and the shapes* cross as prim
     header  <8sHHII   20 B   magic "ARMEMIT1", version, count (<=4096), reserved, crc32
     record  <BBH4B3f3fffHH  44 B
               kind B     RIBBON 1 | DISC 2 | RING 3 | BOLT 4 | EXPLOSION 5 | SHIELD 6
-                         SHIELD_HIT 7 | HULL_HIT 8
+                         SHIELD_HIT 7 | HULL_HIT 8 | FLIGHT 9
               shape B    RIBBON: 0 camera-facing | 1 flat
                          SHIELD_HIT: the contact size in tenths of a world unit (2..18 -> 20..180),
                          because the cap's aperture is min(.19, max(.055, size/radius)) and the
                          window would otherwise have to guess the size the damage system chose
                          DISC/RING: 0 billboard | 1 flat (ecliptic)
-                         BOLT: 0 elongated along its axis | 1 square
+                         BOLT: 0 elongated along its axis | 1 square (legacy)
+                         FLIGHT: 0 laser | 1 missile | 2 torpedo
               flags H    bit0 depth test, bit1 additive blend
               colour 4B  rgba
               a 3f       RIBBON start | DISC/RING centre | BOLT position
@@ -36,14 +37,18 @@ window cannot infer any of them, so the *decisions and the shapes* cross as prim
     the tint the renderer derives from that fraction plus the fade alpha. The window builds the
     shell from the tint and its own camera; it does not re-derive how damaged a unit is.
 
-Two units appear here on purpose. A beam is a world-sized ribbon: its width is part of how a
-capital ship's fire reads at any zoom. A bolt is screen-sized: the Python renderer derives its
-extents from `px_per_world` at its own camera, and in live mode the window owns the camera, so the
-window converts the pixel extents at its own depth. Carrying Python's world size across would make
-a bolt change size when the player zoomed.
+FLIGHT 9 supersedes pixel-sized BOLT records for live laser/missile/torpedo presentation. It uses
+`a` as the actual head, `b` as full world velocity and radius/width as WORLD half-length/half-width.
+Shape selects laser/missile/torpedo; flags must be depth+additive (3), segments must be zero.
+Coordinates, velocities and extents must be finite with magnitude <=1e8; extents and speed must be
+positive. The native renderer builds perspective-correct geometry behind the head, with a 1.2 px
+full-width readability floor only; length is never floored in pixels. The 44-byte version-1 record
+layout is unchanged. BOLT remains decodable for historical fixtures, not the live producer; old
+consumers reject unknown kind 9, so this change requires rebuilding the matched native consumer.
 """
 from __future__ import annotations
 
+import math
 import struct
 import zlib
 
@@ -62,6 +67,10 @@ EXPLOSION = 5                      # a blast carried as parameters, rebuilt by t
 SHIELD = 6                         # a standing shield shell: centre, radius, strength, tint
 SHIELD_HIT = 7                     # a damage contact on that shell: centre, normal, radius, age
 HULL_HIT = 8                       # a bare-hull contact: point, normal, size, age
+FLIGHT = 9                         # physical projectile: head, velocity, WORLD half-length/width
+FLIGHT_LASER = 0
+FLIGHT_MISSILE = 1
+FLIGHT_TORPEDO = 2
 
 SHAPE_CAMERA = 0                   # camera-facing billboard
 SHAPE_FLAT = 1                     # lying in the ecliptic
@@ -128,6 +137,16 @@ def bolt(position, heading, half_length_px, half_width_px, colour, *, square=Fal
                    radius=half_length_px, width=half_width_px)
 
 
+def flight(position, velocity, half_length, half_width, colour, *, subtype=FLIGHT_LASER) -> dict:
+    """World-axis projectile. Only a subpixel width floor is applied by the consumer.
+
+    `position` is the actual head; visible body and short exhaust extend behind it. No target,
+    muzzle, physics or interpolation decision is invented by the renderer.
+    """
+    return _record(FLIGHT, subtype, colour, position, velocity, radius=half_length,
+                   width=half_width, depth=True)
+
+
 def explosion(centre, size, age, seed, colour=(1.0, 1.0, 1.0, 1.0)) -> dict:
     """A detonation as parameters: position, size, age and seed.
 
@@ -178,6 +197,19 @@ def hull_hit(point, normal, size, age, seed, *, visual_contact=False) -> dict:
                    flags_extra=FLAG_VISUAL_CONTACT if visual_contact else 0)
 
 
+def _validate_flight(record):
+    if record['shape'] not in (FLIGHT_LASER, FLIGHT_MISSILE, FLIGHT_TORPEDO):
+        raise EmissiveError('unknown flight subtype')
+    if record['flags'] != FLAG_DEPTH | FLAG_ADDITIVE or record.get('segments', 0):
+        raise EmissiveError('flight must be depth-tested additive, with no segments')
+    values = (*record['a'], *record['b'], record['radius'], record['width'])
+    if any(not math.isfinite(v) or abs(v) > 1e8 for v in values):
+        raise EmissiveError('flight outside finite presentation bounds')
+    if (record['radius'] <= 0 or record['width'] <= 0
+            or sum(v*v for v in record['b']) <= 1e-18):
+        raise EmissiveError('flight must have positive extents and nonzero velocity')
+
+
 def encode(records) -> bytes:
     records = list(records)
     if len(records) > MAX_RECORDS:
@@ -185,8 +217,10 @@ def encode(records) -> bytes:
     body = bytearray()
     for record in records:
         kind = int(record['kind'])
-        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD, SHIELD_HIT, HULL_HIT):
+        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD, SHIELD_HIT, HULL_HIT, FLIGHT):
             raise EmissiveError(f'unknown emissive kind {kind}')
+        if kind == FLIGHT:
+            _validate_flight(record)
         body += RECORD.pack(kind, int(record['shape']), int(record['flags']),
                             *[int(v) for v in record['colour']],
                             *[float(v) for v in record['a']],
@@ -220,7 +254,7 @@ def decode(data):
     for index in range(count):
         fields = RECORD.unpack_from(body, index * RECORD_BYTES)
         kind, shape, flags = fields[0], fields[1], fields[2]
-        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD, SHIELD_HIT, HULL_HIT):
+        if kind not in (RIBBON, DISC, RING, BOLT, EXPLOSION, SHIELD, SHIELD_HIT, HULL_HIT, FLIGHT):
             raise EmissiveError(f'record {index}: unknown kind {kind}')
         if fields[-1]:
             raise EmissiveError(f'record {index}: reserved field must be zero')
@@ -229,4 +263,6 @@ def decode(data):
                     'a': tuple(fields[7:10]), 'b': tuple(fields[10:13]),
                     'radius': fields[13], 'width': fields[14],
                     'segments': fields[15]})
+        if kind == FLIGHT:
+            _validate_flight(out[-1])
     return out

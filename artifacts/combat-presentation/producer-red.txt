@@ -1,0 +1,203 @@
+FFFFFFFFFFF
+======================================================================
+FAIL: test_all_three_weapon_families_leave_the_pixel_billboard_path (test_combat_presentation.ProjectilePresentationTests.test_all_three_weapon_families_leave_the_pixel_billboard_path) (weapon='laser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 23, in test_all_three_weapon_families_leave_the_pixel_billboard_path
+    records, stats = self.records([self.shot(weapon)])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_all_three_weapon_families_leave_the_pixel_billboard_path (test_combat_presentation.ProjectilePresentationTests.test_all_three_weapon_families_leave_the_pixel_billboard_path) (weapon='turbolaser')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 23, in test_all_three_weapon_families_leave_the_pixel_billboard_path
+    records, stats = self.records([self.shot(weapon)])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_all_three_weapon_families_leave_the_pixel_billboard_path (test_combat_presentation.ProjectilePresentationTests.test_all_three_weapon_families_leave_the_pixel_billboard_path) (weapon='point_defense')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 23, in test_all_three_weapon_families_leave_the_pixel_billboard_path
+    records, stats = self.records([self.shot(weapon)])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_all_three_weapon_families_leave_the_pixel_billboard_path (test_combat_presentation.ProjectilePresentationTests.test_all_three_weapon_families_leave_the_pixel_billboard_path) (weapon='missile')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 23, in test_all_three_weapon_families_leave_the_pixel_billboard_path
+    records, stats = self.records([self.shot(weapon)])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_all_three_weapon_families_leave_the_pixel_billboard_path (test_combat_presentation.ProjectilePresentationTests.test_all_three_weapon_families_leave_the_pixel_billboard_path) (weapon='torpedo')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 23, in test_all_three_weapon_families_leave_the_pixel_billboard_path
+    records, stats = self.records([self.shot(weapon)])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_codec_roundtrip_carries_world_units_and_subtype (test_combat_presentation.ProjectilePresentationTests.test_codec_roundtrip_carries_world_units_and_subtype)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 47, in test_codec_roundtrip_carries_world_units_and_subtype
+    records, _ = self.records([self.shot(w) for w in ('laser','missile','torpedo')])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_guided_and_unguided_have_distinct_silhouettes (test_combat_presentation.ProjectilePresentationTests.test_guided_and_unguided_have_distinct_silhouettes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 41, in test_guided_and_unguided_have_distinct_silhouettes
+    records, stats = self.records([self.shot(w) for w in ('laser','missile','torpedo')])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_head_is_real_position_direction_is_full_world_velocity (test_combat_presentation.ProjectilePresentationTests.test_head_is_real_position_direction_is_full_world_velocity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 35, in test_head_is_real_position_direction_is_full_world_velocity
+    records, _ = self.records([shot], lead=1/60)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_length_is_not_derived_from_viewport_or_zoom (test_combat_presentation.ProjectilePresentationTests.test_length_is_not_derived_from_viewport_or_zoom)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 29, in test_length_is_not_derived_from_viewport_or_zoom
+    records, _ = self.records([self.shot(size=1.), self.shot(size=2.)])
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_presentation_never_moves_or_reaims_the_simulated_shot (test_combat_presentation.ProjectilePresentationTests.test_presentation_never_moves_or_reaims_the_simulated_shot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 55, in test_presentation_never_moves_or_reaims_the_simulated_shot
+    self.records(shots, lead=.02)
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+======================================================================
+FAIL: test_stationary_malformed_direction_is_safe_not_an_invented_world_shot (test_combat_presentation.ProjectilePresentationTests.test_stationary_malformed_direction_is_safe_not_an_invented_world_shot)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 59, in test_stationary_malformed_direction_is_safe_not_an_invented_world_shot
+    records, stats = self.records([self.shot(velocity=(0.,0.,0.))])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 16, in records
+    return emissive_batch.projectiles(shots, lambda w: w,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/render/emissive_batch.py", line 181, in projectiles
+    length, width = extents_of(shape, shot.size, 1.0)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/lukaszjawor/Downloads/Project/STAR-ARMADA/tests/test_combat_presentation.py", line 17, in <lambda>
+    lambda *args: self.fail('Native flight must not consult screen-pixel extents'), lead=lead)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Native flight must not consult screen-pixel extents
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.174s
+
+FAILED (failures=11)
+pygame-ce 2.5.8 (SDL 2.32.10, Python 3.11.16)

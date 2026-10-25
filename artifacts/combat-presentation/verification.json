@@ -1,0 +1,207 @@
+{
+  "code_commit": "8b6aa096c15ba1d620a8df056296dad61b781067",
+  "python_tests": 115,
+  "native_tests": 16,
+  "native_products": {
+    "render_cpp/build-w02/armada_viewer": "e91328e5f58bc089961a07c23131ba1db9a5c7f77b46df08d9a7202c388b4066",
+    "render_cpp/build-w02/libarmada_embedded.dylib": "d09094e94e57e9abba345acc960c609f942b6b97c59843ffc754a4dbee6e099c"
+  },
+  "review_rounds": [
+    {
+      "delegation": "deleg_8beda5f2",
+      "passed": false,
+      "blocking": "Version bump left engine_version in release asset lock stale"
+    },
+    {
+      "delegation": "deleg_ee8ac57b",
+      "passed": true,
+      "scope": "Initial render review plus scoped followup; prior blocker closed; no new blocking findings"
+    },
+    {
+      "delegation": "deleg_722ca937",
+      "passed": true,
+      "scope": "Capture-only live-camera correction; no blocking findings"
+    }
+  ],
+  "platform": "macOS native Metal; not Windows graphics acceptance",
+  "final_probe": {
+    "passed": true,
+    "zoom_ratios": {
+      "laser": 4.70002953055752,
+      "missile": 5.176303960924519,
+      "torpedo": 4.87174510701236
+    },
+    "results": {
+      "laser-near": {
+        "changed_pixels": 169,
+        "axis_extent_px": 47.00029530557521,
+        "bbox": [
+          432,
+          298,
+          479,
+          301
+        ],
+        "perspective_axis_error_degrees": null
+      },
+      "laser-far": {
+        "changed_pixels": 24,
+        "axis_extent_px": 10.0,
+        "bbox": [
+          469,
+          298,
+          479,
+          301
+        ],
+        "perspective_axis_error_degrees": null
+      },
+      "missile-near": {
+        "changed_pixels": 350,
+        "axis_extent_px": 88.00001403652817,
+        "bbox": [
+          388,
+          297,
+          476,
+          302
+        ],
+        "perspective_axis_error_degrees": null
+      },
+      "missile-far": {
+        "changed_pixels": 32,
+        "axis_extent_px": 17.00054994854105,
+        "bbox": [
+          460,
+          299,
+          477,
+          300
+        ],
+        "perspective_axis_error_degrees": null
+      },
+      "torpedo-near": {
+        "changed_pixels": 1296,
+        "axis_extent_px": 190.00000146610603,
+        "bbox": [
+          286,
+          295,
+          476,
+          304
+        ],
+        "perspective_axis_error_degrees": null
+      },
+      "torpedo-far": {
+        "changed_pixels": 74,
+        "axis_extent_px": 39.00039868519008,
+        "bbox": [
+          437,
+          299,
+          476,
+          300
+        ],
+        "perspective_axis_error_degrees": null
+      },
+      "perspective": {
+        "changed_pixels": 46,
+        "axis_extent_px": 19.233905703533907,
+        "bbox": [
+          615,
+          213,
+          624,
+          230
+        ],
+        "perspective_axis_error_degrees": 0.16296689234708506
+      }
+    },
+    "head": "8b6aa096c15ba1d620a8df056296dad61b781067",
+    "source_hashes": {
+      "render/emissive_batch.py": "64b92f5656df5cf0839562e94899f889d2d942a6b6fdf14ea448a231c8a6c960",
+      "render_bridge/emissive.py": "dd23a7e5921cd34ffbc9d6a65d082dba56fa058fbe65601ca614229c3addb8dc",
+      "render_cpp/src/viewer.cpp": "ac752ece6ebaebde9dc77137939ebe51275ddb2ad49e474109000ea53ace4e52",
+      "render_cpp/include/projectile_effects.hpp": "8982beab4b08263cad739294400f190a2ff7251f5497f395f0acfb84ffba0313",
+      "render_cpp/include/emissive.hpp": "ffb59a01851cfdf6076a72ca8270e85c14d212a80cacdd4e3b0b58e657fe9195"
+    },
+    "native_sha256": "e91328e5f58bc089961a07c23131ba1db9a5c7f77b46df08d9a7202c388b4066"
+  },
+  "battle_summary": {
+    "close": {
+      "frames": 360,
+      "distance": 1600.0,
+      "native_camera": {
+        "distance": 1600.0,
+        "fov": 55.0,
+        "pitch": 35.0,
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "yaw": 15.0
+      },
+      "weapon_types": [
+        "laser",
+        "missile",
+        "torpedo",
+        "turbolaser"
+      ],
+      "max_projectiles": 12,
+      "native_emissive": {
+        "batches": 360,
+        "blend": "additive, no depth write; FLIGHT world-sized, historical BOLT pixel-sized",
+        "decode_failures": 0,
+        "dropped_vertices": 0,
+        "flight_primitives": 2289,
+        "fx_demo": "",
+        "primitives": 6123,
+        "ring": "/Users/lukaszjawor/.hermes/cache/scratch/combat-camera-verified/close/user/cpp-window/match-xxivrd49/emit.ring",
+        "triangles": 36624
+      },
+      "all_presentations_state_identical": true,
+      "all_workers_reaped": true
+    },
+    "tactical": {
+      "frames": 360,
+      "distance": 3500.0,
+      "native_camera": {
+        "distance": 3500.0,
+        "fov": 55.0,
+        "pitch": 35.0,
+        "target": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "yaw": 15.0
+      },
+      "weapon_types": [
+        "laser",
+        "missile",
+        "torpedo",
+        "turbolaser"
+      ],
+      "max_projectiles": 12,
+      "native_emissive": {
+        "batches": 360,
+        "blend": "additive, no depth write; FLIGHT world-sized, historical BOLT pixel-sized",
+        "decode_failures": 0,
+        "dropped_vertices": 0,
+        "flight_primitives": 2288,
+        "fx_demo": "",
+        "primitives": 6118,
+        "ring": "/Users/lukaszjawor/.hermes/cache/scratch/combat-camera-verified/tactical/user/cpp-window/match-4zv3pw1s/emit.ring",
+        "triangles": 36608
+      },
+      "all_presentations_state_identical": true,
+      "all_workers_reaped": true
+    }
+  },
+  "limitations": [
+    "Owner appearance/play acceptance pending; no combat merge or release authorized",
+    "Normal checkout is the handover branch; installed dist app is not rebuilt",
+    "Legacy Python/OpenGL projectile path unchanged",
+    "Capitals still use stock shared nose muzzle; per-mount origins are separate simulation work",
+    "Exact end-on direction has a small glow; near-end-on angular transition is not separately tuned",
+    "Width floor is 1.2 screen pixels, length and exhaust remain world-sized",
+    "Exhaust follows instantaneous velocity, not a saved curved trajectory",
+    "Legacy ion/plasma/kinetic point sprites remain outside the native carried set",
+    "No full suite, native Windows render, package or performance acceptance claimed"
+  ],
+  "failed_attempts": "Two MSAA/tail-visibility candidates failed the original zoom gates; retained, not treated as passes"
+}

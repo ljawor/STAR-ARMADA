@@ -1,0 +1,16 @@
+{
+  "close": {
+    "codec_name": "h264",
+    "width": 1280,
+    "height": 800,
+    "r_frame_rate": "60/1",
+    "nb_frames": "360"
+  },
+  "tactical": {
+    "codec_name": "h264",
+    "width": 1280,
+    "height": 800,
+    "r_frame_rate": "60/1",
+    "nb_frames": "360"
+  }
+}

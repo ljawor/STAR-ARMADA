@@ -1,0 +1,94 @@
+{
+  "passed": false,
+  "zoom_ratios": {
+    "laser": 1.0,
+    "missile": 1.0,
+    "torpedo": 1.0
+  },
+  "results": {
+    "laser-near": {
+      "changed_pixels": 80,
+      "axis_extent_px": 13.0,
+      "bbox": [
+        473,
+        297,
+        486,
+        302
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "laser-far": {
+      "changed_pixels": 80,
+      "axis_extent_px": 13.0,
+      "bbox": [
+        473,
+        297,
+        486,
+        302
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "missile-near": {
+      "changed_pixels": 36,
+      "axis_extent_px": 5.0,
+      "bbox": [
+        477,
+        297,
+        482,
+        302
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "missile-far": {
+      "changed_pixels": 36,
+      "axis_extent_px": 5.0,
+      "bbox": [
+        477,
+        297,
+        482,
+        302
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "torpedo-near": {
+      "changed_pixels": 64,
+      "axis_extent_px": 7.0,
+      "bbox": [
+        476,
+        296,
+        483,
+        303
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "torpedo-far": {
+      "changed_pixels": 64,
+      "axis_extent_px": 7.0,
+      "bbox": [
+        476,
+        296,
+        483,
+        303
+      ],
+      "perspective_axis_error_degrees": null
+    },
+    "perspective": {
+      "changed_pixels": 78,
+      "axis_extent_px": 12.02402920691057,
+      "bbox": [
+        621,
+        207,
+        626,
+        219
+      ],
+      "perspective_axis_error_degrees": 27.626837852126755
+    }
+  },
+  "head": "2eed8e322563ff59b8e6eb1f692acca117870497",
+  "source_hashes": {
+    "render/emissive_batch.py": "ef726cdf73446e22f2c49da7bf7c3fc280fcbd2beb9503b1b12cf1406bceb163",
+    "render_bridge/emissive.py": "20aeaca2f29bc97066ffe17155a38a227d8d775f81a647a7618bd4656a166416",
+    "render_cpp/src/viewer.cpp": "0215f3f8978416a55970cf6f166f5c103aa0803625e4ee00565539b726f7936d"
+  },
+  "native_sha256": "e135390556b9a48d8097c21005c6fab69faae7fac99bae066c03c34cd7017b95"
+}

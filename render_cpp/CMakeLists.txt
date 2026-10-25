@@ -165,6 +165,9 @@ add_test(NAME scene COMMAND test_scene)
 add_executable(test_camera tests/test_camera.cpp)
 target_include_directories(test_camera PRIVATE include)
 add_test(NAME camera COMMAND test_camera)
+add_executable(test_projectile tests/test_projectile.cpp)
+target_include_directories(test_projectile PRIVATE include)
+add_test(NAME projectiles COMMAND test_projectile)
 # W02 consumer: decodes frames authored by the Python producer (tools/render/
 # write_frame_fixtures.py). Header-only and GPU-free on purpose -- the risky half of the
 # consumer is refusing malformed bytes, which needs no device.
