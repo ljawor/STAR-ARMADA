@@ -85,9 +85,16 @@ def native_payload(build_dir, platform=None, *, imports=None):
     else:
         include = lambda path: True
     found = {}
+    # The Universal CRT and the API-set forwarders are OS components on every supported
+    # Windows (10/11): collecting them from whichever directory happens to be on PATH ships
+    # another machine's copies of ucrtbase.dll next to the game, where they shadow the system
+    # ones. Keep only redistributables the application actually has to carry (VC runtime).
+    os_provided = ('ucrtbase.dll', 'api-ms-win-')
     while queue:
         path = require_file(queue.pop(0)).resolve()
         key = path.name.casefold()
+        if key.startswith(os_provided):
+            continue
         if key in found:
             if found[key] != path:
                 raise RuntimeError(f'Native dependency basename collision: {found[key]} and {path}')
