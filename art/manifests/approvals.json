@@ -9792,7 +9792,7 @@
           "Asteroids look good"
         ],
         "appearance_approval_changed": true,
-        "reason": "The B5 row was re-authored and re-approved on 2026-10-25, so this decision's live pins move to the approved bytes. Unlike the s07 pin corrections this IS a new appearance approval: geometry, roles and tri count all changed, and the decision that authorises it is s06-b5-environment-2026-10-25. The previous pins are kept here so the 2026-10-17 record still says what it approved. It also drops the live pin on render/renderer.py, a file that exists in no tree (git ls-tree -r HEAD has no render/renderer.py), so the assertion it carried could only ever fail; the hash is kept in previous_runtime rather than silently deleted, and the same removal is the reason this test went from 31 failures at the parent to 30 here.",
+        "reason": "The B5 row was re-authored and re-approved on 2026-10-25, so this decision's live pins move to the approved bytes. Unlike the s07 pin corrections this IS a new appearance approval: geometry, roles and tri count all changed, and the decision that authorises it is s06-b5-environment-2026-10-25. The previous pins are kept here so the 2026-10-17 record still says what it approved. It also drops the live pin on render/renderer.py, a file that exists in no tree (git ls-tree -r HEAD has no render/renderer.py), so the assertion it carried could only ever fail; the hash is kept in previous_runtime rather than silently deleted. That removal is why this test fails 30 times here and 31 times at 771dc2f, the one difference being that pin.",
         "previous_source": {
           "art/blender/shared_asteroid_field.blend": "23260a7f81a54e874325fcca802c66c94fbb1c7f1e90378b799e129b17d4ea0e"
         },

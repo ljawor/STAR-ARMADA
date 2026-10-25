@@ -41,12 +41,12 @@
     "renders the same frame again with only the aimed-at field removed, so occlusion by every other object cancels out",
     "result on this revision: passed=True, centre_error=[0.014, 0.014], size_ratio=[0.86, 0.75], disc_fill=0.147, fields_drawn=5, rock_instances=320",
     "drops the sparse silhouette/starfield flicker between the two renders (dense mask), then measures the footprint against the projection: centre error, span ratio, share of the disc that is rock, and whether the field reaches the frame edge",
-    "reproduces to the digit on every gated metric (centre_error, size_ratio, disc_fill, target_pixels, passed) across repeated runs; the frame-wide numbers it also records (changed_pixels, coverage, field_rgb) move by about 0.2 % between runs, which is the flicker the mask is there to remove"
+    "reproduces to the digit on every gated metric (centre_error, size_ratio, disc_fill, target_pixels, passed) when it is re-run; the frame-wide numbers it also records (changed_pixels, coverage, field_rgb) differ by a few pixels between runs - 30 of ~14,000 changed pixels across four runs of the real frame - which is the flicker the mask is there to remove"
   ],
   "controls": [
     {
       "control": "scale3",
-      "expected": "fail: is_a_scatter_not_a_boulder (disc_fill 0.688)",
+      "expected": "fail: is_a_scatter_not_a_boulder (disc_fill 0.676); the clipped bounding box still reads as correctly sized, which is why the disc fill and the frame-edge check exist",
       "observed": {
         "passed": false,
         "centre_error": [
@@ -69,7 +69,7 @@
     },
     {
       "control": "shift",
-      "expected": "fail: centred and size_matches_projection (the belt sits off its mark)",
+      "expected": "fail: centred (0.125 / 0.083) and size_matches_projection (2.67 / 1.22)",
       "observed": {
         "passed": false,
         "centre_error": [
@@ -93,7 +93,7 @@
     },
     {
       "control": "boulder",
-      "expected": "fail: is_a_scatter_not_a_boulder (one rock fills the disc)",
+      "expected": "fail: is_a_scatter_not_a_boulder (disc_fill 1.176) - the picture the owner rejected",
       "observed": {
         "passed": false,
         "centre_error": [
