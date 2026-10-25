@@ -43,7 +43,36 @@ else()
   set(ARMADA_BGFX_TARGET bgfx bx)
   set(SHADERC_COMMAND $<TARGET_FILE:shaderc>)
   set(SHADERC_DEPENDENCY shaderc)
-  set(ARMADA_BGFX_SHADER_INCLUDE "${BGFX_DIR}/src")
+  # bgfx.cmake fetches bgfx itself, and the BGFX_DIR it sets lives in that subproject's directory
+  # scope: here it is empty, so shaderc was invited to `-i /src` and no shader could open
+  # bgfx_shader.sh ("error : Could not open include file 'bgfx_shader.sh'" on the Windows package
+  # job, which is the only place this branch runs - local builds use the prebuilt shaderc). Derive
+  # the directory from the fetched tree, search for it if the layout moves, and refuse to build
+  # rather than pass an include path that cannot contain the header.
+  set(ARMADA_BGFX_SHADER_INCLUDE "")
+  foreach(candidate
+      "${bgfx_cmake_SOURCE_DIR}/bgfx/src"
+      "${CMAKE_BINARY_DIR}/_deps/bgfx_source-src/src"
+      "${BGFX_DIR}/src")
+    if(EXISTS "${candidate}/bgfx_shader.sh")
+      set(ARMADA_BGFX_SHADER_INCLUDE "${candidate}")
+      break()
+    endif()
+  endforeach()
+  if(NOT ARMADA_BGFX_SHADER_INCLUDE)
+    file(GLOB_RECURSE _bgfx_shader_headers "${CMAKE_BINARY_DIR}/_deps/*bgfx_shader.sh")
+    list(FILTER _bgfx_shader_headers INCLUDE REGEX "/src/bgfx_shader\\.sh$")
+    list(LENGTH _bgfx_shader_headers _bgfx_shader_count)
+    if(_bgfx_shader_count GREATER 0)
+      list(GET _bgfx_shader_headers 0 _bgfx_shader_header)
+      get_filename_component(ARMADA_BGFX_SHADER_INCLUDE "${_bgfx_shader_header}" DIRECTORY)
+    endif()
+  endif()
+  if(NOT ARMADA_BGFX_SHADER_INCLUDE)
+    message(FATAL_ERROR "bgfx_shader.sh is not under ${CMAKE_BINARY_DIR}/_deps: shaderc needs its "
+                        "directory on the include path, and guessing one produced unusable shaders")
+  endif()
+  message(STATUS "armada: bgfx shader include ${ARMADA_BGFX_SHADER_INCLUDE}")
 endif()
 set(JSON_BuildTests OFF CACHE BOOL "" FORCE)
 FetchContent_Declare(json GIT_REPOSITORY https://github.com/nlohmann/json.git GIT_TAG 65ee68451d8eb2b5f3a30b410476ab83deb3289b)

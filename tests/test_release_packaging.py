@@ -374,6 +374,21 @@ class WindowsRuntimeGateTests(unittest.TestCase):
                          + '; '.join(f'line {n} in {s_}: {text}' for n, s_, text in offenders))
 
 
+class ShaderIncludePathContractTests(unittest.TestCase):
+    def test_the_shader_include_dir_is_derived_from_the_fetched_tree(self):
+        # The Windows package job failed with "Could not open include file 'bgfx_shader.sh'": the
+        # from-source branch passed `${BGFX_DIR}/src`, a variable bgfx.cmake sets in its own
+        # directory scope, so it expanded to `/src` there. Local builds never hit it because they
+        # use the prebuilt shaderc, which is exactly why the path has to be asserted statically.
+        source = (ROOT / 'render_cpp' / 'CMakeLists.txt').read_text(encoding='utf-8')
+        self.assertNotIn('set(ARMADA_BGFX_SHADER_INCLUDE "${BGFX_DIR}/src")', source,
+                         'the include dir is guessed from a variable that is empty in this scope')
+        self.assertIn('_deps/bgfx_source-src/src', source)
+        self.assertIn('EXISTS "${candidate}/bgfx_shader.sh"', source)
+        self.assertIn('bgfx_shader.sh is not under', source,
+                      'nothing refuses to build with an include path that cannot hold the header')
+
+
 class WindowsMathConstantContractTests(unittest.TestCase):
     def test_native_build_defines_msvc_math_constants(self):
         # Static contract only: MSVC hides M_PI behind _USE_MATH_DEFINES, and the POSIX
