@@ -34,7 +34,13 @@ CLEANUP_RETRY_DELAY = 0.05
 def worker_command(config):
     if getattr(sys, 'frozen', False):
         return [sys.executable, '--native-render-worker', str(config)]
-    return [sys.executable, '-u', '-m', 'render_bridge.native_worker', str(config)]
+    # A venv launcher on Windows is a redirector: it starts the real interpreter as a
+    # grandchild, so the worker would record that launcher as its direct parent and
+    # `native_worker.parent_guard`'s `os.getppid()` check would reject the real game
+    # process. The base interpreter is this process's own interpreter, so the worker
+    # stays a direct child and the parent-identity guard keeps its meaning.
+    interpreter = getattr(sys, '_base_executable', None) if os.name == 'nt' else None
+    return [interpreter or sys.executable, '-u', '-m', 'render_bridge.native_worker', str(config)]
 
 
 def map_pointer_event(event, source_size, target_size):

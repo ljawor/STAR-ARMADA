@@ -6,7 +6,7 @@ uniform vec4 u_options;
 float visibility(vec4 shadowPosition) {
     if(u_options.x<0.5) return 1.0;
     vec3 p=shadowPosition.xyz/shadowPosition.w;
-    if(any(lessThan(p,vec3(0.0))) || any(greaterThan(p,vec3(1.0)))) return 1.0;
+    if(any(lessThan(p,vec3(0.0,0.0,0.0))) || any(greaterThan(p,vec3(1.0,1.0,1.0)))) return 1.0;
     float s=0.0;
     for(int y=-1;y<=1;y++) for(int x=-1;x<=1;x++)
         s+=shadow2D(s_shadow,vec3(p.xy+vec2(float(x),float(y))/2048.0,p.z-0.0008));
@@ -25,13 +25,13 @@ void main() {
     float k=(rough+1.0)*(rough+1.0)/8.0;
     float G=(nl/(nl*(1.0-k)+k))*(nv/(nv*(1.0-k)+k));
     vec3 base=v_color0.rgb;
-    vec3 F0=mix(vec3(0.04),base,0.55);
-    vec3 F=F0+(vec3(1.0)-F0)*pow(1.0-vh,5.0);
+    vec3 F0=mix(vec3(0.04,0.04,0.04),base,0.55);
+    vec3 F=F0+(vec3(1.0,1.0,1.0)-F0)*pow(1.0-vh,5.0);
     vec3 spec=D*G*F/(4.0*max(nl,0.001)*nv+0.0001);
     float sh=visibility(v_shadow);
     vec3 lit=base*(0.17+0.10*max(N.y,0.0))+(base*0.65+spec)*nl*sh*1.55;
     lit+=base*pow(1.0-nv,3.0)*0.13;
     lit=mix(lit,base*2.0,v_color0.a);
-    lit=lit/(lit+vec3(1.0));
-    gl_FragColor=vec4(pow(lit,vec3(1.0/2.2)),v_alpha);
+    lit=lit/(lit+vec3(1.0,1.0,1.0));
+    gl_FragColor=vec4(pow(lit,vec3(1.0/2.2,1.0/2.2,1.0/2.2)),v_alpha);
 }
