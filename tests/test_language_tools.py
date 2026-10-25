@@ -18,6 +18,43 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 class LanguageToolsTests(unittest.TestCase):
+    def test_scanner_excludes_only_globals_lookup_keys(self):
+        source = """
+renderer = globals().get('RENDERER')
+window = globals().get('CPP', {}).get('window')
+internal = globals().get(key='InternalNamespace')
+assert 'AbsentBinding' not in globals()
+assert 'PresentBinding' in globals()
+assert 'Dictionary label' in labels
+fallback = globals().get('MissingNamespace', 'Launch skirmish')
+label = labels.get('Settings')
+keyword_label = labels.get(key='Language')
+other_namespace = registry.globals().get('Registry label')
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'surface.py'
+            path.write_text(source, encoding='utf-8')
+            self.assertEqual(coverage.literals_in(path),
+                             {'Launch skirmish', 'Settings', 'Language', 'Registry label',
+                              'Dictionary label'})
+
+    def test_scanner_keeps_namespace_named_labels_in_ui_contexts(self):
+        source = """
+renderer = globals().get('RENDERER')
+window = globals().get('CPP', {})
+label = labels.get('RENDERER')
+other = t('CPP')
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'surface.py'
+            path.write_text(source, encoding='utf-8')
+            self.assertEqual(coverage.literals_in(path), {'RENDERER', 'CPP'})
+
+    def test_main_namespace_keys_are_absent_from_live_catalogue(self):
+        keys = coverage.catalogue()
+        self.assertNotIn('CPP', keys)
+        self.assertNotIn('RENDERER', keys)
+
     def test_builder_regenerates_every_registered_translation_byte_exactly(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)

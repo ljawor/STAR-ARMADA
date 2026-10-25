@@ -42,7 +42,11 @@ jobs:
           if-no-files-found: error
 
   win:
-    runs-on: windows-latest
+    # CMake 3.31 supports VS 2022, not windows-latest's moving VS 2026 image.
+    runs-on: windows-2022
+    env:
+      CMAKE_GENERATOR: Visual Studio 17 2022
+      CMAKE_GENERATOR_PLATFORM: x64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

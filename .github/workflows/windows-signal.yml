@@ -16,7 +16,11 @@ permissions:
 jobs:
   windows-lan:
     name: LAN surface on real Windows
-    runs-on: windows-latest
+    # Keep the compiler image compatible with the pinned CMake 3.31 toolchain.
+    runs-on: windows-2022
+    env:
+      CMAKE_GENERATOR: Visual Studio 17 2022
+      CMAKE_GENERATOR_PLATFORM: x64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -69,7 +73,7 @@ jobs:
         # Collection-point commands and recovery admission/launch regressions are
         # portable real-TCP gates. Localization tests also exercise native Cyrillic
         # font rendering and settings persistence without requiring an OpenGL context.
-        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_draw_view_scope test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools test_lan_eight_players test_lan_deployment_ui test_lan_language test_release_packaging test_native_binary_discovery test_render_default test_native_worker_entry test_native_worker test_native_worker_main_boundary test_native_worker_parent_identity -v
+        run: python -m unittest test_netdiag test_netdiag_compare test_lan_state_diff test_sim_profiles test_lan test_multiplayer test_checksum_canonicalization test_orbit_spacing_batch test_render_camera test_render_live test_render_single_path test_lan_human_safety test_lan_failure_diagnostics test_lan_reconnect test_lan_production_reconnect test_lan_reconnect_admission test_lan_launch_recovery test_station_balance test_collection_points test_collection_points_lan test_i18n test_i18n_russian test_language_tools test_lan_eight_players test_lan_deployment_ui test_lan_language test_release_packaging test_native_binary_discovery test_render_default test_native_worker_entry test_native_worker test_native_worker_main_boundary test_native_worker_parent_identity -v
       - name: Replay deletion on real Windows
         env:
           PYTHONPATH: tests
@@ -97,7 +101,12 @@ jobs:
     # a published release) to re-test the pairing on the real PC.
     name: Candidate Windows package (manual)
     if: github.event_name == 'workflow_dispatch'
-    runs-on: windows-latest
+    runs-on: windows-2022
+    env:
+      # build_native_release.py preserves caches and delegates generator choice
+      # to CMake; fresh CI must not default to NMake without a developer shell.
+      CMAKE_GENERATOR: Visual Studio 17 2022
+      CMAKE_GENERATOR_PLATFORM: x64
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

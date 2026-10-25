@@ -96,8 +96,12 @@ target_compile_definitions(stub PRIVATE ABI=1)
 target_compile_definitions(bad PRIVATE ABI=99)
 ''')
         build = cls.base / 'build'
+        configure = ['cmake', '-S', str(cls.base), '-B', str(build)]
+        if os.name == 'nt':
+            # VS discovers its MSVC toolchain without cl/nmake on the shell PATH.
+            configure += ['-G', 'Visual Studio 17 2022', '-A', 'x64']
         try:
-            subprocess.run(['cmake', '-S', str(cls.base), '-B', str(build)],
+            subprocess.run(configure,
                            check=True, capture_output=True, timeout=30)
             subprocess.run(['cmake', '--build', str(build), '--config', 'Release'],
                            check=True, capture_output=True, timeout=30)

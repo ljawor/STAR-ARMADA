@@ -16,8 +16,6 @@ PL: dict[str, str] = {
     "Windowed": "W oknie",
     "Current resolution: {width} × {height} · {mode}": "Bieżąca rozdzielczość: {width} × {height} · {mode}",
     "Resolution changes take effect after restarting the game.": "Zmiana rozdzielczości wymaga ponownego uruchomienia gry.",
-    "CPP": "CPP",
-    "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Zmiany obowiązują od następnej sesji, nigdy w trakcie bitwy.",
     "1-9 control groups · F fleet menu": "1-9 grupy sterowania · F menu floty",
     "ACTIONS / BUILD": "AKCJE / BUDOWA",

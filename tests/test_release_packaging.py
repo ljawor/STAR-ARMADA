@@ -173,6 +173,28 @@ class ReleasePackagingTests(unittest.TestCase):
                     'SPECPATH': str(fake_root), 'Analysis': analysis})
 
 
+class WindowsCompilerImageTests(unittest.TestCase):
+    def test_every_windows_job_pins_cmake_compatible_visual_studio_image(self):
+        import re
+        jobs = {}
+        for workflow in ('release.yml', 'windows-signal.yml'):
+            source = (ROOT / '.github/workflows' / workflow).read_text(encoding='utf-8')
+            for match in re.finditer(r'^  ([\w-]+):\n(.*?)(?=^  [\w-]+:|\Z)',
+                                     source, re.MULTILINE | re.DOTALL):
+                name, body = match.groups()
+                if re.search(r'^    runs-on: windows-', body, re.MULTILINE):
+                    jobs[(workflow, name)] = body
+        self.assertEqual(set(jobs), {('release.yml', 'win'),
+                                     ('windows-signal.yml', 'windows-lan'),
+                                     ('windows-signal.yml', 'package-windows')})
+        for job, body in jobs.items():
+            with self.subTest(job=job):
+                # cmake 3.31 cannot discover the VS 2026 compiler on windows-latest.
+                self.assertIn('    runs-on: windows-2022\n', body)
+                self.assertIn('      CMAKE_GENERATOR: Visual Studio 17 2022\n', body)
+                self.assertIn('      CMAKE_GENERATOR_PLATFORM: x64\n', body)
+
+
 class FrozenProbeShellImportTests(unittest.TestCase):
     def test_actual_python_shell_preludes_import_checkout_from_temp_script(self):
         import os

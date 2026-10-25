@@ -16,8 +16,6 @@ RU: dict[str, str] = {
     "Windowed": "В окне",
     "Current resolution: {width} × {height} · {mode}": "Текущее разрешение: {width} × {height} · {mode}",
     "Resolution changes take effect after restarting the game.": "Разрешение изменится после перезапуска игры.",
-    "CPP": "CPP",
-    "RENDERER": "RENDERER",
     "Changes apply at the next session, never during a battle.": "Изменения действуют со следующей сессии, но никогда во время боя.",
     "+{count} convoy": "+{count} конвоев",
     "+{count} per level": "+{count} за уровень",
