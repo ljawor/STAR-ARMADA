@@ -28,5 +28,5 @@ void main() {
     float spec = pow(max(dot(N, normalize(L + V)), 0.0), 70.0);
     result += vec3(0.6, 0.72, 0.8) * spec * ocean * diffuse * 0.5;
     result += air * rim * atmosphere * (0.12 + 0.30 * diffuse);
-    gl_FragColor = vec4(pow(max(result, vec3(0.0)), vec3(0.88)), 1.0);
+    gl_FragColor = vec4(pow(max(result, vec3(0.0,0.0,0.0)), vec3(0.88,0.88,0.88)), 1.0);
 }

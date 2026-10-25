@@ -11,6 +11,9 @@ tools/diag_alliance_cruiser_review.py -text
 tests/test_alliance_blender_cruiser.py -text
 # S08 packs and reviewed code are byte-attested, including Windows checkouts.
 examples/visual_packs/** -text
+# Shipped runtime packs are hash-pinned by the renderer's mesh loader: a checkout
+# that converts their trailing newline to CRLF fails the SHA256 contract.
+visual_packs/** -text
 mods/s08_raiders_fixture/** -text
 game/data/store.py -text
 main.py -text

@@ -1231,7 +1231,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
   size_t inputBatches = 0, inputEvents = 0, inputUnmappedKeys = 0;
   std::vector<input_ring::Event> inputPending;
   if (!o.inputRing.empty()) {
-    inputOut = std::make_unique<input_ring::RingWriter>(o.inputRing, uint16_t(o.inputSlots),
+    inputOut = std::make_unique<input_ring::RingWriter>(o.inputRing.string(), uint16_t(o.inputSlots),
                                                         1u << 16);
   }
   bgfx::TextureHandle uiTexture = BGFX_INVALID_HANDLE;
@@ -1265,11 +1265,12 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
     float bestExtent = -1;
     for (const auto &e : scene.at("instances")) {
       const auto category = e.at("category").get<std::string>();
+      const auto binding = e.at("binding").get<std::string>();
       const bool station = category.find("station") != std::string::npos;
       if ((which == 3) != station || (which == 2 && category != "combat_ships"))
         continue;
       for (const auto &g : groups)
-        if (g.mesh.binding == e.at("binding")) {
+        if (g.mesh.binding == binding) {
           const float extent = std::max({g.mesh.hi[0] - g.mesh.lo[0],
                                          g.mesh.hi[1] - g.mesh.lo[1],
                                          g.mesh.hi[2] - g.mesh.lo[2]}) *
@@ -2071,7 +2072,7 @@ static int run(const Options &o, EmbeddedState *host = nullptr) {
       // size,age,seed
       float size = 120.f, age = 0.35f;
       unsigned seed = 7;
-      std::sscanf(o.fxDemo.c_str(), "%f,%f,%u", &size, &age, &seed);
+      std::sscanf(o.fxDemo.string().c_str(), "%f,%f,%u", &size, &age, &seed);
       emit::Primitive demo{};
       // "disc:SIZE,ALPHA" is a single-primitive alpha probe: one flat red disc whose on-screen
       // value must equal ALPHA over the background. It is how the blend state is checked.

@@ -27,6 +27,9 @@ if(ARMADA_BGFX_PREFIX)
     message(FATAL_ERROR "Prebuilt bgfx needs ARMADA_SHADERC and ARMADA_BGFX_SHADER_INCLUDE from the same pin")
   endif()
   set(ARMADA_BGFX_TARGET bgfx::bgfx)
+  # A prebuilt bgfx must be compiled with the same instance-attribute semantics as the fetched
+  # build below, or the world pass silently loses every instance transform (see the note there).
+  message(STATUS "armada: prebuilt bgfx must define BGFX_CONFIG_INSTANCE_DATA_FIRST_TEXCOORD=7")
   set(SHADERC_COMMAND "${ARMADA_SHADERC}")
   set(SHADERC_DEPENDENCY "${ARMADA_SHADERC}")
 else()
@@ -39,6 +42,13 @@ else()
   set(BGFX_BUILD_EXAMPLE_COMMON OFF CACHE BOOL "" FORCE)
   FetchContent_Declare(bgfx_cmake GIT_REPOSITORY https://github.com/bkaradzic/bgfx.cmake.git GIT_TAG ${ARMADA_BGFX_CMAKE_REV})
   FetchContent_MakeAvailable(bgfx_cmake)
+  # Instance attributes cross to Direct3D as TEXCOORD<N> elements, and the renderer builds those
+  # from BGFX_CONFIG_INSTANCE_DATA_FIRST_TEXCOORD. bgfx's default (31) is the DXIL layout: shaderc's
+  # HLSL/SM5.0 emitter writes i_data0.. at TEXCOORD7 downwards (its remap table stops at
+  # TexCoord15), so at the default the five instance vec4s name elements the shader never declares
+  # and every hull draws with an unbound model matrix and tint - the whole world pass is garbage on
+  # Windows while Metal is unaffected. Pin the backend to the semantics this build actually emits.
+  target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_INSTANCE_DATA_FIRST_TEXCOORD=7)
   # viewer.cpp directly consumes bx:: math; bgfx's private link does not export its headers.
   set(ARMADA_BGFX_TARGET bgfx bx)
   set(SHADERC_COMMAND $<TARGET_FILE:shaderc>)
