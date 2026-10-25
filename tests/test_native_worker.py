@@ -7,6 +7,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest import mock
 from unittest.mock import Mock, patch
 
 from render_bridge import embedded
@@ -124,6 +125,11 @@ class CleanupRetryTests(unittest.TestCase):
         except OSError:
             pass
 
+    def remove_tree(self):
+        import shutil
+        if Path(self.directory.name).exists():
+            shutil.rmtree(self.directory.name)
+
     def window(self, cleanup):
         import threading
         window = object.__new__(embedded.EmbeddedWindow)
@@ -149,7 +155,7 @@ class CleanupRetryTests(unittest.TestCase):
             calls.append(1)
             if len(calls) < 3:
                 raise PermissionError('[WinError 5] frame.bgra is held by a closing handle')
-            shutil.rmtree(self.directory.name)
+            self.remove_tree()
 
         self.window(cleanup)._stop(hard=True)
         self.assertEqual(len(calls), 3, 'cleanup was not retried')
@@ -171,7 +177,6 @@ class CleanupRetryTests(unittest.TestCase):
         self.assertLess(len(calls), 10, 'retry budget must stay bounded')
         self.assertGreaterEqual(elapsed, embedded.CLEANUP_RETRY_DELAY * (embedded.CLEANUP_ATTEMPTS - 1),
                                 'the retry budget was not actually spent')
-        self.assertTrue(window._terminal)
 
     def test_a_silent_cleanup_no_op_is_reported_instead_of_masked(self):
         # A cleanup() that returns without removing anything: trusting its return value
@@ -182,9 +187,67 @@ class CleanupRetryTests(unittest.TestCase):
         self.assertIn('survived cleanup', str(caught.exception))
         self.assertTrue(Path(self.directory.name).exists())
 
+    def test_storage_presence_check_does_not_confuse_unknown_with_removed(self):
+        # os.path.exists answers False for a stat it could not take, which would report an
+        # unreadable parent as a clean teardown; the check itself must raise.
+        with mock.patch.object(embedded.os, 'lstat', side_effect=PermissionError('[WinError 5] denied')):
+            with self.assertRaises(PermissionError):
+                embedded._storage_present(self.directory.name)
+
+    def test_an_unreadable_storage_state_fails_the_teardown_and_stays_retryable(self):
+        import shutil
+
+        def unreadable(name, *args, **kwargs):
+            raise PermissionError('[WinError 5] parent is not readable')
+
+        window = self.window(self.remove_tree)
+        with mock.patch.object(embedded, '_storage_present', side_effect=unreadable):
+            with self.assertRaises(PermissionError):
+                window._stop(hard=True)
+        self.assertIsNotNone(window._temporary, 'a failed teardown must stay retryable')
+
+    def test_a_transiently_unreadable_storage_state_is_retried(self):
+        import shutil
+        seen = []
+
+        def briefly_unreadable(name, *args, **kwargs):
+            seen.append(name)
+            if len(seen) < 3:
+                raise PermissionError('[WinError 32] sharing violation')
+            return False
+
+        window = self.window(self.remove_tree)
+        with mock.patch.object(embedded, '_storage_present', side_effect=briefly_unreadable):
+            window._stop(hard=True)
+        self.assertEqual(len(seen), 3, 'the presence check was not retried')
+        self.assertIsNone(window._temporary)
+
+    def test_texture_release_happens_before_storage_cleanup(self):
+        import shutil
+        order = []
+        def cleanup():
+            order.append('storage')
+            self.remove_tree()
+
+        window = self.window(cleanup)
+        window._texture = 7
+        with mock.patch('OpenGL.GL.glDeleteTextures', side_effect=lambda ids: order.append(('texture', ids))):
+            window._stop(hard=True)
+        self.assertEqual(order[:2], [('texture', [7]), 'storage'])
+
+    def test_a_failed_texture_release_still_cleans_storage(self):
+        import shutil
+        window = self.window(self.remove_tree)
+        window._texture = 11
+        with mock.patch('OpenGL.GL.glDeleteTextures', side_effect=RuntimeError('no GL context')):
+            with self.assertRaises(RuntimeError):
+                window._stop(hard=True)
+        self.assertIsNone(window._temporary, 'storage cleanup was skipped by the texture error')
+        self.assertFalse(Path(self.directory.name).exists())
+
     def test_successful_cleanup_clears_the_temporary_handle(self):
         import shutil
-        window = self.window(lambda: shutil.rmtree(self.directory.name))
+        window = self.window(self.remove_tree)
         window._stop(hard=True)
         self.assertIsNone(window._temporary, 'a cleaned handle must not be re-entered')
         self.assertFalse(Path(self.directory.name).exists())

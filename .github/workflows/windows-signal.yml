@@ -132,7 +132,7 @@ jobs:
           $frames = Get-Content native-worker-cleanup-windows.log |
             Where-Object { $_ -match '^\{"stage":' } |
             ForEach-Object { try { $_ | ConvertFrom-Json } catch { $null } }
-          $verdict = $frames | Where-Object { $_.stage -eq 'baseline_verdict' } | Select-Object -First 1
+          $verdict = $frames | Where-Object { $_.stage -eq 'baseline_verdict' } | Select-Object -Last 1
           $crashed = $frames | Where-Object { $_.stage -eq 'diagnostic_error' } | Select-Object -First 1
           if ($verdict) { $observed = "passed=$($verdict.passed)" } else { $observed = 'no baseline verdict' }
           "Native worker cleanup observation: exited $code, $observed (findings non-blocking, see artifact)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
@@ -141,6 +141,9 @@ jobs:
             else { Write-Error "cleanup diagnostic produced no baseline verdict (exit $code)" }
             exit 1
           }
+          # A crash after the verdict is still a broken observation, and the log is the
+          # only place it shows up.
+          if ($crashed) { Write-Error "cleanup diagnostic crashed after its verdict: $($crashed.exception)"; exit 1 }
           exit 0
       - uses: actions/upload-artifact@v4
         if: always()
@@ -225,8 +228,10 @@ jobs:
           ) | Tee-Object -FilePath "dist/STAR ARMADA/GATE-STATUS.txt"
           "**Windows LAN gate for this candidate:** $env:GATE_VERDICT (commit ${{ github.sha }})" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
       - name: Zip
+        env:
+          GATE_VERDICT: ${{ needs.windows-lan.result }}
         run: |
-          $suffix = if ('${{ needs.windows-lan.result }}' -eq 'success') { '' } else { '-gate-failed' }
+          $suffix = if ($env:GATE_VERDICT -eq 'success') { '' } else { '-gate-failed' }
           Compress-Archive -Path "dist/STAR ARMADA/*" `
             -DestinationPath "dist/STAR-ARMADA-candidate-win$suffix.zip"
       - uses: actions/upload-artifact@v4

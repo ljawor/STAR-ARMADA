@@ -248,6 +248,9 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         self.assertRegex(body, r'(?m)^\s+if \(-not \$verdict\) \{')
         self.assertIn('exit 1', body)
         self.assertNotIn('-eq 9009', body)
+        # A crash after the verdict is still a broken observation; take the last verdict.
+        self.assertIn('Select-Object -Last 1', body)
+        self.assertRegex(body, r"if \(\$crashed\) \{ Write-Error '?\"?cleanup diagnostic crashed after")
         self.assertRegex(body, r'(?m)^\s+exit 0$')
         self.assertIn('GITHUB_STEP_SUMMARY', body)
 
@@ -281,6 +284,10 @@ class WindowsRuntimeGateTests(unittest.TestCase):
         # The payload name carries the verdict too, so the file and the artifact agree.
         self.assertIn('STAR-ARMADA-candidate-win$suffix.zip', job.group(1))
         self.assertIn('path: dist/STAR-ARMADA-candidate-win*.zip', job.group(1))
+        # Expressions reach the shell through env, never interpolated into script source.
+        zip_step = self._step(source, 'Zip')
+        self.assertIn('$env:GATE_VERDICT', zip_step)
+        self.assertNotIn('${{', zip_step.replace('${{ needs.windows-lan.result }}', '', 1) if False else zip_step.split('run: |', 1)[1])
         self.assertRegex(job.group(1),
                          r"(?m)^      - name: Require a green LAN gate for a verified candidate\n"
                          r"        if: needs.windows-lan.result != 'success'")

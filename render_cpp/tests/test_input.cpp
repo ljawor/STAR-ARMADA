@@ -271,7 +271,7 @@ int main() {
       capacity = writer.payloadBytes();
       check(capacity + kSlotOverhead + kSlotTrailer == kMinSlotBytes,
             "capacity plus its framing is exactly one slot");
-      // Pin the wire offsets themselves: the identity above holds for any pair of
+      // Pin the framing sizes themselves: the identity above holds for any pair of
       // constants, while these two numbers are what ring.py and frame_v2.hpp expect.
       check(kSlotOverhead == 20 && kSlotTrailer == 8,
             "slot framing is 20 bytes of header plus an 8-byte closing tag");

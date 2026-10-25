@@ -80,7 +80,16 @@ def _cleanup_temporary(temporary, attempts=CLEANUP_ATTEMPTS, delay=CLEANUP_RETRY
         # removed anything, so a silent no-op must not read as success. lstat instead of
         # exists(): that call answers False for a stat it could not take, which would
         # turn an unreadable parent directory into a clean teardown.
-        if name is None or not _storage_present(name):
+        try:
+            present = False if name is None else _storage_present(name)
+        except OSError:
+            # The check itself can hit the same transient lock the cleanup does; treat it
+            # like a failed attempt rather than aborting the budget on the first try.
+            if remaining == 1:
+                raise
+            time.sleep(delay)
+            continue
+        if not present:
             return
         if remaining == 1:
             raise OSError(f'worker storage survived cleanup: {name}')
@@ -294,15 +303,19 @@ class EmbeddedWindow:
         if self._mapping is not None:
             self._mapping.close()
             self._mapping = None
-        if self._texture is not None:
-            # Released before the storage, or a cleanup that raises would leak the
-            # texture until the context dies with the window.
-            from OpenGL.GL import glDeleteTextures
-            glDeleteTextures([self._texture])
-            self._texture = None
-        if self._temporary is not None:
-            _cleanup_temporary(self._temporary)
-            self._temporary = None
+        # Independent releases: neither the texture nor the storage may be skipped
+        # because the other one raised. A failed texture delete still propagates, after
+        # the storage has been dealt with.
+        texture = self._texture
+        self._texture = None
+        try:
+            if texture is not None:
+                from OpenGL.GL import glDeleteTextures
+                glDeleteTextures([texture])
+        finally:
+            if self._temporary is not None:
+                _cleanup_temporary(self._temporary)
+                self._temporary = None
 
     def terminate(self):
         self._check_thread()
