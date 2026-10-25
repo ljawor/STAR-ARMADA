@@ -301,6 +301,21 @@ class WindowsRuntimeGateTests(unittest.TestCase):
                          r"        if: needs.windows-lan.result != 'success'")
 
 
+    def test_the_windows_native_build_gets_the_cores_and_the_budget_it_needs(self):
+        # The package job failed with a 25-minute timeout while two of the runner's four cores
+        # sat idle, and the compile it was waiting on is third-party (SDL3/bgfx/bx/bimg from
+        # source), not this repository. Pin the parallelism and a budget sized for a cold runner;
+        # the per-test timeout stays where it is, so this cannot hide a slow test.
+        body = self._step(self._workflow(), 'Build and test mandatory native renderer (Release)')
+        self.assertIn('--jobs 4', body)
+        timeout = re.search(r'timeout-minutes:\s*(\d+)', body)
+        self.assertIsNotNone(timeout, 'the native build step has no timeout at all')
+        self.assertGreaterEqual(int(timeout.group(1)), 40,
+                                'a cold runner compiles pinned third-party deps before this repo')
+        # ... and the test gate itself keeps its own, much tighter, limit.
+        source = (ROOT / 'tools/build_native_release.py').read_text(encoding='utf-8')
+        self.assertIn("'--timeout', '60'", source)
+
     def test_no_step_interpolates_expressions_into_script_source(self):
         """Workflow-wide: `${{ }}` is expanded before the shell sees the script.
 

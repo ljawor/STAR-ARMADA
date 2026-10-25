@@ -192,8 +192,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt pyinstaller==6.20.0 cmake==3.31.6
       - name: Build and test mandatory native renderer (Release)
-        timeout-minutes: 25
-        run: python tools/build_native_release.py --build-dir render_cpp/build-w02
+        # A cold runner compiles pinned SDL3, bgfx, bx and bimg from source before it reaches
+        # this repository (~9 min at two jobs), so the budget is for third-party compilation,
+        # not for a slow test: ctest keeps its own 60 s per-test timeout. Four jobs is the
+        # windows-2022 core count; two was leaving three of them idle for 25 minutes.
+        timeout-minutes: 45
+        run: python tools/build_native_release.py --build-dir render_cpp/build-w02 --jobs 4
       - name: Packaging contract tests
         run: python -m unittest discover -s tests -p test_release_packaging.py -v
       - name: Build exe
