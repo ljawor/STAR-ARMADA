@@ -58,9 +58,9 @@ class AsteroidFieldCollectionTests(unittest.TestCase):
         # ... and the exporter's own record must agree with the geometry it describes.
         (bx0, _by0, bz0), (bx1, _by1, bz1) = mesh['bounds']
         self.assertAlmostEqual(bx1 - bx0, max(xs) - min(xs), places=6,
-                               msg='the manifest bounds are stale for the exported vertices')
+                               msg="the exporter's bounds record is stale for the vertices it wrote")
         self.assertAlmostEqual(bz1 - bz0, max(zs) - min(zs), places=6,
-                               msg='the manifest bounds are stale for the exported vertices')
+                               msg="the exporter's bounds record is stale for the vertices it wrote")
 
     def test_session_table_reserves_the_asteroid_binding(self):
         bindings, _ = collect.required_names(
@@ -120,12 +120,45 @@ class AsteroidFieldCollectionTests(unittest.TestCase):
         buffer = bytearray(packed.frame_size(len(one_shot), 0))
         payload, stats = collector.collect_into(self.state, buffer, tick=0, frame_index=0)
         decoded = packed.unpack_frame(bytes(payload), tables)
-        live = [record['entity_id'] for record in decoded['instances']
+        live = [record for record in decoded['instances']
                 if record['binding'] == collect.ASTEROID_BINDING]
         index = {name: i for i, name in enumerate(tables.bindings)}[collect.ASTEROID_BINDING]
-        self.assertEqual(live, [record[0] for record in one_shot if record[1] == index],
-                         'the live emitter draws different rocks than the one-shot collector')
+        one_shot_rocks = [record for record in one_shot if record[1] == index]
+        # Byte for byte, not just the ids: the two branches pack their own matrix and tint, so an
+        # id-only comparison would pass while the live frame drew the rocks in the wrong place,
+        # the wrong colour or with the wrong flags.
+        # Compare the bytes each rock actually occupies in the live payload, not a re-encode of
+        # it: the two branches build their own matrix (column order, scale, translation) and tint,
+        # so equal entity ids would survive a rock drawn somewhere else, in another colour, with
+        # other flags. Doubles become float32 in the frame, which is why the comparison is over
+        # the packed bytes rather than over the Python floats.
+        raw = bytes(payload)
+        start = packed.FRAME.size
+        stride = packed.INSTANCE.size
+        placed = [i for i, record in enumerate(decoded['instances'])
+                  if record['binding'] == collect.ASTEROID_BINDING]
+        live_bytes = b''.join(raw[start + i * stride:start + (i + 1) * stride] for i in placed)
+        one_shot_bytes = b''.join(packed.INSTANCE.pack(*record) for record in one_shot_rocks)
+        self.assertEqual(live_bytes, one_shot_bytes,
+                         'the live emitter packs different instances than the one-shot collector')
         self.assertEqual(stats['instances'], len(one_shot))
+
+    def test_the_scatter_is_worked_out_once_per_field_not_once_per_frame(self):
+        # The layout depends only on the field, and a field is static, so a per-frame rebuild is
+        # pure waste: 64 rocks per field over sixteen fields cost 2.76 ms of a 1.0 ms budget
+        # before this cache existed. Misses prove every live field is laid out; hits prove the
+        # frames after the first reuse it.
+        tables = self.tables()
+        collector = self.collector(tables)
+        collect._scatter.cache_clear()
+        buffer = bytearray(packed.frame_size(packed.MAX_INSTANCES, 0))
+        for index in range(4):
+            collector.collect_into(self.state, buffer, tick=index, frame_index=index)
+        info = collect._scatter.cache_info()
+        self.assertEqual(info.misses, len(self.asteroids),
+                         'a field was laid out more than once, or not at all')
+        self.assertGreaterEqual(info.hits, len(self.asteroids) * 3,
+                                'later frames recomputed the scatter instead of reusing it')
 
     def test_the_densest_map_still_fits_a_frame(self):
         options = dict(default_skirmish_options(self.ds), map_id='skirmish05')

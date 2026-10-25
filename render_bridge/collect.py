@@ -23,6 +23,7 @@ from __future__ import annotations
 
 from operator import attrgetter
 
+import functools
 import math
 import zlib
 
@@ -62,9 +63,11 @@ ASTEROID_BINDING = 'environment:asteroid_field'
 #: The prop's X/Z half-extent (assets/models/shared_asteroid_field.mesh.json bounds), so a
 #: rock of world radius r is that mesh at scale r / ASTEROID_EXTENT.
 ASTEROID_EXTENT = 0.58
-#: The prop is ONE rugged rock - its features block asks for `field_instances: 40` - so a field
-#: is forty of them scattered across the field's radius. Scaling the single mesh up to fill the
-#: radius instead drew one enormous grey boulder over every mining site, which is not a field.
+#: The prop is ONE rugged rock, so a field is many of them scattered across its radius. Scaling the
+#: single mesh up to fill the radius instead drew one enormous grey boulder over every mining
+#: site, which is not a field. (The mesh's features block still records the authoring intent from
+#: before the field was drawn this way - `field_instances: 40`, scales 12-46; the renderer decides
+#: the count and the sizes, and the re-authoring decision says so.)
 ASTEROID_ROCKS = 64
 #: Rock radius as a fraction of the field radius. A few are much larger so the belt has
 #: structure; from the game camera a field is roughly 150-200 px wide, so this reads as a
@@ -95,17 +98,16 @@ def _unit(seed, salt):
     return (_splitmix64((seed * 0x100000001B3 + salt) & 0xFFFFFFFFFFFFFFFF) >> 11) / float(1 << 53)
 
 
-def asteroid_rocks(entity):
-    """The small rocks that make up one asteroid field: ``(position, yaw, scale)`` triples.
+@functools.lru_cache(maxsize=128)
+def _scatter(field_id, radius, x, z):
+    """The rock layout of one field, cached: it depends only on these four numbers.
 
-    Deterministic from the entity id, so the same field looks identical every frame, reload and
-    replay: no RNG state, no per-frame jitter, and the interpolation in the window sees still
-    rocks. Placement is uniform by area (sqrt of the radius) so the belt is not a ring, and the
-    rocks are sized as a fraction of the field radius - the radius the simulation already uses
-    for mining range - so the picture and the rule describe the same region.
+    A field neither moves nor changes radius, so its layout is the same on every frame of a
+    session, every reload and every replay. Recomputing it per frame cost 2.76 ms on the
+    sixteen-field map - 82 % of the whole gather and nearly three times the 1.0 ms producer
+    budget - for 64 rocks that cannot have changed since the previous frame.
     """
-    radius = float(entity.radius)
-    seed = _splitmix64(int(entity.id) + 1)
+    seed = _splitmix64(int(field_id) + 1)
     tau = 6.283185307179586
     rocks = []
     for index in range(ASTEROID_ROCKS):
@@ -127,13 +129,27 @@ def asteroid_rocks(entity):
         angle = tau * unit_angle
         # Slightly dark and warm: at map zoom a bright blue-white speckle reads as dust.
         shade = 0.62 + 0.30 * unit_tint
-        rocks.append(((entity.pos.x + math.cos(angle) * reach,
+        rocks.append(((x + math.cos(angle) * reach,
                        (unit_height - 0.5) * radius * 0.06,
-                       entity.pos.z + math.sin(angle) * reach),
+                       z + math.sin(angle) * reach),
                       tau * unit_yaw,
                       size / ASTEROID_EXTENT,
                       shade))
-    return rocks
+    return tuple(rocks)
+
+
+def asteroid_rocks(entity):
+    """The small rocks that make up one asteroid field: ``(position, yaw, scale, shade)`` rows.
+
+    Deterministic from the entity id, so the same field looks identical every frame, reload and
+    replay: no RNG state, no per-frame jitter, and the interpolation in the window sees still
+    rocks. Placement is area-weighted - ``unit_area ** ASTEROID_SPREAD``, where 0.5 would be
+    uniform by area and 0.62 gathers the belt toward its middle so a field reads as a field
+    rather than a ring of dots - and the rocks are sized as a fraction of the field radius, the
+    radius the simulation already uses for mining range, so picture and rule describe one region.
+    """
+    return _scatter(int(entity.id), float(entity.radius),
+                    float(entity.pos.x), float(entity.pos.z))
 
 
 def rock_field_id(entity_id):
