@@ -48,6 +48,8 @@ UI_SURFACE = (
 SKIP_PREFIXES = ('gl_', 'SDL_', 'K_', 'utf-', 'ascii', 'json', 'text/', 'image/', '#')
 SKIP_SUFFIXES = ('.json', '.png', '.jpg', '.glsl', '.md', '.py', '.ttf', '.wav', '.ogg')
 SKIP_EXACT = {
+    # Internal native transport dimension diagnostic, never a visible UI label.
+    'Application HUD dimensions do not match the native HUD',
     'utf-8', 'ascii', 'true', 'false', 'all', 'off', 'hostiles', 'standard', 'night',
     'ON', 'OFF', 'left', 'right', 'center', 'top', 'bottom', 'none', 'en', 'de', 'pl', 'ru',
     # Settings validation warning, never drawn as a player-facing label.

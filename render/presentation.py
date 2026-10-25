@@ -197,7 +197,8 @@ class PresentationOverlay:
         return [goal, status, instruction]
 
     def draw(self, state, input_controller=None, *, width=None, height=None,
-             selection=None, local_player=None, blocked_rects=()) -> pygame.Surface:
+             selection=None, local_player=None, blocked_rects=(),
+             mission_managed_by_hud=False) -> pygame.Surface:
         """Paint to a transparent Surface; draw_gl uploads it after the HUD.
 
         selection may be an iterable of IDs or an InputController (second arg).
@@ -214,7 +215,7 @@ class PresentationOverlay:
             rect = pygame.Rect((width - min(800, width - 64)) // 2, 72,
                                min(800, width - 64), height - 144)
             self._panel(f'{title} - {self.help_page + 1}/{len(HELP_PAGES)}', list(paragraphs), rect)
-        elif self.settings['tutorial_hints']:
+        elif self.settings['tutorial_hints'] and not mission_managed_by_hud:
             if local_player is not None:
                 self.local_player = local_player
             if selection is None:

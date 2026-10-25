@@ -182,6 +182,8 @@ class HUD:
         self.mission_name: str | None = None
         self.mission_done: bool = False
         self.mission_failed: bool = False
+        self.mission_hints: list[str] = []
+        self.native_application_model: dict | None = None
 
     def close(self) -> None:
         """Release the overlay texture before the current GL context is lost."""
@@ -322,8 +324,10 @@ class HUD:
 
     def _mission_panel(self, local_player):
         if self.mission_progress:
-            self._draw_collapsible('mission', 'MISSION TASKS',
-                                  lambda: self._mission_panel_content(local_player))
+            # One native scope and one collapse state own objectives AND drill hints.
+            with self._native_layer():
+                self._draw_collapsible('mission', 'MISSION TASKS',
+                                      lambda: self._mission_panel_content(local_player))
 
     def _mission_panel_content(self, local_player: int) -> None:
         """Objectives card (top-center) while a campaign mission runs."""
@@ -339,7 +343,7 @@ class HUD:
             ((220, 120, 110) if self.mission_failed else (150, 175, 220))
         title = self.mission_name or "MISSION"
         # Measure every line before painting so wrapped rows grow the card.
-        blocks = [(title, self.font_big, state_col)]
+        blocks: list = [(title, self.font_big, state_col)]
         for row in rows:
             col = (140, 220, 150) if row.startswith("[x]") else (200, 214, 240)
             blocks.append((row, self.font_small, col))
@@ -347,9 +351,15 @@ class HUD:
             tag = "MISSION COMPLETE — press ESC" if self.mission_done \
                 else "MISSION FAILED — press ESC"
             blocks.append((tag, self.font_big, state_col))
+        hint_start = len(blocks)
+        blocks.extend((hint, self.font_small, (160, 186, 210)) for hint in self.mission_hints)
         lines = []
-        yy = y + 8
-        for text, font, col in blocks:
+        yy = y + 12
+        divider_y = None
+        for index, (text, font, col) in enumerate(blocks):
+            if index == hint_start:
+                divider_y = yy
+                yy += 12
             line = ''
             wrapped = []
             for word in text.split():
@@ -370,16 +380,31 @@ class HUD:
             if line:
                 wrapped.append(line)
             for line in wrapped:
-                surf = font.render(line, True, col)
-                lines.append((surf, yy))
-                yy += max(font.get_linesize(), surf.get_height()) + 2
+                lines.append((line, font, col, yy))
+                yy += max(font.get_linesize(), font.get_height()) + 2
             yy += 6
-        h = yy - y + 2
-        self.blocked_rects.append(pygame.Rect(x, y, w, h))
-        _p.rect(ov, PANEL_BG, (x, y, w, h), border_radius=8)
-        _p.rect(ov, PANEL_EDGE, (x, y, w, h), 1, border_radius=8)
-        for surf, yy in lines:
-            _p.blit(ov, surf, (x + 14, yy))
+        full_height = yy - y + 6
+        h = min(full_height, self.height - y - 16)
+        card = pygame.Rect(x, y, w, h)
+        self.blocked_rects.append(card)
+        _p.rect(ov, PANEL_BG, card, border_radius=8)
+        _p.rect(ov, PANEL_EDGE, card, 1, border_radius=8)
+        viewport = card.inflate(-20, -16)
+        overflow = max(0, full_height - h)
+        offset = min(max(0, self.scroll.get('mission', 0)), (overflow + 17) // 18)
+        self.scroll['mission'] = offset
+        if overflow:
+            self.scroll_rects.append((viewport, 'mission'))
+        shift = min(overflow, offset * 18)
+        old_clip = ov.get_clip()
+        ov.set_clip(old_clip.clip(viewport))
+        try:
+            if divider_y is not None:
+                _p.line(ov, PANEL_EDGE, (x + 14, divider_y - shift), (x + w - 14, divider_y - shift), 1)
+            for line, font, col, line_y in lines:
+                self._label(x + 14, line_y - shift, line, col, font, translate=False)
+        finally:
+            ov.set_clip(old_clip)
 
     # ------------------------------------------------------------------ frame
     def render(self, selection: set, hover_id: int | None,
@@ -436,6 +461,12 @@ class HUD:
         if fps > 0.0 and not self.native_top_bar:
             self._label(self.width - 90, 40, f"{fps:0.0f} FPS", TXT_DIM,
                         self.font_small)
+        if self.native_panels and self.native_application_model is not None:
+            model = self.native_application_model
+            if model['logical_size'] != [self.width, self.height]:
+                raise ValueError('Application HUD dimensions do not match the native HUD')
+            for op in model['ops']:
+                self._native_capture().append(op)
         self.recorder.finish()
 
     def _flash_message(self, flash_msg: str, flash_left: float) -> None:

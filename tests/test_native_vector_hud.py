@@ -334,10 +334,10 @@ def test_native_station_production_preserves_every_wheel_reachable_row(game, vie
 def test_native_compose_resets_complete_snapshot_and_keeps_other_overlay(view):
     view.native_panels = True
     view.native_top_bar = True
-    view.mission_progress = ['[ ] Mission remains a Python overlay']
+    view.mission_progress = ['[ ] Mission uses native glyphs']
     view.compose(set(), None, 0, False)
     first = view.native_vector_model()
-    assert not any('Mission remains' in op.get('text', '') for op in first['ops'])
+    assert any('Mission uses native glyphs' in op.get('text', '') for op in first['ops'])
     view.compose(set(), None, 0, False)
     assert first == view.native_vector_model(), 'complete frames must not accumulate ops'
     view.native_top_bar = False

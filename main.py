@@ -474,15 +474,25 @@ def cpp_poll_input():
 
 def cpp_overlay_layers():
     """Compose application-only overlays in the native HUD's input coordinates."""
+    hud.native_application_model = None
+    hud.mission_hints = []
     if globals().get('cinematic') is not None:
+        if getattr(hud, 'native_panels', False) is True:
+            hud.native_application_model = cinematic.native_model(*CPP_HUD_SIZE)
+            return []
         return [cinematic.compose(*CPP_HUD_SIZE)]
     layers = []
     overlay = globals().get('presentation')
     if overlay is not None:
+        managed_mission = bool(getattr(hud, 'mission_progress', None))
+        if managed_mission and overlay.settings['tutorial_hints']:
+            overlay.local_player = local_player
+            hud.mission_hints = overlay.tutorial_paragraphs(state, inputc.selection)
         surface = overlay.draw(state, inputc, width=CPP_HUD_SIZE[0],
                                    height=CPP_HUD_SIZE[1], local_player=local_player,
                                    blocked_rects=[rect for rect in hud.blocked_rects
-                                                  if rect not in overlay.panel_rects])
+                                                  if rect not in overlay.panel_rects],
+                                   mission_managed_by_hud=managed_mission)
         if overlay.panel_rects:
             layers.append(surface)
     sync_recovery_overlay()
