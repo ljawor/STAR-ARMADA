@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "entrypoint": "main.py stock m00_recovery_drill",
+  "drawable": [
+    2560,
+    1440
+  ],
+  "cases": [
+    {
+      "phase": "briefing",
+      "native_application_ops": 21
+    },
+    {
+      "phase": "mission",
+      "single_native_panel": true,
+      "collapse_hides_hints": true,
+      "restores_content": true,
+      "simulation_unchanged": true
+    }
+  ],
+  "files": [
+    "briefing-native.png",
+    "briefing-before-raster.png",
+    "briefing-native-restored.png",
+    "mission-expanded.png",
+    "mission-collapsed.png",
+    "mission-restored.png",
+    "mission-pl.png",
+    "mission-de.png",
+    "mission-ru.png"
+  ],
+  "catalogue_mode": "preview",
+  "accepted_visual_packs": 16,
+  "viewer_sha256": "e91328e5f58bc089961a07c23131ba1db9a5c7f77b46df08d9a7202c388b4066",
+  "head": "37abea989bb077faad9375afe35dc9c2fa029f72",
+  "sources": {
+    "main.py": "a2ff2eb6499450be7f2e6fea3cdb454aec4ee5c0561daca5bee7cf706bb67f4b",
+    "render/hud.py": "ec856ee1fb1375960ffb43b2532e3229d407cab4a83d5feb31ea2a6b7611103a",
+    "render/presentation.py": "f28dd6aed3e8ccda099d20b48acc60f9c59739476ac3f77812099888bc0ad6f6",
+    "render/cinematics.py": "53dbc659db1ae7ee63ff5b9abe77dfe9eb5398d3c2d335f398cdc32592c1cc7e",
+    "render/mission_briefing.py": "608b220350890ff1d019791d37fc1c70dec4686f5cbcf4e8609424e0fe1f2fcc",
+    "tools/render/capture_native_mission_game.py": "09e64c5ba9e78c3dd52f77d07b83fd35850058004a37a753c9f4321e6e35af8d"
+  },
+  "library_sha256": "d09094e94e57e9abba345acc960c609f942b6b97c59843ffc754a4dbee6e099c"
+}

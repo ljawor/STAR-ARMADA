@@ -1,4 +1,9 @@
-"""Read-only campaign presentation; timing and camera belong to the view."""
+"""Read-only campaign presentation; timing and camera belong to the view.
+
+Two renderers share this state. `compose`/`draw_gl` are the legacy raster strips (an
+overlay layer, still the fallback). `native_model` is the C++ vector briefing card the
+window draws itself - see `render.mission_briefing` - and never rasterizes.
+"""
 from __future__ import annotations
 import pygame
 
@@ -8,7 +13,14 @@ class CampaignCinematic:
         self.mission_id = mission.get('id')
         self.title = mission.get('name', mission.get('title', 'Mission'))
         objectives = [o.get('text', o.get('description', '')) for o in mission.get('objectives', [])]
-        self.caption = '\n'.join([mission.get('briefing', '')] + [t for t in objectives if t])
+        # Structured so the native card can mark and indent each objective; `caption`
+        # keeps the legacy concatenation (and therefore compose's output) unchanged.
+        self.briefing = str(mission.get('briefing', '') or '')
+        self.objectives = [{'text': str(t), 'index': i} for i, t in enumerate(objectives) if t]
+        self.caption = '\n'.join([self.briefing] + [entry['text'] for entry in self.objectives])
+        self.native_pages = 1
+        self.native_page = 0
+        self._native_plans = {}
         self.camera = camera
         self.reduced_motion = reduced_motion
         self.outcome = outcome
@@ -88,6 +100,31 @@ class CampaignCinematic:
         text(f'Enter / Space / Esc / click to skip   {page+1}/{pages}', font,
              height - 62, (165,205,230))
         return surface
+
+    def native_model(self, width, height):
+        """The briefing as a complete C++ vector snapshot: text and geometry only.
+
+        The window draws these ops itself (Noto atlas + bgfx triangles), below its own
+        overlays and after the world HUD, so the mission card is crisp at the display
+        resolution instead of being a stretched raster strip in `hud.ring`. Pagination
+        and the presentation duration follow the same 5 s/page rule as `compose`.
+        """
+        from render import mission_briefing
+        key = (int(width), int(height))
+        measured = self._native_plans.get(key)
+        if measured is None:
+            # Text, wrapping and the card geometry do not change while the briefing
+            # runs; measure once per viewport and re-slice the page each frame.
+            measured = mission_briefing.plan(
+                key[0], key[1], title=self.title, briefing=self.briefing,
+                objectives=[entry['text'] for entry in self.objectives],
+                outcome=self.outcome)
+            self._native_plans[key] = measured
+        layout = mission_briefing.page_layout(measured, self.elapsed)
+        model = mission_briefing.emit(layout)[0]
+        self.duration = max(self.duration, layout['pages'] * mission_briefing.SECONDS_PER_PAGE)
+        self.native_pages, self.native_page = layout['pages'], layout['page']
+        return model
 
     def draw_gl(self, width, height):
         from OpenGL import GL

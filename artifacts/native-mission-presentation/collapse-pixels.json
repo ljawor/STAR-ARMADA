@@ -1,0 +1,26 @@
+[
+  {
+    "drawable": [
+      1280,
+      800
+    ],
+    "mission_body_bright_pixels": [
+      1073,
+      0,
+      1073
+    ],
+    "restored_mean_pixel_error": 0.0
+  },
+  {
+    "drawable": [
+      2560,
+      1440
+    ],
+    "mission_body_bright_pixels": [
+      6749,
+      0,
+      6749
+    ],
+    "restored_mean_pixel_error": 0.0
+  }
+]
