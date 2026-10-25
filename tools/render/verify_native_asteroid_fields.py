@@ -1,5 +1,11 @@
 """Prove the native window draws a map's asteroid fields in a real skirmish frame.
 
+The frame is the whole scene the collector produces - ships, planets, stations, fields - not a
+fields-only fixture. Two renders of it differ by a few hundred sparse pixels (silhouette and
+starfield flicker); `dense_mask` drops those and keeps the rock patches, which is what makes the
+footprint measurement reproducible rather than a coin flip.
+
+
 The collector used to drop asteroid fields ("not spheres"), so every map was drawn without
 its mining sites. The unit tests pin the collector; this proves the pixels: it takes a real
 skirmish map, builds the whole frame through the production collector (ships, planets,
@@ -35,17 +41,25 @@ def run(command, cwd, label):
     return result
 
 
-def solid_mask(mask):
-    """Drop single-pixel noise so a bounding box describes the field, not a shimmering rim.
+def dense_mask(mask, window=4, minimum=6):
+    """Keep changed pixels that sit in a crowd; drop the sparse ones.
 
-    A planet's silhouette flickers by one pixel between the two renders; four such pixels put
-    the box around the whole frame. A pixel survives when it sits in a patch of similar ones.
+    The two renders of a real frame are not pixel-identical: a planet's silhouette and the
+    starfield behind it flicker by a pixel or two, anywhere in the frame - 262 such pixels in a
+    measured pair, some 30-40 per channel. A bounding box over the raw difference therefore
+    jumped to the whole viewport on roughly one run in four. Rocks, unlike that noise, are
+    patches: every rock pixel has neighbours. A box this size counts as a crowd, a lone
+    flickering pixel does not.
     """
     import numpy as np
-    padded = np.pad(mask.astype(np.int32), 1)
-    neighbourhood = sum(padded[dy:dy + mask.shape[0], dx:dx + mask.shape[1]]
-                        for dy in range(3) for dx in range(3))
-    return mask & (neighbourhood >= 3)
+    integral = np.pad(mask.astype(np.int32), ((1, 0), (1, 0))).cumsum(0).cumsum(1)
+    height, width = mask.shape
+    top, left = np.clip(np.arange(height) - window, 0, None), np.clip(np.arange(width) - window, 0, None)
+    bottom = np.clip(np.arange(height) + window + 1, None, height)
+    right = np.clip(np.arange(width) + window + 1, None, width)
+    counts = (integral[np.ix_(bottom, right)] - integral[np.ix_(top, right)]
+              - integral[np.ix_(bottom, left)] + integral[np.ix_(top, left)])
+    return mask & (counts >= minimum)
 
 
 def projected_radius_px(world_radius, distance, fov_deg, image_height):
@@ -144,8 +158,8 @@ def main():
     bare = load('without-fields')
     target_frame = load('without-target')
     changed = np.abs(drawn - bare).max(axis=2) > PIXEL_THRESHOLD      # every field in the frame
-    # This field only, with the one-pixel silhouette noise removed before measuring it.
-    target_changed = solid_mask(np.abs(drawn - target_frame).max(axis=2) > PIXEL_THRESHOLD)
+    # This field only, with the sparse flicker of silhouettes and starfield removed first.
+    target_changed = dense_mask(np.abs(drawn - target_frame).max(axis=2) > PIXEL_THRESHOLD)
     height, width = drawn.shape[:2]
     coverage = float(changed.mean())
     mean_rgb = drawn[changed].mean(axis=0).tolist() if changed.any() else [0.0, 0.0, 0.0]
@@ -173,15 +187,28 @@ def main():
     disc_area = math.pi * half_width_px * half_height_px
     disc_fill = float(target_changed.sum()) / disc_area if disc_area else 0.0
 
+    # A field that runs past the frame cannot be measured by its bounding box, and it is too
+    # big for its radius: the span check below would read a clipped box as correctly sized.
+    touches_edge = bool(target_changed[0, :].any() or target_changed[-1, :].any()
+                        or target_changed[:, 0].any() or target_changed[:, -1].any())
     checks = {
         'coverage': bool(coverage > 0.01),
         'lit_rock': bool(sum(mean_rgb) / 3 > sum(background) / 3 + 8),
         'target_drawn': bool(int(target_changed.sum()) > 200),
+        'inside_the_frame': not touches_edge,
         'centred': bool(max(centre_error) < 0.10),
         'size_matches_projection': bool(0.55 <= size_ratio[0] <= 1.9 and 0.55 <= size_ratio[1] <= 1.9),
         'is_a_scatter_not_a_boulder': bool(0.03 <= disc_fill <= 0.50),
     }
+    # Self-describing evidence: an earlier copy of this file in the evidence bundle had been
+    # produced by a different revision of the tool, so its numbers described a file that no
+    # longer existed. The hash below is of the tool that actually wrote the JSON.
+    import hashlib
+    tool_path = Path(__file__).resolve()
     result = dict(
+        tool=dict(path=str(tool_path.relative_to(ROOT)),
+                  sha256=hashlib.sha256(tool_path.read_bytes()).hexdigest(),
+                  pixel_threshold=PIXEL_THRESHOLD),
         map_id=options.get('map_id'), entity_id=target.id, radius=radius,
         distance=distance, fov_deg=fov_deg,
         fields_in_state=len(fields), fields_drawn=len(rock_fields), rock_instances=len(rocks),
@@ -189,9 +216,11 @@ def main():
         coverage=coverage, changed_pixels=int(changed.sum()), frame=[width, height],
         target_pixels=int(target_changed.sum()),
         footprint_box=box, footprint_centre=centre, footprint_span=span,
+        dense_mask_window=4, dense_mask_minimum=6,
         projected_span=[2.0 * half_width_px, 2.0 * half_height_px],
         centre_error=centre_error, size_ratio=size_ratio, disc_fill=disc_fill,
         field_rgb=mean_rgb, background_rgb=background,
+        touches_frame_edge=touches_edge,
         omitted_planets=stats['omitted_planets'], checks=checks,
         passed=bool(all(checks.values())))
     (out / 'verification.json').write_text(json.dumps(result, indent=2))

@@ -1,43 +1,75 @@
 {
- "schema": 1,
- "batch": "s06-b5-environment-v5",
- "row": "environment:asteroid_field",
- "change": "re-authored prop: one irregular faceted boulder on stone roles only, drawn 64 times per field",
- "field_radius": 1800.0,
- "rocks_per_field": 64,
- "rock_size_fraction": [
-  0.018,
-  0.092
- ],
- "prop": {
-  "triangles": 320,
-  "vertices": 162,
-  "roles": [
-   "base",
-   "dark",
-   "trim"
+  "batch": "s06-b5-environment",
+  "asset": "core:environment/asteroid_field",
+  "binding": "environment:asteroid_field",
+  "decision_id": "s06-b5-environment-2026-10-25",
+  "owner_words_verbatim": "Asteroids look good",
+  "what_was_asked": "Every skirmish and multiplayer map must show a good-looking asteroid field made of many small rocks, so a mining station can be placed and built on it.",
+  "what_changed": {
+    "prop": "one irregular boulder (displaced icosphere, 320 triangles, stone roles base/dark/trim) replacing four overlapping bevelled boxes with faction hardware roles",
+    "draw": "64 small rocks per field, area-weighted scatter held inside the field radius, instead of one instance of the prop scaled up to the radius",
+    "envelope": "unchanged at +-0.58 X/Z and +-0.46 Y, so ASTEROID_EXTENT and every projected size hold"
+  },
+  "evidence": {
+    "asteroid-field-comparison.png": {
+      "shows": "2x2 sheet: the same field in the same native frame before and after, wide and close",
+      "sha256": "6e9e7930409b6e0e8fd3bf7aefda9533015eae6085038e44b6365c0c334e2950"
+    },
+    "asteroid-field-before-wide.png": {
+      "sha256": "be55b6815269ffc0277eea3d8326608db4fd9dbe0393a0e0e0bcc58905a47aad"
+    },
+    "asteroid-field-after-wide.png": {
+      "sha256": "78134189618d18c54fb0e02ced69d3bf7f1f000cc556f9ea24ea389be77c8ea9"
+    },
+    "asteroid-field-before-close.png": {
+      "sha256": "da9d5502ba66614d3a23fb8d1c1063565f1401a141176c03f432da4a14cfa204"
+    },
+    "asteroid-field-after-close.png": {
+      "sha256": "6bc778b7776a20ce55be445f258658c744b9d206ff2a9ac5da110907bf3ed742"
+    },
+    "native-field-verification.json": {
+      "shows": "a measurement of the same revision in the real skirmish frame (see limits below)",
+      "written_by": {
+        "path": "tools/render/verify_native_asteroid_fields.py",
+        "sha256": "eaa82148b85bbbb9ad4cdef0cab1a5a31f14e80a7117965af7edf4b67860c258"
+      },
+      "sha256": "6fed6ee4a954d55b33b7e08248827ab1d2b8b0231d87fa2c36a2aaec0a0ef772"
+    }
+  },
+  "what_the_measurement_does": [
+    "renders the whole scene the production collector builds for skirmish01 (ships, planets, stations, 320 rocks) through the native viewer",
+    "renders the same frame again with only the aimed-at field removed, so occlusion by every other object cancels out",
+    "drops the sparse silhouette/starfield flicker between the two renders (dense mask), then measures the footprint against the projection: centre error, span ratio, share of the disc that is rock, and whether the field reaches the frame edge",
+    "result on this revision: passed=True, centre_error=[0.014, 0.014], size_ratio=[0.86, 0.75], disc_fill=0.147, fields_drawn=5, rock_instances=320"
   ],
-  "draw_calls": 3
- },
- "previous": {
-  "triangles": 216,
-  "instances_per_field": 1,
-  "scale": "radius / 0.58 (one boulder over the whole field)"
- },
- "wide_frame_delta": {
-  "changed_pixels": 44282,
-  "frame_pixels": 1024000
- },
- "captures": {
-  "wide": [
-   "asteroid-field-before-wide.png",
-   "asteroid-field-after-wide.png"
+  "controls": [
+    {
+      "sabotage": "rocks scaled 3x too large (ASTEROID_EXTENT 0.58 -> 0.19)",
+      "expected": "fail",
+      "observed": "fail: disc_fill 0.688 > 0.50",
+      "note": "the clipped bounding box still reads as correctly sized, which is why the disc fill and the frame-edge check exist"
+    },
+    {
+      "sabotage": "field shifted by 0.8 of its radius",
+      "expected": "fail",
+      "observed": "fail: centred (centre_error 0.12 / 0.08)"
+    },
+    {
+      "sabotage": "one boulder at 0.95 of the radius instead of a scatter",
+      "expected": "fail",
+      "observed": "fail: disc_fill 1.219"
+    },
+    {
+      "sabotage": "the earlier flaky measurement (raw difference, no dense mask)",
+      "expected": "fail on ~1 run in 4 with no code change",
+      "observed": "6 of 27 runs failed; with the dense mask 4 of 4 runs agree to the digit"
+    }
   ],
-  "close": [
-   "asteroid-field-before-close.png",
-   "asteroid-field-after-close.png"
+  "limits": [
+    "This measures a footprint, not beauty. The appearance was approved by the owner looking at the sheet and the two captures; the numbers here cannot approve a picture.",
+    "It proves one map (skirmish01) and one field. The unit tests cover the other maps, the live emitter and the rock scatter; the pixel proof does not.",
+    "A field drawn in the right place at the right size with ugly rocks would pass. That is what the sheet is for."
   ],
-  "comparison": "asteroid-field-comparison.png"
- },
- "owner_instruction": "We need good looking small asteroids. The small asteroids should build our asteroid fields. The after picture has horrible fields."
+  "reproduce": "python tools/render/verify_native_asteroid_fields.py --out OUTDIR",
+  "tool_sha256": "eaa82148b85bbbb9ad4cdef0cab1a5a31f14e80a7117965af7edf4b67860c258"
 }

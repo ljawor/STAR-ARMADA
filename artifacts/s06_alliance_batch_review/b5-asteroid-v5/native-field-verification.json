@@ -1,4 +1,9 @@
 {
+  "tool": {
+    "path": "tools/render/verify_native_asteroid_fields.py",
+    "sha256": "eaa82148b85bbbb9ad4cdef0cab1a5a31f14e80a7117965af7edf4b67860c258",
+    "pixel_threshold": 12
+  },
   "map_id": "skirmish01",
   "entity_id": 5,
   "radius": 1800.0,
@@ -9,8 +14,8 @@
   "rock_instances": 320,
   "instances_with_fields": 334,
   "instances_without_fields": 14,
-  "coverage": 0.013716796875,
-  "changed_pixels": 14046,
+  "coverage": 0.0137138671875,
+  "changed_pixels": 14043,
   "frame": [
     1280,
     800
@@ -30,6 +35,8 @@
     264.0,
     177.0
   ],
+  "dense_mask_window": 4,
+  "dense_mask_minimum": 6,
   "projected_span": [
     307.3571403153866,
     235.4492293915419
@@ -44,20 +51,22 @@
   ],
   "disc_fill": 0.14715789354393574,
   "field_rgb": [
-    127.5736864587783,
-    133.45956144097963,
-    140.19051687313114
+    127.59602649006622,
+    133.48287402976572,
+    140.21099480168056
   ],
   "background_rgb": [
     8.0,
     14.0,
     27.0
   ],
+  "touches_frame_edge": false,
   "omitted_planets": 0,
   "checks": {
     "coverage": true,
     "lit_rock": true,
     "target_drawn": true,
+    "inside_the_frame": true,
     "centred": true,
     "size_matches_projection": true,
     "is_a_scatter_not_a_boulder": true
