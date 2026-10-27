@@ -93,6 +93,16 @@ def find_binary(root: str) -> str | None:
 
 def spawn(paths: dict, *, root: str, snapshot: str | None, size=(1280, 800), log=print):
     """Launch the viewer against a live session's rings. Returns the process, or None."""
+    import sys
+    if getattr(sys, 'frozen', False) and sys.platform == 'darwin':
+        # PyInstaller macOS bundles expose data under Frameworks through symlinks
+        # into Resources. The native mesh loader canonicalizes every file and
+        # rejects anything outside --assets, so Frameworks cannot be that root.
+        # Resolve the data directory, not merely its unsymlinked parent. Keep
+        # the native containment check intact; source/Windows roots are unchanged.
+        assets = os.path.join(root, 'assets')
+        if os.path.isdir(assets):
+            root = os.path.dirname(os.path.realpath(assets))
     binary = find_binary(root)
     if binary is None:
         log('cpp window: no armada_viewer built (render_cpp/build-w02); the match is running '
