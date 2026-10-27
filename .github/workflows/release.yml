@@ -25,6 +25,8 @@ jobs:
         run: PATH="$PWD/.venv/bin:$PATH" ./.venv/bin/python tools/build_native_release.py --build-dir render_cpp/build-w02
       - name: Packaging contract tests
         run: ./.venv/bin/python -m unittest discover -s tests -p test_release_packaging.py -v
+      - name: macOS bundle asset-root regression tests
+        run: ./.venv/bin/python -m unittest discover -s tests -p test_macos_bundle_assets.py -v
       - name: Build app + DMG
         run: |
           ./.venv/bin/pyinstaller star_armada.spec --noconfirm

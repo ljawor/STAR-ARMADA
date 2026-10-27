@@ -174,6 +174,15 @@ class ReleasePackagingTests(unittest.TestCase):
                     'SPECPATH': str(fake_root), 'Analysis': analysis})
 
 
+class MacBundleRuntimeGateTests(unittest.TestCase):
+    def test_macos_release_runs_bundle_asset_root_regressions_before_packaging(self):
+        source = (ROOT / '.github/workflows/release.yml').read_text(encoding='utf-8')
+        mac = source.split('  mac:\n', 1)[1].split('\n  win:\n', 1)[0]
+        command = './.venv/bin/python -m unittest discover -s tests -p test_macos_bundle_assets.py -v'
+        self.assertIn(command, mac)
+        self.assertLess(mac.index(command), mac.index('- name: Build app + DMG'))
+
+
 class WindowsCompilerImageTests(unittest.TestCase):
     def test_every_windows_job_pins_cmake_compatible_visual_studio_image(self):
         import re
